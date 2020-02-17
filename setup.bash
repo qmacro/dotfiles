@@ -5,6 +5,7 @@ DOTFILES=${HOME}/.dotfiles
 # Dotfiles symlinks
 figlet -f small symbolic links
 ln -f -s ${DOTFILES}/bashrc ${HOME}/.bashrc
+ln -f -s ${DOTFILES}/npmrc ${HOME}/.npmrc
 ln -f -s ${DOTFILES}/bash_aliases ${HOME}/.bash_aliases
 ln -f -s ${DOTFILES}/vimrc ${HOME}/.vimrc
 ln -f -s ${DOTFILES}/tmux.conf ${HOME}/.tmux.conf
