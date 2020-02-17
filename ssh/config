@@ -1,0 +1,14 @@
+Host pixel
+     Port 8022
+
+Host github.com
+     ForwardX11 no
+
+Host zino gargantubrain acer
+     User dj
+
+Host pimodelb
+     User pi
+
+Host *
+     ForwardX11 yes
