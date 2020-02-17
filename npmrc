@@ -1,0 +1,3 @@
+@sap:registry=https://npm.sap.com
+@qmacro:registry=https://npm.pkg.github.com
+depth=0
