@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
 heading () {
-  figlet $@
+  figlet -w 100 $@
 }
 
 CONTAINER=${1:-dev}
 USER=${2:-dj}
+SCRIPTDIR=$(dirname ${BASH_SOURCE[0]})
 
-heading Container "${CONTAINER}"
-
-heading Setup and package update
+heading Setup container ${CONTAINER} and package update
 lxc launch images:debian/buster ${CONTAINER}
 lxc exec ${CONTAINER} -- 'apt update && apt upgrade -y'
 
 heading Install of basic tools
-lxc exec ${CONTAINER} -- apt install -y git curl tmux ranger hub fzf figlet man lolcat sudo
+lxc exec ${CONTAINER} -- apt install -y $(cat ${SCRIPTDIR}/installs | tr '\n' ' ')
 
 heading Create user "${USER}" and environment
 lxc exec ${CONTAINER} -- useradd -m -s /bin/bash ${USER}
@@ -28,6 +27,9 @@ lxc exec ${CONTAINER} -- su -c "git clone git@github.com:qmacro/dotfiles.git ~/.
 
 heading Running dotfiles setup
 lxc exec ${CONTAINER} -- su -c "~/.dotfiles/setup.bash" dj
+
+heading Installing Node.js 12 LTS
+lxc exec ${CONTAINER} -- su -c "nvm install 12 lts" dj
 
 heading Entering ${CONTAINER} as ${USER}
 echo "(Don't forget to install tmux plugins with 'prefix I')"
