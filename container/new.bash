@@ -33,7 +33,8 @@ heading Running dotfiles setup
 lxc exec ${CONTAINER} -- su -c "~/.dotfiles/setup.bash" dj
 
 heading Installing Node.js 12 LTS
-lxc exec ${CONTAINER} -- su -c "nvm install 12 lts" dj
+
+lxc exec ${CONTAINER} -- su -c ". ~/.nvm/nvm.sh && nvm install 12 lts" dj
 
 heading Entering ${CONTAINER} as ${USER}
 echo "(Don't forget to install tmux plugins with 'prefix I')"
