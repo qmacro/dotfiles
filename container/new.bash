@@ -17,7 +17,7 @@ lxc launch images:debian/buster ${CONTAINER}
 lxc exec ${CONTAINER} -- 'apt update && apt upgrade -y'
 
 heading Install of basic tools
-lxc exec ${CONTAINER} -- apt install -y git curl tmux ranger hub fzf figlet man lolcat sudo htop
+lxc exec ${CONTAINER} -- apt install -y git curl tmux ranger hub fzf figlet man lolcat sudo htop openssh-server
 
 heading Create user "${USER}" and environment
 lxc exec ${CONTAINER} -- useradd -m -s /bin/bash ${USER}
