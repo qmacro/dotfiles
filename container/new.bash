@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 heading () {
-  figlet -w 100 $@
+  if ! type figlet > /dev/null 2>&1; then
+    echo +++ $@
+  else
+    figlet -w 100 $@
+  fi
 }
 
 CONTAINER=${1:-dev}
@@ -13,7 +17,7 @@ lxc launch images:debian/buster ${CONTAINER}
 lxc exec ${CONTAINER} -- 'apt update && apt upgrade -y'
 
 heading Install of basic tools
-lxc exec ${CONTAINER} -- apt install -y $(cat ${SCRIPTDIR}/installs | tr '\n' ' ')
+lxc exec ${CONTAINER} -- apt install -y git curl tmux ranger hub fzf figlet man lolcat sudo htop
 
 heading Create user "${USER}" and environment
 lxc exec ${CONTAINER} -- useradd -m -s /bin/bash ${USER}
