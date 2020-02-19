@@ -17,7 +17,8 @@ fi
 # Ranger
 heading ranger
 ranger --copy-config=all
-ln -f -s ${DOTFILES}/ranger/rc.conf ${HOME}/.config/ranger/rc.conf
+ln -f -s ${DOTFILES}/ranger/rc.conf ${HOME}/.config/ranger/
+ln -f -s ${DOTFILES}/ranger/scope.sh ${HOME}/.config/ranger/
 
 # nvm
 heading nvm
