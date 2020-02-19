@@ -17,7 +17,7 @@ lxc launch images:debian/buster ${CONTAINER}
 lxc exec ${CONTAINER} -- 'apt update && apt upgrade -y'
 
 heading Install of basic tools
-lxc exec ${CONTAINER} -- apt install -y git curl tmux ranger hub fzf figlet man lolcat sudo htop
+lxc exec ${CONTAINER} -- apt install -y git curl tmux ranger hub fzf figlet man lolcat sudo htop openssh-server
 
 heading Create user "${USER}" and environment
 lxc exec ${CONTAINER} -- useradd -m -s /bin/bash ${USER}
@@ -33,7 +33,8 @@ heading Running dotfiles setup
 lxc exec ${CONTAINER} -- su -c "~/.dotfiles/setup.bash" dj
 
 heading Installing Node.js 12 LTS
-lxc exec ${CONTAINER} -- su -c "nvm install 12 lts" dj
+
+lxc exec ${CONTAINER} -- su -c ". ~/.nvm/nvm.sh && nvm install 12 lts" dj
 
 heading Entering ${CONTAINER} as ${USER}
 echo "(Don't forget to install tmux plugins with 'prefix I')"
