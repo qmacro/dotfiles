@@ -23,7 +23,6 @@ ln -f -s ${DOTFILES}/ranger/scope.sh ${HOME}/.config/ranger/
 # nvm
 heading nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
-export NVM_DIR="$HOME/.nvm" && ~/.nvm/nvm.sh && nvm install 12 lts
 
 # ssh
 if [ ! -d ${HOME}/.ssh/ ]; then
