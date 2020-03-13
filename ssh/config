@@ -1,3 +1,11 @@
+Host pi
+    HostName raspberrypi.lan
+    User pi
+
+Host workmbp
+    HostName C02W52RKHV2Q
+    User i347491
+
 Host pixel
      Port 8022
 
@@ -9,6 +17,8 @@ Host zino gargantubrain acer
 
 Host pimodelb
      User pi
+     ForwardX11 yes
 
 Host *
+     User dj
      ForwardX11 yes
