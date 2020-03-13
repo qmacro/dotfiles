@@ -27,14 +27,10 @@ lxc exec ${CONTAINER} -- chmod 700 /home/${USER}/.ssh
 lxc file push ${HOME}/.ssh/id_rsa* ${HOME}/.ssh/known_hosts* ${CONTAINER}/home/${USER}/.ssh/
 
 heading Cloning 'dotfiles' repo
-lxc exec ${CONTAINER} -- su -c "git clone git@github.com:qmacro/dotfiles.git ~/.dotfiles" dj
+lxc exec ${CONTAINER} -- su -c "git clone git@github.com:qmacro/dotfiles.git ~/.dotfiles" ${USER}
 
 heading Running dotfiles setup
-lxc exec ${CONTAINER} -- su -c "~/.dotfiles/setup.bash" dj
-
-heading Installing Node.js 12 LTS
-
-lxc exec ${CONTAINER} -- su -c ". ~/.nvm/nvm.sh && nvm install 12 lts" dj
+lxc exec ${CONTAINER} -- su -c "~/.dotfiles/setup.bash" ${USER}
 
 heading Entering ${CONTAINER} as ${USER}
 echo "(Don't forget to install tmux plugins with 'prefix I')"
