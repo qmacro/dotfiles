@@ -28,7 +28,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
 if [ ! -d ${HOME}/.ssh/ ]; then
   heading ssh
   mkdir ${HOME}/.ssh/
-  directory created
+  echo directory created
 fi
 
 # Dotfiles symlinks
