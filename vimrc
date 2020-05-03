@@ -21,7 +21,7 @@ Plug 'morhetz/gruvbox'
 Plug 'leafgarland/typescript-vim'
 Plug '$HOME/local/projects/vim-cds'
 Plug 'airblade/vim-gitgutter'
-Plug 'arcticicestudio/nord-vim'
+Plug 'morhetz/gruvbox'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -31,7 +31,7 @@ syntax on
 filetype plugin indent on
 
 set background=dark
-colorscheme nord
+colorscheme gruvbox
 set encoding=utf-8
 set ts=2
 set expandtab
@@ -105,6 +105,7 @@ iabbrev NABHEETMADAN [Nabheet Madan](https://people.sap.com/nabheetscn)
 iabbrev MAXSTREIFENEDER [Max Streifeneder](https://people.sap.com/iinside)
 iabbrev JOHNMURRAY [John Murray](https://people.sap.com/jbm1991)
 iabbrev CHRISTIANDRUMM [Christian Drumm](https://people.sap.com/christian.drumm)
+iabbrev PHILCOOLEY [Phil Cooley](https://people.sap.com/phil.cooley)
 iabbrev hosd https://bit.ly/handsonsapdev
 
 " Quick insertions of various patterns when writing markdown
@@ -116,7 +117,7 @@ autocmd FileType markdown inoremap ppp :point_right:<space>
 "set exrc
 
 let g:ale_completion_enabled = 1
-let g:ale_sign_column_always = 0
+let g:ale_sign_column_always = 1
 let g:airline#extension#ale#enabled = 1
 
 nnoremap <silent> <leader>ll :call LocationToggle()<cr>
@@ -142,3 +143,8 @@ nnoremap <leader>g :Gblame<cr>
 
 nnoremap [[ :bprev<cr>
 nnoremap ]] :bnext<cr>
+
+" Ignore markdown complaints about underscores
+" (see https://github.com/tpope/vim-markdown/issues/21)
+autocmd FileType markdown syn match markdownError "\w\@<=\w\@="
+

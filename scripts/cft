@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Small UI to choose a new CF target to set
+# Uses the cf-targets plugin for cf (see https://github.com/guidowb/cf-targets-plugin)
+# and also uses fzf (see https://github.com/junegunn/fzf)
+
+target=$(cf targets | fzf --height=25% | cut -d ' ' -f 1) \
+  && [ ! -z ${target} ] \
+  && cf set-target -f ${target} \
+  && cf target

@@ -1,8 +1,6 @@
 [user]
-	email = dj.adams@pobox.com
+	email = dj.adams@sap.com
 	name = DJ Adams
-[credential]
-	helper = pass
 [credential "https://github.tools.sap"]
 	username = i347491
 [alias]

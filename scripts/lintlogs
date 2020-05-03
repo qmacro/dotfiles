@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+stdio=${1:-OUT}
+
+grep --line-buffered "${stdio} {" \
+  | stdbuf -oL cut -d ' ' -f 7- \
+  | jq -r '.written_at + " " + .msg'

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+opslist=$(cat ops | sed '1,3d')
+echo ${opslist}
+exit 0
+while true
+do
+  echo "You entered [$myline]"
+done

@@ -1,5 +1,5 @@
 Host pi
-    HostName raspberrypi.lan
+    HostName pimodelb
     User pi
 
 Host workmbp
@@ -14,10 +14,6 @@ Host github.com
 
 Host zino gargantubrain acer
      User dj
-
-Host pimodelb
-     User pi
-     ForwardX11 yes
 
 Host *
      User dj
