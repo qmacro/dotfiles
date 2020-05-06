@@ -1,6 +1,8 @@
 [user]
 	email = dj.adams@sap.com
 	name = DJ Adams
+[credential "https://github.com"]
+	username = qmacro
 [credential "https://github.tools.sap"]
 	username = i347491
 [alias]
