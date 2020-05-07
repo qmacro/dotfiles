@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# Starts a new instance of a workflow definition.
+
+# Definition and context can be supplied as parameters
+#if [[ $# -eq 2 ]]; then
+definition=$1
+context=$2
+count=$3
+#fi
+
+
+# Bring in the required env for the script
+source ./cpenv-home
+source ~/.dotfiles/scripts/utils
+
+
+# Retrieve an access token using the Client Credentials grant type
+get_access_token() {
+  curl \
+    --silent \
+    --netrc \
+    --data "grant_type=client_credentials" \
+    "${UAAROOT}/oauth/token" \
+  | jq -r .access_token
+}
+
+# Present all workflow definitions, allow selection of one
+select_workflow_definition() {
+  curl \
+    --silent \
+    --header "Authorization: Bearer ${access_token}" \
+    "${WORKFLOWAPIROOT}/v1/workflow-definitions" \
+    | jq -r '.[] | "\(.id) (v \(.version))"' \
+    | fzf ${FZF_OPTS} --prompt "Select workflow definition: " \
+    | cut -d ' ' -f 1
+}
+
+
+# Start new instance of workflow definition 'definition' with context 'context'
+start_new_instance() {
+  curl \
+    --silent \
+    --header "Authorization: Bearer ${access_token}" \
+    --header "Content-Type: application/json" \
+    --data "{\"definitionId\":\"${definition}\",\"context\":${context}}" \
+    "${WORKFLOWAPIROOT}/v1/workflow-instances"
+#  | jq -r '"\(.id) \(.status)"'
+}
+
+
+access_token=$(get_access_token)
+log Access token retrieved: \'$(echo ${access_token} | cut -c 1-8)...\'
+
+[ -z "$definition" ] && definition=$(select_workflow_definition)
+log Workflow definition chosen: ${definition}
+[ -z "$definition" ] && exit 0
+
+
+# Ask for a context if one wasn't supplied
+if [ -z "$context" ]; then
+  read -p "Specify JSON context for new instance (default is {}): " context
+  [ -z "$context" ] && context='{}'
+fi
+
+[ -z "$count" ] && count=1
+log Starting ${count} new instance\(s\) of ${definition} with ${context}
+for i in $(seq ${count}); do
+  log Instance $(start_new_instance)
+  sleep 1
+done
+

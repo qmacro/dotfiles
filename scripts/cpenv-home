@@ -1,0 +1,21 @@
+# Abbreviations
+# GLO Global
+# SUB Sub
+# ACC Account
+# SRV Server
+# DOM Domain
+# SDM Subdomain
+# UAA User Authentication & Access
+# API Application Programming Interface
+
+# relevant for: sapcp
+export CLISRVURL=https://cpcli.cf.eu10.hana.ondemand.com
+export GLOACCSDM=898789e9trial-ga
+export SUBACCID=b8449197-d5d5-436b-af1f-aa4856cced9e
+
+# relevant for: auth
+export UAAROOT=https://898789e9trial.authentication.eu10.hana.ondemand.com
+
+# relevant for: workflow
+export WORKFLOWAPIROOT=https://api.workflow-sap.cfapps.eu10.hana.ondemand.com/workflow-service/rest
+

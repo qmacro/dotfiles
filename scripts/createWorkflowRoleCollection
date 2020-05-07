@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+rolecollection=Workflow
+app=workflow!b10150
+assignee=dj.adams@sap.com
+idp=sap.default
+
+source ~/cpenv-home
+
+# Set subdomain as target for subsequent commands
+sapcp target -sa ${SUBACCID}
+
+# Create new role collection
+sapcp create security/role-collection ${rolecollection}
+
+# Add roles to role collection
+for role in `cat <<EOF
+WorkflowAdmin
+WorkflowContextViewer
+WorkflowParticipant
+WorkflowDeveloper
+WorkflowInitiator
+WorkflowViewer
+EOF`
+do
+  sapcp add security/role ${role} --to-role-collection ${rolecollection} --of-app ${app} --of-role-template ${role}
+done
+
+# Assign role collection
+sapcp assign security/role-collection ${rolecollection} --to-user ${assignee} --of-idp ${idp}

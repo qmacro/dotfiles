@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# Lists instances of a workflow definition.
+
+# Definition can be supplied as parameter
+definition=$1
+
+# Bring in the required env for the script
+source ./cpenv-home
+source ~/.dotfiles/scripts/utils
+
+
+# Retrieve an access token using the Client Credentials grant type
+get_access_token() {
+  curl \
+    --silent \
+    --netrc \
+    --data "grant_type=client_credentials" \
+    "${UAAROOT}/oauth/token" \
+  | jq -r .access_token
+}
+
+# Present all workflow definitions, allow selection of one
+select_workflow_definition() {
+  curl \
+    --silent \
+    --header "Authorization: Bearer ${access_token}" \
+    "${WORKFLOWAPIROOT}/v1/workflow-definitions" \
+    | jq -r '.[] | "\(.id) (v \(.version))"' \
+    | fzf ${FZF_OPTS} --prompt "Select workflow definition: " \
+    | cut -d ' ' -f 1
+}
+
+
+# List instances of a workflow definition
+list_instances() {
+  curl \
+    --silent \
+    --header "Authorization: Bearer ${access_token}" \
+    "${WORKFLOWAPIROOT}/v1/workflow-instances?definitionId=${definition}" \
+    | jq -r '.[] | "\(.definitionId)\tv\(.definitionVersion)\t\(.id)\t\(.status)\t\(.status)"'
+}
+
+
+########################################################################
+
+access_token=$(get_access_token)
+log Access token retrieved: \'$(echo ${access_token} | cut -c 1-8)...\'
+
+[ -z "$definition" ] && definition=$(select_workflow_definition)
+log Workflow definition chosen: ${definition}
+[ -z "$definition" ] && exit 0
+
+log Requesting list of ${definition} instances
+echo $(list_instances)

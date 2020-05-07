@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Retrieve values from service keys (skv = Service Key Value)
+# Usage: skv [file] property
+# Example: skv myservice uaa.url - get the value of the uaa.url property from the myservice.json file
+# Example: skv uaa.clientid - get the value of the uaa.clientid property from the (default) keys.json file
+
+defaultfile=keys.json
+
+if [[ $# -eq 2 ]]; then
+  file=${1}.json
+  property=${2}
+else
+  file=${defaultfile}
+  property=${1}
+fi
+
+jq -r ".${property}" ${file}
