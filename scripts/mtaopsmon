@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+getopsid() {
+  cf mta-ops | sed '1,3d' | head -1 | awk '{print $1}'
+}
+
+echo -n Searching for an MTA operation
+
+opsid=$(getopsid)
+while [ -z ${opsid} ]; do
+  echo -n .
+  sleep 1
+  opsid=$(getopsid)
+done
+
+echo
+echo Found ops id ${opsid}
+
+cf deploy -i ${opsid} -a monitor
