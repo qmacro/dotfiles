@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Calls cf with the arguments given, and then
+# passes the output to 'trunc'
+
+cf "$@" | trunc
