@@ -1,0 +1,17 @@
+# Abbreviations
+# GLO Global
+# SUB Sub
+# ACC Account
+# SRV Server
+# DOM Domain
+# SDM Subdomain
+# UAA User Authentication & Access
+# API Application Programming Interface
+
+
+# relevant for: auth
+export UAAROOT=https://p2001351149trial.authentication.eu10.hana.ondemand.com
+
+# relevant for: workflow
+export WORKFLOWAPIROOT=https://api.workflow-sap.cfapps.eu10.hana.ondemand.com/workflow-service/rest
+
