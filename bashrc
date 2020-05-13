@@ -115,3 +115,9 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# For bash-git-prompt (https://github.com/magicmonty/bash-git-prompt)
+if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+  GIT_PROMPT_ONLY_IN_REPO=1
+  source $HOME/.bash-git-prompt/gitprompt.sh
+fi
