@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Sets sapcp target according to env vars
+sapcp login \
+  --url ${CLISRVURL} \
+  --subdomain ${GLOACCSDM} \
+  --user ${GLOACCUSR}
+
+# Offers the subaccount list to pick from
+subaccount=$(
+sapcp list accounts/subaccount 2>/dev/null \
+ | sed -E '1,4d;/^\s*$/d' \
+ | fzf --prompt 'Select subaccount' \
+ | awk '{print $1}'
+ )
+
+if [ ! -z ${subaccount} ]; then
+  sapcp target --subaccount ${subaccount}
+fi

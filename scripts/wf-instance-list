@@ -6,7 +6,7 @@
 definition=$1
 
 # Bring in the required env for the script
-source ./cpenv-home
+cftarget
 source ~/.dotfiles/scripts/utils
 
 

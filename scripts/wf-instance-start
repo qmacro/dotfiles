@@ -11,7 +11,7 @@ count=$3
 
 
 # Bring in the required env for the script
-source ./cpenv-home
+cftarget
 source ~/.dotfiles/scripts/utils
 
 
@@ -44,8 +44,8 @@ start_new_instance() {
     --header "Authorization: Bearer ${access_token}" \
     --header "Content-Type: application/json" \
     --data "{\"definitionId\":\"${definition}\",\"context\":${context}}" \
-    "${WORKFLOWAPIROOT}/v1/workflow-instances"
-#  | jq -r '"\(.id) \(.status)"'
+    "${WORKFLOWAPIROOT}/v1/workflow-instances" \
+  | jq -r '"\(.id) \(.status)"'
 }
 
 

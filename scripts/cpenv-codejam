@@ -7,16 +7,16 @@
 # SDM Subdomain
 # UAA User Authentication & Access
 # API Application Programming Interface
-# USR Username
+# USR User
 
 # relevant for: sapcp
 export CLISRVURL=https://cpcli.cf.eu10.hana.ondemand.com
-export GLOACCSDM=898789e9trial-ga
-export SUBACCID=b8449197-d5d5-436b-af1f-aa4856cced9e
-export GLOACCUSR=dj.adams@sap.com
+export GLOACCSDM=15b7915atrial-ga
+export SUBACCID=dc7ac25f-3a70-4619-83cf-847864e3366e
+export GLOACCUSR=qmacro+codejam@gmail.com
 
 # relevant for: auth
-export UAAROOT=https://898789e9trial.authentication.eu10.hana.ondemand.com
+export UAAROOT=https://15b7915atrial.authentication.eu10.hana.ondemand.com
 
 # relevant for: workflow
 export WORKFLOWAPIROOT=https://api.workflow-sap.cfapps.eu10.hana.ondemand.com/workflow-service/rest

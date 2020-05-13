@@ -1,0 +1,12 @@
+#!/bin/bash
+
+token=$(
+curl \
+  --verbose \
+  --netrc \
+  --data "grant_type=client_credentials" \
+  "${UAAROOT}/oauth/token" \
+| jq -r '.access_token'
+)
+
+export ACCESSTOKEN=${token}
