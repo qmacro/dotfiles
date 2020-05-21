@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Only proceed if we have GLOACCUSR defined
+# (signifying this is a Feature Set B user)
+[ -z ${GLOACCUSR} ] && exit 1
+
 # Sets sapcp target according to env vars
 sapcp login \
   --url ${CLISRVURL} \
