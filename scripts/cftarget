@@ -7,6 +7,4 @@
 target=$(cf targets | fzf --height=25% | cut -d ' ' -f 1) \
   && [ ! -z ${target} ] \
   && cf set-target -f ${target} \
-  && cf target \
-  && source ~/.dotfiles/scripts/cpenv-${target} \
-  && sapcptarget
+  && cf target
