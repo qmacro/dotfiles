@@ -1,3 +1,6 @@
+Host pihole
+    User pi
+
 Host pi
     HostName pimodelb
     User pi
