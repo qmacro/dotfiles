@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+status=RUNNING
+
 getopsid() {
-  cf mta-ops | sed '1,3d' | head -1 | awk '{print $1}'
+  cf mta-ops | sed '1,3d' | grep ${status} | head -1 | awk '{print $1}'
 }
 
 echo -n Searching for an MTA operation
