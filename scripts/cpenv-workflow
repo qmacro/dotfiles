@@ -8,6 +8,7 @@
 # UAA User Authentication & Access
 # API Application Programming Interface
 
+echo setting env for cpenv-workflow
 
 # relevant for: auth
 export UAAROOT=https://p2001351149trial.authentication.eu10.hana.ondemand.com
