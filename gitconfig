@@ -10,3 +10,5 @@
 	co = checkout
 	br = branch
 	ci = commit
+[credential]
+	helper = cache
