@@ -1,8 +1,4 @@
-Host pihole
-    User pi
-
-Host pi
-    HostName pimodelb
+Host pi*
     User pi
 
 Host workmbp
@@ -19,5 +15,4 @@ Host zino gargantubrain acer
      User dj
 
 Host *
-     User dj
      ForwardX11 yes
