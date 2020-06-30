@@ -1,5 +1,5 @@
 #
-# Basic theme
+# qmacro theme - based on Basic theme
 #
 
 set -g status-interval 60
@@ -9,8 +9,6 @@ WEATHER='#(curl -s wttr.in/manchester\?format\="%%m+%%C+%%c++%%f&period=60")'
 set -goq @themepack-status-left-area-left-format "#S"
 set -goq @themepack-status-left-area-middle-format "#I"
 set -goq @themepack-status-left-area-right-format "#P"
-#set -goq @themepack-status-right-area-left-format "#H"
-#set -goq @themepack-status-right-area-middle-format "%H:%M:%S"
 set -goq @themepack-status-right-area-right-format "%d %b $WEATHER"
 set -goq @themepack-window-status-current-format "#I:#W#F"
 set -goq @themepack-window-status-format "#I:#W#F"
