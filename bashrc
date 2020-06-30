@@ -2,6 +2,17 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# See https://github.com/platformio/platformio-atom-ide-terminal/issues/196#issuecomment-391707383
+update_terminal_cwd() {
+    # Identify the directory using a "file:" scheme URL,
+    # including the host name to disambiguate local vs.
+    # remote connections. Percent-escape spaces.
+    local SEARCH=' '
+    local REPLACE='%20'
+    local PWD_URL="file://$HOSTNAME${PWD//$SEARCH/$REPLACE}"
+    printf '\e]7;%s\a' "$PWD_URL"
+}
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -61,10 +72,13 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='💻 ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\033[00m\]\[\033[01;34m\]\w\[\033[00m\]\n-> '
-    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\n-> '
+    #export PS1_START='\e[32m\]\u\e[34m\]\e[33m\]@\e[34m\]\h \e[33m\][\w]\n\e[37m\]▶ '
+    export PS1_START='\e[32m\]\u\e[34m\]\e[33m\]@\e[34m\]\h\e[39;49m'
+    export PS1_DIR='\e[33m\][\w]'
+    export PS1_END='\n\e[37m\]▶ '
+    PS1="${PS1_START} ${PS1_DIR} ${PS1_END}"
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='\u@\h [\w]\n▶ '
 fi
 unset color_prompt force_color_prompt
 
@@ -101,6 +115,8 @@ if ! shopt -oq posix; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
+  elif [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
   fi
 fi
 
@@ -110,7 +126,7 @@ export PATH=$HOME/.dotfiles/scripts:$PATH
 set -o vi
 bind -x '"\C-l": clear'
 
-export NVM_DIR="$HOME/.config/nvm"
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
@@ -119,6 +135,8 @@ export NVM_DIR="$HOME/.config/nvm"
 # For bash-git-prompt (https://github.com/magicmonty/bash-git-prompt)
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
   GIT_PROMPT_ONLY_IN_REPO=1
+  GIT_PROMPT_START=${PS1_START}
+  GIT_PROMPT_END=" ${PS1_DIR} ${PS1_END}"
   source $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
