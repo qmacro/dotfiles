@@ -80,3 +80,6 @@ export EDITOR=vim
 
 set -o vi
 bind -x '"\C-l": clear'
+
+# SAP CP CLI configuration
+export SAPCP_CLIENTCONFIG=${HOME}/.config/sapcp
