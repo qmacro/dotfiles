@@ -1,8 +1,7 @@
 Host pi*
     User pi
 
-Host oldmbp
-    HostName C02W52RKHV2Q
+Host *mbp
     User i347491
 
 Host pixel
