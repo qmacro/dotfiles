@@ -17,11 +17,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
-Plug 'morhetz/gruvbox'
 Plug 'leafgarland/typescript-vim'
 Plug '$HOME/local/projects/vim-cds'
 Plug 'airblade/vim-gitgutter'
-Plug 'morhetz/gruvbox'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -31,7 +29,6 @@ syntax on
 filetype plugin indent on
 
 set background=dark
-colorscheme gruvbox
 set encoding=utf-8
 set ts=2
 set expandtab
