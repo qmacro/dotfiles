@@ -83,3 +83,8 @@ bind -x '"\C-l": clear'
 
 # SAP CP CLI configuration
 export SAPCP_CLIENTCONFIG=${HOME}/.config/sapcp
+
+# Maintain host aliases so as not to expose work machine hostnames
+# Note that ~/.dotfiles/host.aliases is not git controlled
+ln -s -f "$HOME/.dotfiles/host.aliases" "$HOME/.config/"
+export HOSTALIASES="$HOME/.config/host.aliases"
