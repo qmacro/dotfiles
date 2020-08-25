@@ -10,7 +10,7 @@ Host pixel
 Host github.com
      ForwardX11 no
 
-Host zino gargantubrain acer
+Host zino gargantubrain acer teemo
      User dj
 
 Host *
