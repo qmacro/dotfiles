@@ -3,7 +3,7 @@
 # Undeploys (deletes) a workflow definition, including active instances
 
 # Bring in the required env for the script
-source ~/cpenv-home
+source cpenv-home
 source ~/.dotfiles/scripts/utils
 
 

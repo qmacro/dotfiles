@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Delete Service Instance with Keys (dsik)
+
+instance=$1
+
+source utils
+
+# Delete any keys first
+keys=$(cf sk ${instance} | sed 1,3d | awk '{print $1}')
+for key in ${keys}; do
+  log Deleting service key ${key}
+  cf dsk -f ${instance} ${key}
+done
+
+# Now we can delete the instance
+log Deleting service instance ${instance}
+cf ds -f ${instance}

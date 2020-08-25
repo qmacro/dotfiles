@@ -1,12 +1,8 @@
 #!/bin/bash
 
-token=$(
 curl \
-  --verbose \
-  --netrc \
+  --silent \
+  --user "$(skv clientid):$(skv clientsecret)" \
   --data "grant_type=client_credentials" \
-  "${UAAROOT}/oauth/token" \
-| jq -r '.access_token'
-)
-
-export ACCESSTOKEN=${token}
+  "$(skv url)/oauth/token" \
+| jq -r .access_token
