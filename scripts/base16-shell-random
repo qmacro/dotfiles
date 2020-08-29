@@ -5,7 +5,10 @@
 # install first, obviously. After setting a new theme, it, the theme
 # name is written to the tmux status bar (if tmux is running).
 
-# Usage: random-base16-shell N (where N=frequency in minutes)
+# Typical usage example for use in .bashrc - run in background and
+# change theme every quarter of an hour:
+#
+# base16-shell-random 15 &
 
 # DYNAMIC VALUES
 
@@ -49,7 +52,7 @@ function set_theme {
 
 while true; do
 
-  sleep 10
+  sleep 60
 
   # Go round again if it's not yet time to change the theme
   not_time_yet && continue
