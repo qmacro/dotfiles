@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+# Sets a random theme every N minutes, via the excellent base16-shell
+# (https://github.com/chriskempson/base16-shell) which you need to
+# install first, obviously. After setting a new theme, it, the theme
+# name is written to the tmux status bar (if tmux is running).
+
+# Usage: random-base16-shell N (where N=frequency in minutes)
+
+# DYNAMIC VALUES
+
+# How often (in mins) to change the theme - supply as first argument
+# on invocation, defaults to 30.
+frequency=${1:-30}
+
+# Where the theme scripts are (in the base16-shell installation)
+themedir="${HOME}/.config/base16-shell/scripts"
+
+# The file where we write the current theme
+themefile="/tmp/$(basename "$0").theme"
+
+
+# FUNCTIONS
+
+# Returns a truthy value if it's not time for another theme change
+function not_time_yet {
+  find "$themefile" -newermt "${frequency} mins ago" 2>/dev/null | \
+    grep -q "$themefile"
+}
+
+# Pick a theme at random - returns the theme name
+function pick_random_theme {
+  local theme
+  theme=$(find "$themedir" | sort -R | tail -1)
+  basename "$theme" ".sh"
+}
+
+# Set the new theme, write the name to the themefile,
+# and display the name in tmux (if running).
+function set_theme {
+  local theme=$1
+  source "${themedir}/${theme}.sh"
+  echo "$theme" > "$themefile"
+  tmux rename-session "$theme" 2>/dev/null
+}
+
+
+# MAIN EXECUTION
+
+while true; do
+
+  sleep 10
+
+  # Go round again if it's not yet time to change the theme
+  not_time_yet && continue
+
+  theme=$(pick_random_theme)
+  set_theme "$theme"
+
+done
