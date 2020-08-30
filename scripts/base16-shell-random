@@ -19,11 +19,17 @@ frequency=${1:-30}
 # Where the theme scripts are (in the base16-shell installation)
 themedir="${HOME}/.config/base16-shell/scripts"
 
-# The file where we write the current theme
-themefile="/tmp/$(basename "$0").theme"
+# A couple of helper files - where we write the current theme
+# and where we store the PID of this script when it's running.
+scriptfilename=$(basename "$0")
+themefile="/tmp/${scriptfilename}.theme"
+pidfile="/tmp/${scriptfilename}.pid"
 
 
 # FUNCTIONS
+
+log () { echo "$(date '+%Y-%m-%d %H:%M:%S')" "$0"; }
+err () { echo "$0" 1>&2; }
 
 # Returns a truthy value if it's not time for another theme change
 function not_time_yet {
@@ -49,6 +55,19 @@ function set_theme {
 
 
 # MAIN EXECUTION
+
+# Check that another instance of this script isn't running,
+# basing the check on whether the PID file exists or not.
+if [[ -e $pidfile ]]; then
+  err "Another instance of this script is already running"
+  exit 2
+fi
+
+# Ensure PID file is removed on exit
+trap "{ echo TRAP; rm -f $pidfile; }" EXIT SIGTERM
+
+# Write PID to file
+echo $$ > "$pidfile"
 
 while true; do
 
