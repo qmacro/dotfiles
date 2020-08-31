@@ -48,6 +48,7 @@ function pick_random_theme {
 # and display the name in tmux (if running).
 function set_theme {
   local theme=$1
+  # shellcheck source=/dev/null
   source "${themedir}/${theme}.sh"
   echo "$theme" > "$themefile"
   tmux rename-session "$theme" 2>/dev/null
@@ -64,7 +65,7 @@ if [[ -e $pidfile ]]; then
 fi
 
 # Ensure PID file is removed on exit
-trap "{ echo TRAP; rm -f $pidfile; }" EXIT SIGTERM
+trap '{ echo TRAP; rm -f $pidfile; }' EXIT SIGTERM
 
 # Write PID to file
 echo $$ > "$pidfile"
