@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 
+# bsr - base16 shell random
+
 # Sets a random theme every N minutes, via the excellent base16-shell
 # (https://github.com/chriskempson/base16-shell) which you need to
 # install first, obviously. After setting a new theme, it, the theme
 # name is written to the tmux status bar (if tmux is running).
 
 # Typical usage example for use in .bashrc - run in background and
-# change theme every quarter of an hour:
+# change theme every quarter of an hour. Also don't forget to ensure
+# huponexit is set (with shopt -s huponexit) so that this backgrounded
+# child process will be terminated when the parent shell process ends:
 #
-# base16-shell-random 15 &
+# shopt -s huponexit
+# bsr 15 &
 
 # DYNAMIC VALUES
 
@@ -19,11 +24,13 @@ frequency=${1:-30}
 # Where the theme scripts are (in the base16-shell installation)
 themedir="${HOME}/.config/base16-shell/scripts"
 
+# Pattern can be used to exclude certain themes (such as light ones)
+exclude="${BSR_EXCLUDE:-^$}"
+
 # A couple of helper files - where we write the current theme
 # and where we store the PID of this script when it's running.
 scriptfilename=$(basename "$0")
-themefile="/tmp/${scriptfilename}.theme"
-pidfile="/tmp/${scriptfilename}.pid"
+themefile="/tmp/${scriptfilename}.$$.theme"
 
 
 # FUNCTIONS
@@ -40,7 +47,7 @@ function not_time_yet {
 # Pick a theme at random - returns the theme name
 function pick_random_theme {
   local theme
-  theme=$(find "$themedir" | sort -R | tail -1)
+  theme=$(find "$themedir" | grep -v -E "$exclude" | sort -R | tail -1)
   basename "$theme" ".sh"
 }
 
@@ -52,32 +59,24 @@ function set_theme {
   source "${themedir}/${theme}.sh"
   echo "$theme" > "$themefile"
   tmux rename-session "$theme" 2>/dev/null
+  echo $$ $theme >> /tmp/theme.info
 }
 
 
 # MAIN EXECUTION
 
-# Check that another instance of this script isn't running,
-# basing the check on whether the PID file exists or not.
-if [[ -e $pidfile ]]; then
-  err "Another instance of this script is already running"
-  exit 2
-fi
+# Ensure themefile is removed on exit
+trap '{ rm -f $themefile; }' EXIT SIGTERM
 
-# Ensure PID file is removed on exit
-trap '{ echo TRAP; rm -f $pidfile; }' EXIT SIGTERM
-
-# Write PID to file
-echo $$ > "$pidfile"
+set_theme "$(pick_random_theme)"
 
 while true; do
 
-  sleep 60
+  sleep 10
 
   # Go round again if it's not yet time to change the theme
   not_time_yet && continue
 
-  theme=$(pick_random_theme)
-  set_theme "$theme"
+  set_theme "$(pick_random_theme)"
 
 done
