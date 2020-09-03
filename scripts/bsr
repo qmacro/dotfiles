@@ -47,7 +47,7 @@ function not_time_yet {
 # Pick a theme at random - returns the theme name
 function pick_random_theme {
   local theme
-  theme=$(find "$themedir" | grep -v -E "$exclude" | sort -R | tail -1)
+  theme=$(find "${themedir}" -name "*.sh" | grep -v -E "$exclude" | sort -R | tail -1)
   basename "$theme" ".sh"
 }
 
@@ -59,7 +59,6 @@ function set_theme {
   source "${themedir}/${theme}.sh"
   echo "$theme" > "$themefile"
   tmux rename-session "$theme" 2>/dev/null
-  echo $$ $theme >> /tmp/theme.info
 }
 
 
