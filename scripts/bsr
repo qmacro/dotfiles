@@ -71,7 +71,7 @@ set_theme "$(pick_random_theme)"
 
 while true; do
 
-  sleep 10
+  sleep 60
 
   # Go round again if it's not yet time to change the theme
   not_time_yet && continue
