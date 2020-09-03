@@ -99,5 +99,5 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 		eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 shopt -s huponexit
-BSR_EXCLUDE=light
+export BSR_EXCLUDE=light
 bsr 1 &
