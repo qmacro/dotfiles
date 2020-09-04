@@ -1,4 +1,4 @@
-Host pi*
+Host pi* athertonmine.hopto.org
     User pi
 
 Host *mbp
