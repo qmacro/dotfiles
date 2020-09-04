@@ -38,7 +38,7 @@ shopt -s checkwinsize
 
 export PS1_START="\[\033[36m\]\u\[\033[33m\]@\[\033[1;34m\]\h\[\033[0m\]"
 export PS1_DIR="\[\033[0;33m\][\w]\[\033[0m\]"
-export PS1_END="\n\[\033[37m\]▶ \[\033[0m\]"
+export PS1_END="\n\[\033[37m\]❯ \[\033[0m\]"
 PS1="${PS1_START} ${PS1_DIR} ${PS1_END}"
 
 # Alias definitions.
