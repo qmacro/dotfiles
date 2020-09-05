@@ -30,8 +30,7 @@ exclude="${BSR_EXCLUDE:-^$}"
 # A couple of helper files - where we write the current theme
 # and where we store the PID of this script when it's running.
 scriptfilename=$(basename "$0")
-themefile="/tmp/${scriptfilename}.$$.theme"
-
+themefile="$(mktemp).${scriptfilename}.$$.theme"
 
 # FUNCTIONS
 
