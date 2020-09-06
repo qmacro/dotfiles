@@ -13,13 +13,9 @@
 # child process will be terminated when the parent shell process ends:
 #
 # shopt -s huponexit
-# bsr 15 &
+# bsr -d 15 &
 
 # DYNAMIC VALUES
-
-# How often (in mins) to change the theme - supply as first argument
-# on invocation, defaults to 30.
-frequency=${1:-30}
 
 # Where the theme scripts are (in the base16-shell installation)
 themedir="${HOME}/.config/base16-shell/scripts"
@@ -27,21 +23,14 @@ themedir="${HOME}/.config/base16-shell/scripts"
 # Pattern can be used to exclude certain themes (such as light ones)
 exclude="${BSR_EXCLUDE:-^$}"
 
-# A couple of helper files - where we write the current theme
-# and where we store the PID of this script when it's running.
-scriptfilename=$(basename "$0")
-themefile="$(mktemp).${scriptfilename}.$$.theme"
+parent=$(ps -o ppid= $$)
+
 
 # FUNCTIONS
 
-log () { echo "$(date '+%Y-%m-%d %H:%M:%S')" "$0"; }
-err () { echo "$0" 1>&2; }
-
-# Returns a truthy value if it's not time for another theme change
-function not_time_yet {
-  find "$themefile" -newermt "${frequency} mins ago" 2>/dev/null | \
-    grep -q "$themefile"
-}
+function log { echo "$(date '+%Y-%m-%d %H:%M:%S')" "$0"; }
+function err { echo "$0" 1>&2; }
+function get_tmp_dir { dirname $(mktemp -u); }
 
 # Pick a theme at random - returns the theme name
 function pick_random_theme {
@@ -56,25 +45,45 @@ function set_theme {
   local theme=$1
   # shellcheck source=/dev/null
   source "${themedir}/${theme}.sh"
-  echo "$theme" > "$themefile"
+  echo "$theme" > "$(get_tmp_dir)/bsr.$parent"
   tmux rename-session "$theme" 2>/dev/null
 }
 
+function continuous {
+  # Ensure themefile is removed on exit
+  trap '{ rm -f "$(get_tmp_dir)/bsr.$parent"; }' EXIT SIGTERM
+
+  local frequency=$1
+  while true; do
+    $0 -r
+    sleep $(( $frequency * 60 ))
+  done
+}
 
 # MAIN EXECUTION
 
-# Ensure themefile is removed on exit
-trap '{ rm -f $themefile; }' EXIT SIGTERM
+OPTIND=1
 
-set_theme "$(pick_random_theme)"
-
-while true; do
-
-  sleep 60
-
-  # Go round again if it's not yet time to change the theme
-  not_time_yet && continue
-
-  set_theme "$(pick_random_theme)"
-
+while getopts "d:rn:" opt; do
+  case "$opt" in
+    n)
+      theme=$OPTARG
+      if [[ ! -f "${themedir}/${theme}.sh" ]]; then
+        err Theme $theme does not exist
+        exit 1
+      fi
+      set_theme $theme
+      exit 0
+      ;;
+    r)
+      $0 -n $(pick_random_theme)
+      exit 0
+      ;;
+    d)
+      continuous $OPTARG
+      exit 0
+      ;;
+  esac
 done
+
+echo print some help here

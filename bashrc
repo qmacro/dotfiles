@@ -100,4 +100,3 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 
 shopt -s huponexit
 export BSR_EXCLUDE=light
-bsr 30 &
