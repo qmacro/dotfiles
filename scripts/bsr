@@ -106,6 +106,7 @@ done
 # "no" - don't like this theme, add it to the exclude list
 if [ "$1" = "no" ]; then
   $0 -? >> "$(get_exclude_file)"
+  $0 -r
   exit 0
 fi
 
