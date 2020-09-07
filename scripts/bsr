@@ -29,8 +29,12 @@ function log { echo "$(date '+%Y-%m-%d %H:%M:%S')" "$0"; }
 function err { echo "$0" 1>&2; }
 function get_tmp_dir { dirname "$(mktemp -u)"; }
 
+function get_exclude_file {
+  echo ${BSR_EXCLUDE_FILE:-${HOME}/.config/bsr.exclude}
+}
+
 function exclude_list {
-  local exclude_file=${BSR_EXCLUDE_FILE:-${HOME}/.config/bsr.exclude}
+  local exclude_file=$(get_exclude_file)
   if [ -s "$exclude_file" ]; then
     echo "($(uniq "$exclude_file" | grep -v "^$" | paste -s -d "|"))"
   else
@@ -71,8 +75,8 @@ function continuous {
 
 OPTIND=1
 
-
-while getopts "g:d:rn:" opt; do
+# Process switches
+while getopts "?g:d:rn:" opt; do
   case "$opt" in
     n)
       set_theme $OPTARG
@@ -90,7 +94,19 @@ while getopts "g:d:rn:" opt; do
       continuous $OPTARG
       exit 0
       ;;
+    ?)
+      cat "$current_theme_file"
+      exit 0
+      ;;
   esac
 done
+
+# Process commands
+
+# "no" - don't like this theme, add it to the exclude list
+if [ "$1" = "no" ]; then
+  $0 -? >> "$(get_exclude_file)"
+  exit 0
+fi
 
 echo print some help here

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -101,6 +103,4 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 # Base16 Shell Random
 shopt -s huponexit
 export BSR_INFO=$(bsr -g $$)
-export BSR_EXCLUDE=light
-#trap '{ rm -f $BSR_INFO; }' EXIT SIGTERM
-bsr -d 1 &
+bsr -d 30 &
