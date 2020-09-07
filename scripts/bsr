@@ -20,9 +20,6 @@
 # Where the theme scripts are (in the base16-shell installation)
 themedir="${HOME}/.config/base16-shell/scripts"
 
-# Pattern can be used to exclude certain themes (such as light ones)
-exclude="${BSR_EXCLUDE:-^$}"
-
 # Where to write the theme name
 current_theme_file=${BSR_INFO:-tempname}
 
@@ -32,10 +29,19 @@ function log { echo "$(date '+%Y-%m-%d %H:%M:%S')" "$0"; }
 function err { echo "$0" 1>&2; }
 function get_tmp_dir { dirname "$(mktemp -u)"; }
 
+function exclude_list {
+  local exclude_file=${BSR_EXCLUDE_FILE:-${HOME}/.config/bsr.exclude}
+  if [ -s "$exclude_file" ]; then
+    echo "($(uniq "$exclude_file" | grep -v "^$" | paste -s -d "|"))"
+  else
+    echo "^$"
+  fi
+}
+
 # Pick a theme at random - returns the theme name
 function pick_random_theme {
   local theme
-  theme=$(find "${themedir}" -name "*.sh" | grep -v -E "$exclude" | sort -R | tail -1)
+  theme=$(find "${themedir}" -name "*.sh" | grep -v -E "$(exclude_list)" | sort -R | tail -1)
   basename "$theme" ".sh"
 }
 
@@ -64,6 +70,7 @@ function continuous {
 # MAIN EXECUTION
 
 OPTIND=1
+
 
 while getopts "g:d:rn:" opt; do
   case "$opt" in
