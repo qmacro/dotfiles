@@ -23,14 +23,14 @@ themedir="${HOME}/.config/base16-shell/scripts"
 # Pattern can be used to exclude certain themes (such as light ones)
 exclude="${BSR_EXCLUDE:-^$}"
 
-parent=$(ps -o ppid= $$)
-
+# Where to write the theme name
+current_theme_file=${BSR_INFO:-tempname}
 
 # FUNCTIONS
 
 function log { echo "$(date '+%Y-%m-%d %H:%M:%S')" "$0"; }
 function err { echo "$0" 1>&2; }
-function get_tmp_dir { dirname $(mktemp -u); }
+function get_tmp_dir { dirname "$(mktemp -u)"; }
 
 # Pick a theme at random - returns the theme name
 function pick_random_theme {
@@ -43,20 +43,21 @@ function pick_random_theme {
 # and display the name in tmux (if running).
 function set_theme {
   local theme=$1
+  if [[ ! -f "${themedir}/${theme}.sh" ]]; then
+    err Theme "$theme" does not exist
+    exit 1
+  fi
   # shellcheck source=/dev/null
   source "${themedir}/${theme}.sh"
-  echo "$theme" > "$(get_tmp_dir)/bsr.$parent"
+  echo "$theme" > "$current_theme_file"
   tmux rename-session "$theme" 2>/dev/null
 }
 
 function continuous {
-  # Ensure themefile is removed on exit
-  trap '{ rm -f "$(get_tmp_dir)/bsr.$parent"; }' EXIT SIGTERM
-
   local frequency=$1
   while true; do
     $0 -r
-    sleep $(( $frequency * 60 ))
+    sleep $(( frequency * 60 ))
   done
 }
 
@@ -64,19 +65,18 @@ function continuous {
 
 OPTIND=1
 
-while getopts "d:rn:" opt; do
+while getopts "g:d:rn:" opt; do
   case "$opt" in
     n)
-      theme=$OPTARG
-      if [[ ! -f "${themedir}/${theme}.sh" ]]; then
-        err Theme $theme does not exist
-        exit 1
-      fi
-      set_theme $theme
+      set_theme $OPTARG
       exit 0
       ;;
     r)
       $0 -n $(pick_random_theme)
+      exit 0
+      ;;
+    g)
+      echo "$(get_tmp_dir)/$(basename $0).$OPTARG"
       exit 0
       ;;
     d)

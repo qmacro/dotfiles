@@ -98,5 +98,9 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 	[ -s "$BASE16_SHELL/profile_helper.sh" ] && \
 		eval "$("$BASE16_SHELL/profile_helper.sh")"
 
+# Base16 Shell Random
 shopt -s huponexit
+export BSR_INFO=$(bsr -g $$)
 export BSR_EXCLUDE=light
+#trap '{ rm -f $BSR_INFO; }' EXIT SIGTERM
+bsr -d 1 &
