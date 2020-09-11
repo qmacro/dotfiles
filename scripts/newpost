@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+repo=qmacro.github.io
+clone_location=${BLOG_REPO_LOCATION:-$HOME/Projects/$repo}
+
+makename () {
+  echo "$@" \
+  | tr "[:upper:]" "[:lower:]" \
+  | tr "[:blank:]" -
+}
+
+postdate=$(date "+%Y-%m-%d")
+posttime=$(date "+%H:%M:%S")
+postname=$(makename "$@")
+
+cd "$clone_location" || exit
+filename="_posts/$postdate-$postname.markdown"
+cat > "$filename" <<EOF
+---
+layout: post
+title: $@
+date: '$postdate $posttime'
+---
+EOF
+
+$EDITOR "$filename"
