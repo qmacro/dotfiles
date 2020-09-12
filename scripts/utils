@@ -1,6 +1,7 @@
 FZF_OPTS="--height=25%"
 
 log () { echo `date "+%Y-%m-%d %H:%M:%S"` "$@"; }
+err () { echo "$@" 1>&2; }
 
 urlencode() {
     # urlencode <string>
