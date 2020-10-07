@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+exit 0
 
 # bsr - base16 shell random
 
@@ -21,7 +22,7 @@
 themedir="${HOME}/.config/base16-shell/scripts"
 
 # Where to write the theme name
-current_theme_file=${BSR_INFO:-tempname}
+current_theme_file=${BSR_INFO:-/tmp/tempname}
 
 # FUNCTIONS
 
