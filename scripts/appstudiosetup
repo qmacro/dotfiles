@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Experimental App Studio setup script
+# Invoke with curl github.com
+set -o errexit
+
+echo App Studio setup
+git clone https://github.com/qmacro/dotfiles.git .dotfiles
+ln -s $HOME/.dotfiles/bashrc .bashrc
+
+echo Done
