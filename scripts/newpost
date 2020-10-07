@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 repo=qmacro.github.io
-clone_location=${BLOG_REPO_LOCATION:-$HOME/Projects/$repo}
+clone_location="${BLOG_REPO_LOCATION:-$HOME/Projects}/$repo"
 
 source utils # err
 
-makename () {
+makename() {
   echo "$@" \
-  | tr "[:upper:]" "[:lower:]" \
-  | tr "[:blank:]" -
+    | tr "[:upper:]" "[:lower:]" \
+    | tr "[:blank:]" -
 }
 
 # MAIN
@@ -22,12 +22,14 @@ postname=$(makename "$@")
 
 cd "$clone_location" || exit
 filename="_posts/$postdate-$postname.markdown"
-cat > "$filename" <<EOF
+cat > "$filename" << EOF
 ---
 layout: post
 title: $@
 date: '$postdate $posttime'
 ---
+
+_The lede_
 EOF
 
 $EDITOR "$filename"
