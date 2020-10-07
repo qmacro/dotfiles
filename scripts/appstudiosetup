@@ -8,7 +8,7 @@ declare dotfiles="$HOME/.dotfiles"
 declare backupdir="$HOME/.appstudiosetup.backups"
 
 echo App Studio backup
-mkdir "$backupdir"
+mkdir "$backupdir" 2>/dev/null
 [[ -e "$HOME/.bashrc" ]] && cp "$HOME/.bashrc" "$backupdir" 
 
 echo App Studio setup
