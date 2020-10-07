@@ -4,10 +4,15 @@
 # Invoke with curl github.com
 set -o errexit
 
+declare dotfiles="$HOME/.dotfiles"
+
 echo App Studio setup
 
 # Bring in and set up dotfiles 
-git clone https://github.com/qmacro/dotfiles.git .dotfiles
-ln -s -f $HOME/.dotfiles/bashrc .bashrc
+git clone https://github.com/qmacro/dotfiles.git "$dotfiles"
+ln -s -f "$dotfiles/bashrc" "$HOME/.bashrc"
+
+# Configure dev space as I like it
+cp "$dotfiles/.theia/settings.json" "$HOME/.theia/settings.json"
 
 echo Done
