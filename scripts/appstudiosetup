@@ -5,7 +5,9 @@
 set -o errexit
 
 echo App Studio setup
+
+# Bring in and set up dotfiles 
 git clone https://github.com/qmacro/dotfiles.git .dotfiles
-ln -s $HOME/.dotfiles/bashrc .bashrc
+ln -s -f $HOME/.dotfiles/bashrc .bashrc
 
 echo Done
