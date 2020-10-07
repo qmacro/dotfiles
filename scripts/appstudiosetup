@@ -30,7 +30,15 @@ cp "$dotfiles/.theia/settings.json" "$HOME/.theia/settings.json"
 mkdir "$HOME/bin"
 
 # Install common utilities
+# ------------------------
+
+# jq - for JSON parsing and manipulation
 curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > "$HOME/bin/jq" && chmod +x "$HOME/bin/jq"
+
+# jwt - for decoding JSON Web Tokens (OAuth access tokens)
 npm install --global jwt-cli
+
+# Bash git prompt - to show git repository status on the command line prompt
+git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt --depth=1
 
 echo Done
