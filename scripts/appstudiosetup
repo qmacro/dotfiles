@@ -15,4 +15,11 @@ ln -s -f "$dotfiles/bashrc" "$HOME/.bashrc"
 # Configure dev space as I like it
 cp "$dotfiles/.theia/settings.json" "$HOME/.theia/settings.json"
 
+# Set up a common user-space bin directory for locally installed executables
+mkdir "$HOME/bin"
+
+# Install common utilities
+curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > "$HOME/bin/jq" && chmod +x "$HOME/bin/jq"
+npm install --global jwt-cli
+
 echo Done
