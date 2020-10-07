@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Forces a reauthentication if required, first.
+# Then call cf with the arguments given, truncating
+# the output to the width of the terminal.
+
+cf a > /dev/null 2>&1 || cf login
+cf "$@" | cut -c 1-"$(tput cols)"
