@@ -1,0 +1,5 @@
+{
+    "workbench.iconTheme": "theia-file-icons",
+    "terminal.integrated.fontSize": 16,
+    "workbench.colorTheme": "Monokai"
+}
