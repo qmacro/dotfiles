@@ -9,7 +9,7 @@ declare backupdir="$HOME/.appstudiosetup.backups"
 
 echo App Studio backup
 mkdir "$backupdir"
-cp "$HOME/.bashrc" "$backupdir" 
+[[ -e "$HOME/.bashrc" ]] && cp "$HOME/.bashrc" "$backupdir" 
 
 echo App Studio setup
 
