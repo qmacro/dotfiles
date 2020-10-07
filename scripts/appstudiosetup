@@ -7,13 +7,19 @@ set -o errexit
 declare dotfiles="$HOME/.dotfiles"
 declare backupdir="$HOME/.appstudiosetup.backups"
 
-echo App Studio backup
-mkdir "$backupdir" 2>/dev/null
-[[ -e "$HOME/.bashrc" ]] && cp "$HOME/.bashrc" "$backupdir" 
+backup() {
+  if [[ -e "$HOME/$1" ]]; then
+    local file="$(echo "$1" | tr '\/' '-')"
+    cp "$HOME/$1" "$backupdir/$file"
+  fi
+}
 
-echo App Studio setup
+[[ -d "$backupdir" ]] || mkdir "$backupdir"
+backup ".bashrc"
+backup ".theia/settings.json"
 
 # Bring in and set up dotfiles 
+rm -rf "$dotfiles"
 git clone https://github.com/qmacro/dotfiles.git "$dotfiles"
 ln -s -f "$dotfiles/bashrc" "$HOME/.bashrc"
 
