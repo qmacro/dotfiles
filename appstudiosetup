@@ -58,11 +58,12 @@ install_utils() {
 
 main() {
 
+  setup_dirs
+
   backup ".bashrc"
   backup ".theia/settings.json"
 
   setup_dotfiles
-  setup_dirs
 
   modify_theia_settings
 
