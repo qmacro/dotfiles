@@ -1,44 +1,73 @@
 #!/usr/bin/env bash
 
-# Experimental App Studio setup script
-# Invoke with curl github.com
+# Experimental App Studio setup script.
+
+# Invoke with curl github.com/qmacro/dotfiles/blob/master/scripts/appstudiosetup | bash
+# when in the terminal of a new App Studio dev space.
+
 set -o errexit
 
+# Script-global vars
 declare dotfiles="$HOME/.dotfiles"
 declare backupdir="$HOME/.appstudiosetup.backups"
+declare execdir="$HOME/bin"
+declare jqrelease="jq-1.6"
 
+# Make backup of a file (not even sure if backups are really neccessary,
+# as this is for a freshly minted dev space.
+# Note path chars (/) are turned into dashes.
 backup() {
   if [[ -e "$HOME/$1" ]]; then
-    local file="$(echo "$1" | tr '\/' '-')"
+    local file
+    file="$(echo "$1" | tr '\/' '-')"
     cp "$HOME/$1" "$backupdir/$file"
   fi
 }
 
-[[ -d "$backupdir" ]] || mkdir "$backupdir"
-backup ".bashrc"
-backup ".theia/settings.json"
+# Bring in and set up dotfiles
+setup_dotfiles() {
+  rm -rf "$dotfiles"
+  git clone https://github.com/qmacro/dotfiles.git "$dotfiles"
+  ln -s -f "$dotfiles/bashrc" "$HOME/.bashrc"
+}
 
-# Bring in and set up dotfiles 
-rm -rf "$dotfiles"
-git clone https://github.com/qmacro/dotfiles.git "$dotfiles"
-ln -s -f "$dotfiles/bashrc" "$HOME/.bashrc"
+setup_dirs() {
+  [[ -d "$backupdir" ]] || mkdir "$backupdir"
+  [[ -d "$execdir" ]] || mkdir "$execdir"
+}
 
 # Configure dev space as I like it
-cp "$dotfiles/.theia/settings.json" "$HOME/.theia/settings.json"
-
-# Set up a common user-space bin directory for locally installed executables
-mkdir "$HOME/bin"
+modify_theia_settings() {
+  cp "$dotfiles/.theia/settings.json" "$HOME/.theia/settings.json"
+}
 
 # Install common utilities
 # ------------------------
 
-# jq - for JSON parsing and manipulation
-curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > "$HOME/bin/jq" && chmod +x "$HOME/bin/jq"
+install_utils() {
+  # jq - for JSON parsing and manipulation
+  local target="$execdir/jq"
+  curl -L "https://github.com/stedolan/jq/releases/download/${jqrelease}/jq-linux64" > "$target" && chmod +x "$target"
 
-# jwt - for decoding JSON Web Tokens (OAuth access tokens)
-npm install --global jwt-cli
+  # jwt - for decoding JSON Web Tokens (OAuth access tokens)
+  npm install --global jwt-cli
 
-# Bash git prompt - to show git repository status on the command line prompt
-git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt --depth=1
+  # Bash git prompt - to show git repository status on the command line prompt
+  git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt --depth=1
+}
 
-echo Done
+main() {
+
+  backup ".bashrc"
+  backup ".theia/settings.json"
+
+  setup_dotfiles
+  setup_dirs
+
+  modify_theia_settings
+
+  install_utils
+
+}
+
+main "$@"
