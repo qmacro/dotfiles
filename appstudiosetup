@@ -2,7 +2,7 @@
 
 # Experimental App Studio setup script.
 
-# Invoke with curl github.com/qmacro/dotfiles/blob/master/scripts/appstudiosetup | bash
+# Invoke with curl https://raw.githubusercontent.com/qmacro/dotfiles/master/appstudiosetup | bash
 # when in the terminal of a new App Studio dev space.
 
 set -o errexit
