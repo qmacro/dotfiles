@@ -108,3 +108,6 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 export BLOG_REPO_LOCATION=~/local/projects
 export PATH=$PATH:$HOME/Library/Python/3.8/bin
 export PATH="$PATH:$HOME/bin"
+
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
