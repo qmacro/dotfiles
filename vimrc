@@ -160,3 +160,7 @@ fun! s:FormatBashScripts()
   endif
 endfun
 autocmd BufWritePre * call s:FormatBashScripts()
+
+" See https://medium.com/@pezcoder/how-i-migrated-from-iterm-to-alacritty-c50a04705f95
+set termguicolors
+highlight Comment cterm=italic gui=italic
