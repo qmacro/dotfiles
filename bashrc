@@ -61,6 +61,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Exercism completion
+if [ -f "$HOME/.config/exercism/exercism_completion.bash" ]; then
+  source "$HOME/.config/exercism/exercism_completion.bash"
+fi
+
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.dotfiles/scripts:$PATH
 export PATH=$HOME/.local/bin:$PATH
