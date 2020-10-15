@@ -44,15 +44,15 @@ font:
     style: Italic
 
   # Font size
-  size: 16.0
+  size: 18.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing
   # I've given in 14 spacing which fits really well with my fonts, you may change it
   # to your convenience but make sure to adjust 'glyph_offset' appropriately post that
   offset:
-   x: 0
-   y: 14
+   x: -1
+   y: 0
 
   # Note: This requires RESTART
   # By default when you change the offset above you'll see an issue, where the texts are bottom
@@ -61,7 +61,7 @@ font:
   glyph_offset:
    x: 0
    # Keeping this as half of offset to vertically align the text in cursor
-   y: 7
+   y: 0
 
   # Better font rendering for mac
   use_thin_strokes: true
@@ -118,4 +118,4 @@ colors:
     cyan:    '#8ec07c'
     white:   '#ebdbb2'
 
-background_opacity: .8
+background_opacity: .85
