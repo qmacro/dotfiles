@@ -166,3 +166,5 @@ set termguicolors
 highlight Comment cterm=italic gui=italic
 
 highlight clear SignColumn
+set cursorline
+hi CursorLine term=bold cterm=bold guibg=Grey40
