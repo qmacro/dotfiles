@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+declare exercism_location="$HOME/exercism"
+
+template() {
+  cat <<EOT
+#!/usr/bin/env bash
+
+# Solution for $1
+
+main() {
+  echo Hello, world!
+}
+
+main "$@"
+EOT
+}
+
+tmuxsetup() {
+  declare exercise=$1
+  declare filename=$2
+  tmux send-keys -t "$exercise" "export TERM=xterm-256color" Enter
+  tmux split-window -h -t "$exercise"
+  tmux send-keys -t "${exercise}:1.1" "vim -o $filename.sh ${filename}_test.sh" Enter
+  tmux send-keys -t "${exercise}:1.1" "/echo" Enter
+  tmux send-keys -t "${exercise}:1.1" ":set nohls" Enter
+  tmux send-keys -t "${exercise}:1.2" "export BATS_RUN_SKIPPED=true" Enter
+  tmux send-keys -t "${exercise}:1.2" "ls $filename.sh | entr -c bats ${filename}_test.sh" Enter
+  tmux select-pane -t "${exercise}:1.1"
+}
+
+main() {
+  declare filename
+  declare exercise=$1
+  filename=$(echo "$exercise" | tr '-' '_')
+  exercism download --exercise="$exercise"
+  cd "$exercism_location/bash/$exercise"
+  template "$exercise" > "$filename.sh"
+  tmux new-session -d -s "$exercise"
+  tmuxsetup "$exercise" "$filename"
+  sleep 0.5
+  tmux attach-session -t "$exercise"
+}
+
+main "$@"
