@@ -161,10 +161,6 @@ fun! s:FormatBashScripts()
 endfun
 autocmd BufWritePre * call s:FormatBashScripts()
 
-" See https://medium.com/@pezcoder/how-i-migrated-from-iterm-to-alacritty-c50a04705f95
-set termguicolors
-highlight Comment cterm=italic gui=italic
-
 highlight clear SignColumn
 set cursorline
-hi CursorLine term=bold cterm=bold guibg=Grey40
+hi CursorLine term=none cterm=none ctermbg=darkgrey
