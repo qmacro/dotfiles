@@ -18,4 +18,5 @@ __errorcolour() {
   [[ $1 -eq 0 ]] && echo "$reset" || echo "$red"
 }
 
-PROMPT_COMMAND='__git_ps1 "\w" "\n$(__errorcolour $?)> $reset"'
+#PROMPT_COMMAND='__git_ps1 "\w" "\n$(__errorcolour $?)> $reset"'
+PROMPT_COMMAND='__git_ps1 "\w" "\n> "'
