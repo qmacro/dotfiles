@@ -3,4 +3,4 @@
 # Sets the show title on the RHS of the tmux status bar (if running)
 
 ! tmux info &> /dev/null && exit 1
-tmux set -g status-right "$@"
+tmux set -g status-right "$*"
