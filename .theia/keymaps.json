@@ -1,0 +1,28 @@
+[
+    {
+        "command": "workbench.action.showAllTerminals",
+        "keybinding": "shift+ctrl+alt+\\",
+        "resolved": [
+            {
+                "key": {
+                    "code": "Backslash",
+                    "keyCode": 220,
+                    "easyString": "\\"
+                },
+                "ctrl": true,
+                "shift": true,
+                "alt": true,
+                "meta": false
+            }
+        ],
+        "scope": 1
+    },
+    {
+        "command": "core.toggleMaximized",
+        "keybinding": "ctrl+alt+\\"
+    },
+    {
+        "command": "-core.toggleMaximized",
+        "keybinding": "alt+m"
+    }
+]
