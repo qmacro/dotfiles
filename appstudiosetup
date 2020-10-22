@@ -28,8 +28,8 @@ backup() {
 setup_dotfiles() {
   rm -rf "$dotfiles"
   git clone https://github.com/qmacro/dotfiles.git "$dotfiles"
-  ln -s -f "$dotfiles/bashrc" "$HOME/"
-  ln -s -f "$dotfiles/bashrc.d" "$HOME/"
+  ln -s -f "$dotfiles/bashrc" "$HOME/.bashrc"
+  ln -s -f "$dotfiles/bashrc.d" "$HOME/.bashrc.d"
 }
 
 setup_dirs() {
