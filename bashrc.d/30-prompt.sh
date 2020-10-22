@@ -36,7 +36,6 @@ __prompt_command() {
     PS1+=$'\u256d\u2500'"$(__showlocation "$USER")$(__git_ps1)\\n"$'\u2570\u2500'
   fi
   
-  PS1=$'\u256d\u2500'"$(__showlocation "$USER")$(__git_ps1)\\n"$'\u2570\u2500'
   if [ $EXIT != 0 ]; then
     PS1+=$'\[\e[0;31m\]> \[\e[0m\]'
   else
