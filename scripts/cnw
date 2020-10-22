@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# cnw = Chrome (New Window)
+
+open --new -a "Google Chrome" --args --new-window "$@"
