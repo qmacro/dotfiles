@@ -22,14 +22,26 @@ __showlocation() {
   fi
 }
 
+__is_theia() {
+  env | grep THEIA > /dev/null
+  return $?
+}
+
 __prompt_command() {
-    local EXIT="$?"
-    PS1=$'\u256d\u2500'"$(__showlocation "$USER")$(__git_ps1)\\n"$'\u2570\u2500'
-    if [ $EXIT != 0 ]; then
-      PS1+=$'\[\e[0;31m\]> \[\e[0m\]'
-    else
-      PS1+=$'> '
-    fi
+  local EXIT="$?"
+
+  if [[ __is_theia ]]; then
+    PS1="$(__showlocation "$USER")$(__git_ps1)\\n"
+  else
+    PS1+=$'\u256d\u2500'"$(__showlocation "$USER")$(__git_ps1)\\n"$'\u2570\u2500'
+  fi
+  
+  PS1=$'\u256d\u2500'"$(__showlocation "$USER")$(__git_ps1)\\n"$'\u2570\u2500'
+  if [ $EXIT != 0 ]; then
+    PS1+=$'\[\e[0;31m\]> \[\e[0m\]'
+  else
+    PS1+=$'> '
+  fi
 }
 
 PROMPT_COMMAND=__prompt_command
