@@ -67,7 +67,7 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 
 " Edit and source .vimrc
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :so $MYVIMRC<cr>
 
 " Remove all trailing whitespace on save
@@ -164,3 +164,4 @@ autocmd BufWritePre * call s:FormatBashScripts()
 highlight clear SignColumn
 set cursorline
 hi CursorLine term=none cterm=none ctermbg=darkgrey
+hi CursorLineNr cterm=none
