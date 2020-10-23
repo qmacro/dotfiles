@@ -30,12 +30,14 @@ __is_theia() {
 __prompt_command() {
   local EXIT="$?"
 
-  if [[ $(__is_theia) ]]; then
-    PS1="$(__showlocation "$USER")$(__git_ps1)\\n"
-  else
-    PS1=$'\u256d\u2500'"$(__showlocation "$USER")$(__git_ps1)\\n"$'\u2570\u2500'
+  PS1="$(__showlocation "$USER")$(__git_ps1)\\n"
+
+  # Add fancy Unicode lines if not in Theia
+  if ! __is_theia; then
+    PS1=$'\u256d\u2500'"$PS1"$'\u2570\u2500'
   fi
 
+  # Make prompt red if last command failed
   if [ $EXIT != 0 ]; then
     PS1+=$'\[\e[0;31m\]> \[\e[0m\]'
   else
