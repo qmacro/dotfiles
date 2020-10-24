@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Don't Panic - dp
+# Display text "in large, friendly letters"
+
+clear
+figlet -w "$(tput cols)" "$@" | lolcat

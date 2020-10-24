@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+clear
+figlet -w "$(tput cols)" "$@" | lolcat
