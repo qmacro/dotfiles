@@ -32,16 +32,11 @@ __prompt_command() {
 
   PS1="$(__showlocation "$USER")$(__git_ps1)\\n"
 
-  # Add fancy Unicode lines if not in Theia
-  if ! __is_theia; then
-    PS1=$'\u256d\u2500'"$PS1"$'\u2570\u2500'
-  fi
-
   # Make prompt red if last command failed
   if [ $EXIT != 0 ]; then
-    PS1+=$'\[\e[0;31m\]> \[\e[0m\]'
+    PS1+=$'\[\e[0;31m\]\$ \[\e[0m\]'
   else
-    PS1+=$'> '
+    PS1+=$'\$ '
   fi
 }
 
