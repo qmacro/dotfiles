@@ -5,5 +5,6 @@ export GAPI_ENDPOINT_TOKENINFO=https://www.googleapis.com/oauth2/v3/tokeninfo
 export CALLBACK_OOB_URI=urn:ietf:wg:oauth:2.0:oob
 
 # For YouTube streaming API use
+export YT_API_BASE=https://youtube.googleapis.com/youtube/v3
 export SCOPE_RW_YT=https://www.googleapis.com/auth/youtube
 export OAUTH_CONTEXT=yt

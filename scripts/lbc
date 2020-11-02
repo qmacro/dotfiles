@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Live broadcast chat - lbc
+
+set -o errexit
+
+payload_live_chat_message() {
+
+  local liveChatId="$1"
+  shift
+  local message="$*"
+
+  yq r -j - << EOM
+kind: youtube#liveChatMessage
+snippet:
+  type: textMessageEvent
+  textMessageDetails:
+    messageText: $message
+  liveChatId: $liveChatId
+EOM
+
+}
+
+
+main() {
+
+  local payload
+  local liveChatIdFile="$HOME/.liveChatId"
+
+  if [[ ! -f "$liveChatIdFile" ]]; then
+    echo No live chat ID available.
+    exit 1
+  fi
+
+  payload=$(payload_live_chat_message "$(cat "$liveChatIdFile")" "$@")
+
+  curl \
+    --fail \
+    --silent \
+    --header "Authorization: Bearer $(tget)" \
+    --header "Content-Type: application/json" \
+    --data "$payload" \
+    "${YT_API_BASE}/liveChat/messages?part=snippet" \
+    > "/tmp/$(basename "$0").log"
+
+}
+
+main "$@"

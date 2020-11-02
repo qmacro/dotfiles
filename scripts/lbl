@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Live broadcast list - lbl
+
+set -o errexit
+
+main() {
+
+  local result
+  result=$(curl \
+    --fail \
+    --silent \
+    --header "Authorization: Bearer $(tget)" \
+    --header "Accept: application/json" \
+    "${YT_API_BASE}/liveBroadcasts?part=snippet&broadcastStatus=active&broadcastType=all")
+  #result=$(cat ./data.json)
+  #result=$(cat ./empty.json)
+
+  streams="$(jq -r '.items[] | .snippet | .title + " " + .liveChatId' <(echo "$result"))"
+
+  # Abort with high RC if no active streams
+  [ -n "$streams" ] || exit 1
+
+  # Get user to pick a stream and determine the ID
+  local stream id
+  stream=$(echo "$streams" | fzf)
+  id=${stream##* }
+
+  echo "$id" > "$HOME/.liveChatId"
+
+}
+
+main "$@"
