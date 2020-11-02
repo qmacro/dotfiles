@@ -12,27 +12,14 @@
 
 # Work in progress; currently using a specific GAPI endpoint.
 
-# shellcheck disable=1090
-. "$(dirname "$0")/tlib.sh" # setup
-
-
-main () {
-
-  declare suffix oauth_file
-  setup "$1"
-
-  # Abort if the oauth file doesn't exist
-  if [[ ! -f "$oauth_file" ]]; then
-    echo "Aborting: the OAuth file ($oauth_file) doesn't exist."
-    exit 1
-  fi
+main() {
 
   local access_token
-  access_token=$(jq -r .access_token < "$oauth_file")
+  access_token=$(tget)
 
   local response rc
   response=$(curl \
-  curl \
+    curl \
     --fail \
     --silent \
     --header "Authorization: Bearer $access_token" \

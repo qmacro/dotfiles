@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+# Token get - tget
+
+# Retrieves and prints the current OAuth 2.0 access token
+
+# shellcheck disable=1090
+. "$(dirname "$0")/tlib.sh" # setup
+
+main() {
+
+  declare oauth_file_access_token
+  setup "$1"
+
+  cat "$oauth_file_access_token"
+
+}
+
+main "$@"

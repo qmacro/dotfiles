@@ -18,8 +18,8 @@ setup() {
     exit 1
   fi
 
-  # Determine the filename for OAuth details. Can't abort here if
-  # it doesn't exist, it might be we're creating it for the first time.
-  export oauth_file="$HOME/.oauth${suffix}"
+  # Determine the filenames for OAuth details.
+  export oauth_file_access_token="$HOME/.oauth${suffix}_access_token"
+  export oauth_file_refresh_token="$HOME/.oauth${suffix}_refresh_token"
 
 }

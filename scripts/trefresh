@@ -7,50 +7,50 @@
 # If no context is specified, the script also checks for an environment variable
 # OAUTH_CONTEXT.
 
-
 # shellcheck disable=1090
 . "$(dirname "$0")/tlib.sh"
 
 main() {
 
-  declare oauth_file client_id_var client_secret_var
+  declare oauth_file_access_token oauth_file_refresh_token
+  declare client_id_var client_secret_var
 
   setup "$1"
 
   # Determine the oauth file holding the info we're interested in.
   # Abort if the file doesn't exist.
-  if [[ ! -f "$oauth_file" ]]; then
-    echo "No OAuth file ($oauth_file)"
+  if [[ ! -f "$oauth_file_access_token" || ! -f "$oauth_file_refresh_token" ]]; then
+    echo "Missing OAuth token data (check access or refresh token file)."
     exit 1
   fi
 
   # We need to use the refresh token that we've stored in
   # the OAuth data. Abort if we don't have one.
   local refresh_token
-  refresh_token=$(jq -r .refresh_token < "$oauth_file")
+  refresh_token=$(cat "$oauth_file_refresh_token")
   if [[ -z "${refresh_token}" ]]; then
-    echo No refresh token available
+    echo No refresh token available.
     exit 1
   fi
 
-  echo REFRESH TOKEN IS "X${refresh_token}Y"; exit;
-
-
   # Make the request to refresh the access token.
-  curl \
+  local jsondata
+  jsondata=$(curl \
     --fail \
+    --silent \
     --data client_id="${!client_id_var}" \
     --data client_secret="${!client_secret_var}" \
     --data refresh_token="$refresh_token" \
     --data grant_type=refresh_token \
-    "$GAPI_ENDPOINT_TOKEN" \
-    > "$oauth_file"
+    "$GAPI_ENDPOINT_TOKEN")
 
   local rc=$?
   if [[ "$rc" -gt 0 ]]; then
-    echo Failed to refresh token
+    echo Failed to refresh token.
     exit 1
   fi
+
+  jq -r .access_token <(echo "$jsondata") > "$oauth_file_access_token"
 
 }
 
