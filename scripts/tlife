@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+# Token life - tlife
+
+# Shows the remaining lifetime (in secs) for an access
+# token. If the token is already invalid (i.e. it's already
+# expired), the value is given as -1.
+
+# Takes an optional single argument, denoting *which*
+# access token. For example, 'yt' for the YouTube one.
+# If no argument given, assumes the default one (no suffix).
+
+# Work in progress; currently using a specific GAPI endpoint.
+
+# shellcheck disable=1090
+. "$(dirname "$0")/tlib.sh" # setup
+
+
+main () {
+
+  declare suffix oauth_file
+  setup "$1"
+
+  # Abort if the oauth file doesn't exist
+  if [[ ! -f "$oauth_file" ]]; then
+    echo "Aborting: the OAuth file ($oauth_file) doesn't exist."
+    exit 1
+  fi
+
+  local access_token
+  access_token=$(jq -r .access_token < "$oauth_file")
+
+  local response rc
+  response=$(curl \
+  curl \
+    --fail \
+    --silent \
+    --header "Authorization: Bearer $access_token" \
+    "${GAPI_ENDPOINT_TOKENINFO}")
+  rc=$?
+
+  if [[ "$rc" -gt 0 ]]; then
+    echo "-1"
+  else
+    jq -r .expires_in <(echo "$response")
+  fi
+
+}
+
+main "$@"

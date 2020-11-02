@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+# Token request - trequest
+
+# Two-stage process:
+# 1) Request auth code via browser
+# 2) Request access token via code received from browser
+
+# Uses environment vars from 51-globals-gapi.sh
+# and ~/.private_envvars.sh
+
+# Stores the token details (in the form of a JSON stanza) in
+# a file ~/.oauth[_suffix]
+
+# shellcheck disable=1090
+. "$(dirname "$0")/tlib.sh" # setup
+
+
+# Return a URL that will ask the resource owner for permission
+# to grant an auth code.
+auth_code_url() {
+
+echo "${GAPI_ENDPOINT_AUTH}\
+?client_id=${!client_id_var}\
+&scope=${SCOPE_RW_YT}\
+&redirect_uri=${CALLBACK_OOB_URI}\
+&response_type=code\
+&access_type=offline"
+
+}
+
+
+# Open the auth code permission request URL in a browser, and
+# then ask for the code that was granted.
+get_auth_code() {
+
+  open "$(auth_code_url)"
+  read -rp "Enter auth code received: " auth_code
+  echo "$auth_code"
+
+}
+
+
+main() {
+
+  declare oauth_file client_id_var client_secret_var
+  setup "$1"
+
+  # Request an auth code
+  local auth_code
+  auth_code=$(get_auth_code)
+
+  # Use the auth code received to request an access token
+  # (and related refresh token, etc). Store this JSON locally.
+  curl \
+    --fail \
+    --silent \
+    --data client_id="${!client_id_var}" \
+    --data client_secret="${!client_secret_var}" \
+    --data code="${auth_code}" \
+    --data redirect_uri="${CALLBACK_OOB_URI}" \
+    --data grant_type=authorization_code \
+    "$GAPI_ENDPOINT_TOKEN" \
+    > "$oauth_file"
+
+}
+
+main "$@"
