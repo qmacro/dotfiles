@@ -13,8 +13,6 @@ main() {
     --header "Authorization: Bearer $(tget)" \
     --header "Accept: application/json" \
     "${YT_API_BASE}/liveBroadcasts?part=snippet&broadcastStatus=active&broadcastType=all")
-  #result=$(cat ./data.json)
-  #result=$(cat ./empty.json)
 
   streams="$(jq -r '.items[] | .snippet | .title + " " + .liveChatId' <(echo "$result"))"
 
