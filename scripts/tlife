@@ -26,8 +26,10 @@ main() {
     "${GAPI_ENDPOINT_TOKENINFO}")
   rc=$?
 
+  # Expired? Emit -1 and return exit code 1
   if [[ "$rc" -gt 0 ]]; then
     echo "-1"
+    exit 1
   else
     jq -r .expires_in <(echo "$response")
   fi
