@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Cache commands - cache
+
+# Use before another command, and it will cache that command's
+# output. Default cache lifetime is value of env var CACHE_MINS
+# or 5; can be overridden with the -m (or --mins) option
+# e.g. cache -m 10 <some command...>
+
+# Stores cache files in /tmp, prefixed with cache.
+
+declare tmpdir=/tmp
+declare prefix
+prefix=$(basename "$0")
+
+main() {
+
+  local mins=${CACHE_MINS:-5}
+  local cachefile
+  cachefile="${tmpdir}/${prefix}.$(echo "$@" | md5sum | cut -d' ' -f 1)"
+
+  case "$1" in
+    # Only option is -m / --mins N to set specific cache file lifetime
+    -m|--mins)
+      shift
+      mins=$1
+      shift
+      ;;
+  esac
+
+  # If there's no cache file or it's older than N mins then
+  # run the command for real, cacheing the output (again).
+  if [ ! -f "$cachefile" ] \
+    || test "$(find "$cachefile" -mmin +"$mins")"; then
+    "$@" | tee "$cachefile"
+  else
+    cat "$cachefile"
+  fi
+
+}
+
+main "$@"
