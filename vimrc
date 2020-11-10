@@ -159,9 +159,15 @@ fun! s:FormatBashScripts()
     %!shfmt -i 2 -bn -ci -sr -
   endif
 endfun
-autocmd BufWritePre * call s:FormatBashScripts()
+"autocmd BufWritePre * call s:FormatBashScripts()
 
 highlight clear SignColumn
 set cursorline
-hi CursorLine term=none cterm=none ctermbg=darkgrey
+hi CursorLine term=none cterm=bold ctermbg=darkgrey
 hi CursorLineNr cterm=none
+
+" Make comments italic
+" See https://stackoverflow.com/questions/3494435/vimrc-make-comments-italic
+hi Comment cterm=italic gui=italic
+set t_ZH=[3m
+set t_ZR=[23m
