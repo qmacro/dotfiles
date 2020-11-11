@@ -30,13 +30,13 @@ __is_theia() {
 __prompt_command() {
   local EXIT="$?"
 
-  PS1="$(__showlocation "$USER")$(__git_ps1)\\n"
+  PS1="# $(__showlocation "$USER")$(__git_ps1)\\n"
 
   # Make prompt red if last command failed
   if [ $EXIT != 0 ]; then
-    PS1+=$'\[\e[0;31m\]\$ \[\e[0m\]'
+    PS1+=$'\[\e[0;31m\]; \[\e[0m\]'
   else
-    PS1+=$'\$ '
+    PS1+=$'; '
   fi
 }
 
