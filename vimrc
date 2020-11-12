@@ -135,8 +135,10 @@ nnoremap <leader>h :set hls!<cr>
 " See https://github.com/neovim/neovim/issues/5559#issuecomment-258143499
 let g:is_bash = 1
 
-" Toggle Gblame
-nnoremap <leader>g :Gblame<cr>
+" Git features
+nnoremap <leader>g  :G<cr>
+nnoremap <leader>gb :Gblame<cr>
+nnoremap <leader>gd :Gvdiffsplit<cr>
 
 nnoremap [[ :bprev<cr>
 nnoremap ]] :bnext<cr>
