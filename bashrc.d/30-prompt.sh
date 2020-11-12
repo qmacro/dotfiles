@@ -30,7 +30,8 @@ __is_theia() {
 __prompt_command() {
   local EXIT="$?"
 
-  PS1="# $(__showlocation "$USER")$(__git_ps1)\\n"
+  #PS1="# $(__showlocation "$USER")$(__git_ps1)\\n"
+  PS1=""
 
   # Make prompt red if last command failed
   if [ $EXIT != 0 ]; then
