@@ -45,6 +45,9 @@ noremap <Down>  <nop>
 noremap <Left>  <nop>
 noremap <Right> <nop>
 
+" 'I want to scroll like rwxrob'
+set scr=1 "affects C-D,C-U
+
 " Disables automatic commenting on newline
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
