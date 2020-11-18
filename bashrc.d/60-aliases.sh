@@ -8,4 +8,5 @@ alias urldecode='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_pl
 alias urlencode='python3 -c "import sys, urllib.parse as ul; print (ul.quote_plus(sys.argv[1]))"'
 alias twt='[ "$TMUX" ] && tmux display-message -p "#W"'
 alias tt='twt|dp'
-alias tm='tmux new -s $(basename $PWD)'
+alias tm='tmux attach-session -t $(basename "$PWD") || tmux new-session -s $(basename "$PWD")'
+alias python=/usr/local/bin/python3

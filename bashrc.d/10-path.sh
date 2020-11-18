@@ -1,4 +1,5 @@
 export PATH=$PATH:$HOME/bin:$HOME/.dotfiles/scripts
+export PATH=/usr/local/opt/openjdk/bin:$PATH # brew-installed Java
 
 # Temp/specific projects as WIP
-export PATH=$PATH:$HOME/local/projects/untappd-shell
+export PATH=$PATH:$HOME/Projects/untappd-shell
