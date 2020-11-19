@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Show (shorter) dir - sdir
+
+# Shows the process working directory:
+# - with the user's actual home directory hidden and substituted with ~
+# - with the resulting string truncated to N chars
+
+# Takes two parameters:
+# dir - the directory to show (defaults to $PWD)
+# len - the length it should be truncated to (optional, defaults to 20)
+
+# Examples (when in /home/username/some/path/to/dir):
+# sdir $PWD -> ~/some/path/to/dir
+# sdir $PWD 10 -> …ath/to/dir
+
+declare dir len prefix
+dir=$(echo "${1:-$PWD}" | sed 's@^'"$HOME"'@~@')
+len=${2:-${#dir}}
+(( $len < ${#dir} )) && prefix=…
+(( $len > ${#dir} )) && len=${#dir}
+echo "${prefix}${dir: -${len}}"
