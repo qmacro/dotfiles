@@ -10,7 +10,7 @@ case $- in
   *) return ;;
 esac
 
-for rcfile in "$HOME"/.bashrc.d/*; do
+for rcfile in "$HOME"/.bashrc.d/*.sh; do
   # shellcheck disable=SC1090
   source "$rcfile"
 done
