@@ -7,7 +7,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -18,7 +18,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
 Plug 'leafgarland/typescript-vim'
-Plug '$HOME/local/projects/vim-cds'
+Plug '$HOME/Projects/vim-cds'
 Plug 'airblade/vim-gitgutter'
 
 " Add plugins to &runtimepath
@@ -122,7 +122,7 @@ let g:ale_fixers = {
 \   'javascript': ['prettier'],
 \   'css': ['prettier'],
 \}
-let g:ale_linters_explicit = 1
+"let g:ale_linters_explicit = 1
 let g:ale_fix_on_save = 1
 let g:airline#extension#ale#enabled = 1
 
