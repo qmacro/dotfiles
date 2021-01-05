@@ -20,6 +20,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'leafgarland/typescript-vim'
 Plug '$HOME/Projects/vim-cds'
 Plug 'airblade/vim-gitgutter'
+Plug 'bfrg/vim-jq'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -44,9 +45,6 @@ noremap <Up>    <nop>
 noremap <Down>  <nop>
 noremap <Left>  <nop>
 noremap <Right> <nop>
-
-" 'I want to scroll like rwxrob'
-set scr=1 "affects C-D,C-U
 
 " Disables automatic commenting on newline
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -182,3 +180,10 @@ hi CursorLineNr cterm=none
 hi Comment cterm=italic gui=italic
 set t_ZH=[3m
 set t_ZR=[23m
+
+" 'I want to scroll like rwxrob'
+set scroll=1 "affects C-D,C-U
+
+hi MatchParen cterm=none ctermbg=green ctermfg=white
+
+set colorcolumn=72
