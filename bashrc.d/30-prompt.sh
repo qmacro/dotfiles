@@ -33,7 +33,7 @@ __prompt_command() {
   # Location is shown in the Tmux status bar. But if Tmux
   # isn't running, show it in a prompt line.
   PS1=""
-  [ -z "$TMUX" ] && PS1="# $(__showlocation "$USER")$(__git_ps1)\\n"
+  PS1="# $(__showlocation "$USER")$(__git_ps1)\\n"
 
   # Make prompt red if last command failed
   if [ $EXIT != 0 ]; then
