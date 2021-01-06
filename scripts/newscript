@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-declare script="$HOME/.dotfiles/scripts/$1"
+# Create new Bash shell script - newscript
+
+declare script=$1
 if [[ ! -f "$script" ]]; then
   cat > "$script" << EOF
 #!/usr/bin/env bash
