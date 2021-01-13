@@ -10,3 +10,4 @@ alias twt='[ "$TMUX" ] && tmux display-message -p "#W"'
 alias tt='twt|dp'
 alias tm='tmux attach-session -t $(basename "$PWD") || tmux new-session -s $(basename "$PWD")'
 alias python=/usr/local/bin/python3
+alias t=tmux
