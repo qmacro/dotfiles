@@ -12,3 +12,5 @@
 	ci = commit
 [credential]
 	helper = cache
+[init]
+	defaultBranch = main
