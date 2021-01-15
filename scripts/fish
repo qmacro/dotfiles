@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Hat tip to rwxrob
-
-opacity 999
-tmux set status off 2>/dev/null
-asciiquarium
-tmux set status on 2>/dev/null
