@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Start 'fx' package's 'life' in terminal - life
+
+# Speed is a value for setInterval, higher is slower
+declare speed=${1:-16}
+
+# Implementation is in the bang.js file in the 'fx' package, can't
+# proceed without it!
+declare impl
+impl="$(npm --global root)/fx/bang.js"
+if [[ ! -f "$impl" ]]; then
+  echo Install NPM package 'fx' globally
+  exit 1
+fi
+
+# Monkeypatch the interval speed and execute
+sed "s/setInterval(f, 16)/setInterval(f, ${speed})/" "$impl" \
+  | node
