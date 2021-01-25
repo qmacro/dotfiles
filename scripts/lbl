@@ -21,7 +21,8 @@ main() {
 
   # Get user to pick a stream and determine the ID
   local stream id
-  stream=$(echo "$streams" | fzf)
+  stream=$(echo "$streams" | fzf --select-1)
+  echo "$stream"
   id=${stream##* }
 
   echo "$id" > "$HOME/.liveChatId"
