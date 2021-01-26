@@ -2,6 +2,7 @@
 # Takes two optional variables:
 # COLS: comma-separated list of column nrs (fields) to output (default: all)
 # GAP: gap required between each column (default: 1)
+# See https://qmacro.org/2021/01/26/columnar-layout-with-awk/ for more info.
 
 # Take care of the GAP default
 BEGIN {
