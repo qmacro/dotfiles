@@ -36,6 +36,8 @@ loaddefinitions() {
   proplist[workflows]='.id, .name, .state'
   pathinfo[workflow_runs]='/repos/REPO/actions/workflows/ID/runs'
   proplist[workflow_runs]='.id, .name, .status, .conclusion, .created_at, .run_number'
+  pathinfo[jobs]='/repos/REPO/actions/runs/ID/jobs'
+  proplist[jobs]='.id, .name, .status, .conclusion, .started_at, .completed_at'
 
 }
 
@@ -47,6 +49,9 @@ main() {
 
   local resource=$1
   local id=$2
+
+  # Make sure we have a repo specified
+  checkrepo
 
   # Ensure a resource is specified
   if [[ -z "$resource" ]]; then
