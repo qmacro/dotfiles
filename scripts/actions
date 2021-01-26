@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+# An early and experimental script to help explore the surface area
+# of the GitHub Actions API - actions
+
+# API Docu: https://docs.github.com/en/rest/reference/actions
+
+
+declare -A pathinfo proplist
+#declare paginate="--paginate"
+declare paginate=''
+
+checkrepo() {
+
+  # Ensures a repo is set and exists.
+
+  if [[ -z "$REPO" ]]; then
+    echo "No repository. Use 'repo <owner>/<repo>' to set."
+    exit 1
+  fi
+
+  if ! gh api --silent "/repos/$REPO" 2>/dev/null; then
+    echo "Repository '$REPO' not found."
+    exit 1
+  fi
+
+}
+
+
+loaddefinitions() {
+
+  # These are the pairs of paths and properties for each of the
+  # "resources" in the GitHub API surface area for Actions.
+
+  pathinfo[workflows]='/repos/REPO/actions/workflows'
+  proplist[workflows]='.id, .name, .state'
+  pathinfo[workflow_runs]='/repos/REPO/actions/workflows/ID/runs'
+  proplist[workflow_runs]='.id, .name, .status, .conclusion, .created_at, .run_number'
+
+}
+
+
+main() {
+
+  # Prepare and make the API call, and turn the output into something
+  # a bit more columnar.
+
+  local resource=$1
+  local id=$2
+
+  # Ensure a resource is specified
+  if [[ -z "$resource" ]]; then
+    echo "No action resource (e.g. workflows, workflow_runs, etc) specified."
+    exit 1
+  fi
+
+  # Bring in the definitions of the resources and interesting properties.
+  loaddefinitions
+
+  # Ensure that an ID is supplied if one is required
+  if [[ ${pathinfo[$resource]} == */ID/* ]] && [[ -z "$id" ]]; then
+    echo "Resource '$resource' requires an ID, specify one as second argument."
+    exit 1
+  fi
+
+  # Construct API path by adding the owner, repo and optional ID.
+  local path
+  path=${pathinfo[$resource]}
+  path=${path/REPO/$REPO}
+  path=${path/ID/$id}
+
+  # Make the call, via the gh CLI, extract the properties, and
+  # pass the output through a columniser.
+
+  # shellcheck disable=2086
+  gh api $paginate "$path" \
+    | jq -r ".${resource}[] | [ ${proplist[$resource]} ] | @tsv" \
+    | awk -F"\t" -f "$HOME/.dotfiles/scripts/cols.awk"
+
+}
+
+main "$@"
