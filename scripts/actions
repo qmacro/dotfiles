@@ -38,6 +38,8 @@ loaddefinitions() {
   proplist[workflow_runs]='.id, .name, .status, .conclusion, .created_at, .run_number'
   pathinfo[jobs]='/repos/REPO/actions/runs/ID/jobs'
   proplist[jobs]='.id, .name, .status, .conclusion, .started_at, .completed_at'
+  pathinfo[steps]='/repos/REPO/actions/jobs/ID'
+  proplist[steps]='.id, .name, .status, .conclusion, .number, .started_at, .completed_at'
 
 }
 
