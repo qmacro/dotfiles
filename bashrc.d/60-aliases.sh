@@ -11,3 +11,5 @@ alias tt='twt|dp'
 alias tm='tmux attach-session -t $(basename "$PWD") || tmux new-session -s $(basename "$PWD")'
 alias python=/usr/local/bin/python3
 alias t=tmux
+alias cg='cd $(find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 | fzf --height 10 --reverse) && ls'
+alias cgr='cg && r'
