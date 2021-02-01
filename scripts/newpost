@@ -32,4 +32,4 @@ date: '$postdate $posttime'
 _The lede_
 EOF
 
-$EDITOR "$filename"
+exec "$EDITOR" +7 "$filename"
