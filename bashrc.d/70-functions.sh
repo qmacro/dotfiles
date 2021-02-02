@@ -4,15 +4,16 @@ repo() {
 
 newpost() {
 
-  local blog
+  local blog location
   blog=$(
     printf "qmacro.github.io\nautodidactics" \
       | fzf --no-border --inline-info
     )
 
   if [[ -n "$blog" ]]; then
-    cd "$HOME/Projects/$blog" || exit 1
-    createnewpost "$@"
+    location="$HOME/Projects/$blog"
+    cd "$location" || exit 1
+    vim +7 -c "Goyo" "$location/$(createnewpost "$@")"
     git status
   fi
 

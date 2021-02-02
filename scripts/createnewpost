@@ -35,9 +35,7 @@ main() {
   _The lede_
 EOF
 
-  pwd
-  "$EDITOR" +7 "$filename"
-  pwd
+  echo "$filename"
 
 }
 
