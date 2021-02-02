@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# Create new post for blog. Accept the title of the blog post as parms.
+# Normally invoked indirectly, from the newpost function. If invoking
+# directly, make sure you're in a blog repo directory first.
+# E.g.
+# createnewpost This is the title
+
+source "$(dirname "$0")/utils"
+
+# Sets everything to lower case and replaces spaces with dashes
+makename() {
+  echo "$@" \
+    | tr "[:upper:]" "[:lower:]" \
+    | tr "[:blank:]" -
+}
+
+main() {
+
+  # Abort if we haven't been given any title
+  [[ $# -eq 0 ]] && err "No title supplied" && exit 1
+
+  postdate=$(date "+%Y-%m-%d")
+  posttime=$(date "+%H:%M:%S")
+  postname=$(makename "$@")
+
+  filename="_posts/$postdate-$postname.markdown"
+  cat > "$filename" << EOF
+  ---
+  layout: post
+  title: $@
+  date: '$postdate $posttime'
+  ---
+
+  _The lede_
+EOF
+
+  pwd
+  "$EDITOR" +7 "$filename"
+  pwd
+
+}
+
+main "$@"

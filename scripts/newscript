@@ -6,7 +6,6 @@ declare script=$1
 if [[ ! -f "$script" ]]; then
   cat > "$script" << EOF
 #!/usr/bin/env bash
-
 EOF
   chmod +x "$script"
 fi
