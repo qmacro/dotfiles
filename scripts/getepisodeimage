@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Retrieves YouTube live stream episode image, for insertion
+# into the OBS scene as appropriate.
+
+declare scriptname
+scriptname=$(basename "$0")
+
+# Place where OBS is pulling the episode image from
+readonly image="$HOME/Documents/livestreaming/EPISODEIMAGE"
+
+# Requires YouTube video ID
+readonly id=$1
+
+if [ -z "$id" ]; then
+  echo "Usage: $scriptname <YOUTUBE VIDEO ID>"
+  exit 1
+fi
+
+curl \
+  --fail \
+  --silent \
+  -o "$image" \
+  "https://img.youtube.com/vi/$id/maxresdefault.jpg"
