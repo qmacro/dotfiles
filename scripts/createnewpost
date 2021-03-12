@@ -26,13 +26,13 @@ main() {
 
   filename="_posts/$postdate-$postname.markdown"
   cat > "$filename" << EOF
-  ---
-  layout: post
-  title: $@
-  date: '$postdate $posttime'
-  ---
+---
+layout: post
+title: $@
+date: '$postdate $posttime'
+---
 
-  _The lede_
+_The lede_
 EOF
 
   echo "$filename"
