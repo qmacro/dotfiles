@@ -187,7 +187,6 @@ set scroll=1 "affects C-D,C-U
 
 hi MatchParen cterm=none ctermbg=green ctermfg=white
 
-set colorcolumn=72
 set nobackup
 set nowritebackup
 set laststatus=2
