@@ -10,7 +10,7 @@ payload_live_chat_message() {
   shift
   local message="$*"
 
-  yq r -j - << EOM
+  yq e -j - << EOM
 kind: youtube#liveChatMessage
 snippet:
   type: textMessageEvent
