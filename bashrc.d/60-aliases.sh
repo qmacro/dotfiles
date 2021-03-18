@@ -7,10 +7,10 @@ alias r=ranger
 alias urldecode='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
 alias urlencode='python3 -c "import sys, urllib.parse as ul; print (ul.quote_plus(sys.argv[1]))"'
 alias twt='[ "$TMUX" ] && tmux display-message -p "#W"'
-alias tt='twt|dp'
 alias tm='tmux attach-session -t $(basename "$PWD") || tmux new-session -s $(basename "$PWD")'
 alias python=/usr/local/bin/python3
 alias t=tmux
 alias cg='cd $(find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 | fzf --height 60% --reverse) && ls'
 alias cgr='cg && r'
 alias vig='vim -c "Goyo"'
+alias tt='tmux a -t $(tmux ls | fzf --layout=reverse --border --info=inline --margin=8,20 --padding=1 | cut -d: -f 1)'
