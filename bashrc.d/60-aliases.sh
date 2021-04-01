@@ -13,4 +13,3 @@ alias t=tmux
 alias cg='cd $(find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 | fzf --height 60% --reverse) && ls'
 alias cgr='cg && r'
 alias vig='vim -c "Goyo"'
-alias tt='tmux a -t $(tmux ls | fzf --layout=reverse --border --info=inline --margin=8,20 --padding=1 | cut -d: -f 1)'
