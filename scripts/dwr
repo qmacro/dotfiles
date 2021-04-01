@@ -8,12 +8,10 @@
 
 # Requires gh (GitHub CLI) and jq (JSON processor)
 
-# First version
-
 set -o errexit
 set -o pipefail
 
-declare repo=${1:?No owner/repo specified}
+declare repo hostname
 
 jqscript() {
 
@@ -42,7 +40,7 @@ EOF
 
 selectruns() {
 
-  gh api --paginate "/repos/$repo/actions/runs" \
+  gh --hostname "$hostname" api --paginate "/repos/$repo/actions/runs" \
     | jq -r -f <(jqscript) \
     | fzf --multi
 
@@ -53,7 +51,7 @@ deleterun() {
   local run id result
   run=$1
   id="$(cut -f 3 <<< "$run")"
-  gh api -X DELETE "/repos/$repo/actions/runs/$id"
+  gh --hostname "$hostname" api -X DELETE "/repos/$repo/actions/runs/$id"
   [[ $? = 0 ]] && result="OK!" || result="BAD"
   printf "%s\t%s\n" "$result" "$run"
 
@@ -69,10 +67,35 @@ deleteruns() {
 
 }
 
+gethostname() {
+
+  # Given a git remote URL, extract the hostname from it
+  # e.g. get 'github.com' from 'https://github.com/qmacro/reponame.git'
+  local url=$1
+  echo "$url" | sed -E 's,^.+(://|@)([^/:]+).*$,\2,'
+
+}
+
 main() {
+
+  local url
+  if [[ -n $1 ]]; then
+    # If owner/repo passed as argument, take that, assume github.com.
+    repo=$1
+    hostname=github.com
+  else
+    # Otherwise assume we're in a git repo, so use the placeholders
+    # and grab the hostname from the origin remote.
+    if ! git status >/dev/null 2>&1; then
+      echo "No repo specified and not in a repo dir"
+      exit 1
+    fi
+    repo=':owner/:repo'
+    hostname="$(gethostname "$(git remote get-url origin)")"
+  fi
 
   selectruns | deleteruns
 
 }
 
-main
+main "$@"
