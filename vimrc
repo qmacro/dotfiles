@@ -57,6 +57,7 @@ nnoremap <leader>gs :Gstatus<cr>
 
 " Automatically turn on auto-save for markdown files (so I can live preview them)
 autocmd FileType markdown let g:auto_save = 0
+autocmd FileType markdown Goyo
 
 " Integrate Limelight with Goyo
 autocmd! User GoyoEnter Limelight
@@ -190,6 +191,28 @@ hi MatchParen cterm=none ctermbg=green ctermfg=white
 set nobackup
 set nowritebackup
 set laststatus=2
+
+function! s:goyo_enter()
+  let b:quitting = 0
+  let b:quitting_bang = 0
+  autocmd QuitPre <buffer> let b:quitting = 1
+  cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+endfunction
+
+function! s:goyo_leave()
+  " Quit Vim if this is the only remaining buffer
+  if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+    if b:quitting_bang
+      qa!
+    else
+      qa
+    endif
+  endif
+endfunction
+
+autocmd! User GoyoEnter call <SID>goyo_enter()
+autocmd! User GoyoLeave call <SID>goyo_leave()
+
 let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
