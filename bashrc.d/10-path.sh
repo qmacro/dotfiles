@@ -6,3 +6,6 @@ export PATH=$PATH:$HOME/Projects/untappd-shell
 
 # Brew-installed Node.js v12
 export PATH="/usr/local/opt/node@12/bin:$PATH"
+
+# Brew-installed Gnu sed
+export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
