@@ -19,11 +19,10 @@ newpost() {
     blog=$(chooseblog)
 
     if [[ -n "$blog" ]]; then
-      location="$HOME/Projects/$blog"
+      location="$HOME/Projects/gh/github.com/qmacro/$blog"
       cd "$location" || exit 1
 
-      tmux new -s "$blog"
-      vim +7 -c "Goyo" "$location/$(createnewpost "$@")"
+      vim +7 "$location/$(createnewpost "$@")"
       git status
     fi
 
@@ -48,3 +47,15 @@ editpost() {
 
 }
 
+j() {
+
+  # Start new journal entry
+  cd "$HOME/Projects/gh/github.com/qmacro/thinking-aloud" || exit
+  gh issue create --label entry --title "$(date '+%Y-%m-%d %H:%M:%S')"
+}
+
+choose_tmux_session() {
+
+  tmux ls | fzf --layout=reverse --border --info=inline --margin=8,20 --padding=1 | cut -d: -f 1
+
+}
