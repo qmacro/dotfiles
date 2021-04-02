@@ -11,3 +11,6 @@ export TERM=xterm-256color
 privateenvvars="$HOME/.private_envvars.sh"
 # shellcheck disable=1090
 [ -f "$privateenvvars" ] && . "$privateenvvars"
+
+# See https://github.blog/2021-03-11-scripting-with-github-cli/
+export GIT_PAGER='delta -s'
