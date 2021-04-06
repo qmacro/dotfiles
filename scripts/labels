@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# When in a repo directory, gives an overview of labels, allows selection.
+
+set -o errexit
+
+# Load common functions
+readonly here="$(dirname "$0")"
+source "$here/github.sh"
+
+main() {
+
+  abort_if_not_repo
+
+  local hostname
+  hostname=$(get_hostname)
+
+  gh api \
+    "/repos/:owner/:repo/labels" \
+    --hostname "$hostname" \
+    --paginate \
+    --cache 1h \
+    --jq ".[].name" \
+    | fzf --multi
+
+}
+
+main "$@"
