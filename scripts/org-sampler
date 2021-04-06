@@ -5,7 +5,7 @@ readonly org="${1:?Specify org name}"
 jqscript() {
 
   cat << EOF
-.[]
+  .[]
   | [
     .name,
     "Name: \(.name)\n\nDescription: \(.description)\n\nLanguage: \(.language)\nWatchers: \(.watchers_count)\nStars: \(.stargazers_count)\nForks: \(.forks_count)"
@@ -14,6 +14,7 @@ jqscript() {
 EOF
 
 }
+
 
 gh api \
   "/orgs/$org/repos" \
