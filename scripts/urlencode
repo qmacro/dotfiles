@@ -1,0 +1,7 @@
+#!python3
+"""
+Simple URL encoding of first argument passed
+"""
+import sys
+import urllib.parse as ul
+print(ul.quote_plus(sys.argv[1]))
