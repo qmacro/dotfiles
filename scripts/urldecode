@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+"""
+Simple URL decoding of first argument passed
+"""
+import sys
+import urllib.parse as ul
+print(ul.unquote_plus(sys.argv[1]))
