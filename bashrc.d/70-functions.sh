@@ -59,3 +59,20 @@ choose_tmux_session() {
   tmux ls | fzf --layout=reverse --border --info=inline --margin=8,20 --padding=1 | cut -d: -f 1
 
 }
+
+cg() {
+
+  # Change to a git repo
+  local target
+  target=$(\
+    find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 \
+      | sed -E 's/^(.+\/gh(\/.+?))$/\2\t\1/' \
+      | fzf --with-nth=1 --select-1 --query=$1 --height=60% --reverse \
+      | cut -f 2
+  )
+
+  if [[ -n "$target" ]]; then
+    cd "$target" && ls
+  fi
+
+}
