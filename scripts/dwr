@@ -11,6 +11,10 @@
 set -o errexit
 set -o pipefail
 
+# Load common functions
+readonly here="$(dirname "$0")"
+source "$here/github.sh"
+
 declare repo hostname
 
 jqscript() {
@@ -40,7 +44,7 @@ EOF
 
 selectruns() {
 
-  gh --hostname "$hostname" api --paginate "/repos/$repo/actions/runs" \
+  gh --hostname "$hostname" api --cache 1h --paginate "/repos/$repo/actions/runs" \
     | jq -r -f <(jqscript) \
     | fzf --multi
 
@@ -67,15 +71,6 @@ deleteruns() {
 
 }
 
-gethostname() {
-
-  # Given a git remote URL, extract the hostname from it
-  # e.g. get 'github.com' from 'https://github.com/qmacro/reponame.git'
-  local url=$1
-  echo "$url" | sed -E 's,^.+(://|@)([^/:]+).*$,\2,'
-
-}
-
 main() {
 
   local url
@@ -91,7 +86,7 @@ main() {
       exit 1
     fi
     repo=':owner/:repo'
-    hostname="$(gethostname "$(git remote get-url origin)")"
+    hostname="$(get_hostname)"
   fi
 
   selectruns | deleteruns
