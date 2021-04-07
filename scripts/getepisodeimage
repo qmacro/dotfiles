@@ -7,7 +7,7 @@ declare scriptname
 scriptname=$(basename "$0")
 
 # Place where OBS is pulling the episode image from
-readonly image="$HOME/Documents/livestreaming/EPISODEIMAGE"
+readonly image="$HOME/Projects/yt/HandsOnSAPDev/livestreaming/EPISODEIMAGE"
 
 # Requires YouTube video ID
 readonly id=$1
