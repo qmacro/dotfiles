@@ -6,4 +6,4 @@
 # combines them into a list, and then shows the
 # issues based on the labels selected.
 
-issues "$(urlencode "$(labels | paste -s -d ',' -)")"
+issues "$(urlencode "$(labels | paste -s -d ',' -)")" | cut -f 1

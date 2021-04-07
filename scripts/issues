@@ -46,7 +46,8 @@ main() {
       --with-nth=1,2 \
       --delimiter='\t' \
       --preview='echo -e {3}' \
-      --preview-window="$(preview_window_location):wrap"
+      --preview-window="$(preview_window_location):wrap" \
+    | cut -f 1
 
 }
 
