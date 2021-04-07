@@ -44,7 +44,7 @@ EOF
 
 selectruns() {
 
-  gh --hostname "$hostname" api --cache 1h --paginate "/repos/$repo/actions/runs" \
+  gh --hostname "$hostname" api --paginate "/repos/$repo/actions/runs" \
     | jq -r -f <(jqscript) \
     | fzf --multi
 
