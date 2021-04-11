@@ -113,22 +113,6 @@ nnoremap ]] :bnext<cr>
 " (see https://github.com/tpope/vim-markdown/issues/21)
 autocmd FileType markdown syn match markdownError "\w\@<=\w\@="
 
-
-" More steps towards improving my shell scripting.
-" If it exists, use shfmt (see https://github.com/mvdan/sh)
-" to format Bash scripts on write. Using options to get close
-" to the Google Shell Style Guide:
-" -i 2  two spaces indent
-" -bn   binary operators like && and | may start a line
-" -ci   switch cases will be indented
-" -sr   redirect operators will be followed by a space
-fun! s:FormatBashScripts()
-  if getline(1) =~# '^#!.*bash' && executable('shfmt')
-    %!shfmt -i 2 -bn -ci -sr -
-  endif
-endfun
-"autocmd BufWritePre * call s:FormatBashScripts()
-
 highlight clear SignColumn
 set cursorline
 hi CursorLine term=none cterm=bold ctermbg=darkgrey
