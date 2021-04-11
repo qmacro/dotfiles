@@ -80,34 +80,6 @@ autocmd BufWritePre * %s/\s\+$//e
 set listchars=tab:▸·,eol:¬
 nnoremap <silent> <leader>l :set list!<cr>
 
-" Abbreviations
-iabbrev scp SAP Cloud Platform
-iabbrev s4h S/4HANA
-iabbrev sbs side-by-side
-iabbrev s4s S/4HANA Cloud SDK
-" iabbrev hosd https://bit.ly/handsonsapdev
-iabbrev capcom https://bit.ly/cap-com
-iabbrev SRIKANTHPERI [Srikanth Peri](https://people.sap.com/speri)
-iabbrev RONNIESLETTA [Ronnie Sletta](https://people.sap.com/rsletta)
-iabbrev CHRISWHEALY [Chris Whealy](https://people.sap.com/chris.whealy)
-iabbrev THOMASJUNG [Tom Jung](https://people.sap.com/thomas.jung)
-iabbrev MARIUSOBERT [Marius Obert](https://people.sap.com/mariusobert)
-iabbrev GREGORWOLF [Gregor Wolf](https://people.sap.com/gregor.wolf)
-iabbrev MARKTEICHMANN [Mark Teichmann](https://people.sap.com/mark.teichmann)
-iabbrev BRENTONOCALLAGHAN [Brenton O'Callaghan](https://people.sap.com/ocallaghan001)
-iabbrev PIERREDOMINIQUE [Pierre Dominique](https://people.sap.com/pdominique-bio)
-iabbrev VOLKERBUZEK [Volker Buzek](https://people.sap.com/vobu)
-iabbrev HENDRIKNEUMANN [Hendrik Neumann](https://people.sap.com/hendrik.neumann)
-iabbrev HELMUTTAMMEN [Helmut Tammen](https://people.sap.com/helmut.tammen2)
-iabbrev LARSHVAM [Lars Hvam](https://people.sap.com/lars.hvam)
-iabbrev ENNOWULFF [Enno Wulf](https://people.sap.com/enno.wulff)
-iabbrev NABHEETMADAN [Nabheet Madan](https://people.sap.com/nabheetscn)
-iabbrev MAXSTREIFENEDER [Max Streifeneder](https://people.sap.com/iinside)
-iabbrev JOHNMURRAY [John Murray](https://people.sap.com/jbm1991)
-iabbrev CHRISTIANDRUMM [Christian Drumm](https://people.sap.com/christian.drumm)
-iabbrev PHILCOOLEY [Phil Cooley](https://people.sap.com/phil.cooley)
-iabbrev hosd https://bit.ly/handsonsapdev
-
 " Quick insertions of various patterns when writing markdown
 autocmd FileType markdown inoremap ii -<space>[<space>]<space>
 autocmd FileType markdown inoremap ppp :point_right:<space>
