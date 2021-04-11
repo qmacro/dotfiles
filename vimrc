@@ -76,19 +76,31 @@ nnoremap <silent> <leader>l :set list!<cr>
 autocmd FileType markdown inoremap ii -<space>[<space>]<space>
 autocmd FileType markdown inoremap ppp :point_right:<space>
 
+" -------------------------------------------------------------------
+" Linting and formatting with ALE
+" -------------------------------------------------------------------
 let g:ale_completion_enabled = 1
 let g:ale_sign_column_always = 1
-let g:ale_fixers = {
-\   'javascript': ['prettier'],
-\   'css': ['prettier'],
-\}
-"let g:ale_linters_explicit = 1
 let g:ale_fix_on_save = 1
-let g:airline#extension#ale#enabled = 1
+let g:ale_linters = {
+      \ 'sh': ['shellcheck', 'language_server'],
+      \ }
+let g:ale_fixers = {
+      \ 'sh': ['shfmt', 'remove_trailing_lines', 'trim_whitespace'],
+      \}
 
-nnoremap <silent> <leader>ll :call LocationToggle()<cr>
-nnoremap <silent> <leader>gd :ALEGoToDefinition<cr>
-nnoremap <silent> <leader>fr :ALEFindReferences<cr>
+" shfmt options:
+" -i 2 : indent with 2 spaces
+" -bn  : binary ops (&&, |) may start a line
+" -ci  : switch cases will be indented
+" -sr  : redirect ops will be followed by a space
+let g:ale_sh_shfmt_options='-i 2 -bn -ci -sr'
+
+nmap <silent> <leader>aj :ALENextWrap<cr>
+nmap <silent> <leader>ak :ALEPreviousWrap<cr>
+nmap <silent> <leader>ad :ALEGoToDefinition<cr>
+nmap <silent> <leader>ar :ALEFindReferences<cr>
+" -------------------------------------------------------------------
 
 " Color name (:help cterm-colors) or ANSI code
 let g:limelight_conceal_ctermfg = 'gray'
