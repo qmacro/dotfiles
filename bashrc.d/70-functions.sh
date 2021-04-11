@@ -76,3 +76,13 @@ cg() {
   fi
 
 }
+
+exportsecrets() {
+
+  declare secret
+  for secret in .secret.*; do
+    export "${secret#.secret.}"="$(cat "${secret}")"
+  done
+
+}
+
