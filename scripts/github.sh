@@ -4,7 +4,7 @@
 
 abort_if_not_repo() {
 
-  if ! git status >/dev/null 2>&1; then
+  if ! git status > /dev/null 2>&1; then
     echo Not a repository - aborting
     exit 1
   fi
