@@ -124,9 +124,6 @@ hi Comment cterm=italic gui=italic
 set t_ZH=[3m
 set t_ZR=[23m
 
-" 'I want to scroll like rwxrob'
-set scroll=1 "affects C-D,C-U
-
 hi MatchParen cterm=none ctermbg=green ctermfg=white
 
 set nobackup
