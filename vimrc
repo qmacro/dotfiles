@@ -53,12 +53,6 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 nnoremap <leader>w :w<cr>
 nnoremap <leader>q :q<cr>
 
-nnoremap <leader>gs :Gstatus<cr>
-
-" Automatically turn on auto-save for markdown files (so I can live preview them)
-autocmd FileType markdown let g:auto_save = 0
-autocmd FileType markdown Goyo
-
 " Integrate Limelight with Goyo
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
@@ -83,10 +77,6 @@ nnoremap <silent> <leader>l :set list!<cr>
 " Quick insertions of various patterns when writing markdown
 autocmd FileType markdown inoremap ii -<space>[<space>]<space>
 autocmd FileType markdown inoremap ppp :point_right:<space>
-
-" To enable project/folder specific vimrc settings
-" (see https://andrew.stwrt.ca/posts/project-specific-vimrc/)
-"set exrc
 
 let g:ale_completion_enabled = 1
 let g:ale_sign_column_always = 1
