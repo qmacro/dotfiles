@@ -96,8 +96,8 @@ let g:ale_fixers = {
 " -sr  : redirect ops will be followed by a space
 let g:ale_sh_shfmt_options='-i 2 -bn -ci -sr'
 
-nmap <silent> <leader>aj :ALENextWrap<cr>
-nmap <silent> <leader>ak :ALEPreviousWrap<cr>
+nmap <silent> <F8> :ALENextWrap<cr>
+nmap <silent> <S-F8> :ALEPreviousWrap<cr>
 nmap <silent> <leader>ad :ALEGoToDefinition<cr>
 nmap <silent> <leader>ar :ALEFindReferences<cr>
 " -------------------------------------------------------------------
