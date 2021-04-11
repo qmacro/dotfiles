@@ -18,8 +18,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
-Plug 'leafgarland/typescript-vim'
-Plug '$HOME/Projects/vim-cds'
 Plug 'airblade/vim-gitgutter'
 Plug 'bfrg/vim-jq'
 
