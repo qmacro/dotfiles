@@ -86,7 +86,8 @@ let g:ale_linters = {
       \ 'sh': ['shellcheck', 'language_server'],
       \ }
 let g:ale_fixers = {
-      \ 'sh': ['shfmt', 'remove_trailing_lines', 'trim_whitespace'],
+      \ 'sh': ['shfmt'],
+      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
       \}
 
 " shfmt options:
