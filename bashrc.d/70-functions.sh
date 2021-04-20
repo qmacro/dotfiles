@@ -67,7 +67,7 @@ cg() {
   target=$(
     find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 \
       | sed -E 's/^(.+\/gh(\/.+?))$/\2\t\1/' \
-      | fzf --with-nth=1 --select-1 --query=$1 --height=60% --reverse \
+      | fzf --with-nth=1 --select-1 --query="$1" --height=60% --reverse \
       | cut -f 2
   )
 
