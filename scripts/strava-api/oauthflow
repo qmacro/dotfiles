@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+declare PORT=8888
+declare CLIENT_ID="${STRAVA_CLIENT_ID:?Client ID not set}"
+declare CLIENT_SECRET="${STRAVA_CLIENT_SECRET:?Client secret not set}"
+declare SCOPE=read_all,activity:read_all,activity:write
+declare -A QUERYPARAMS
+declare TUNNELPID
+declare THIS
+THIS="$(basename "$0")"
+
+show_start_url() {
+
+  local tunnel_url=$1
+
+  echo "\
+https://www.strava.com/oauth/authorize\
+?client_id=$CLIENT_ID&response_type=code\
+&scope=$SCOPE&redirect_uri=$tunnel_url&approval_prompt=force"
+
+}
+
+capture_request() {
+
+  ncat -l $PORT < <(printf "HTTP/1.0 200 OK\r\n\r\nOK")
+
+}
+
+start_tunnel() {
+
+  ngrok http -log stdout $PORT > "$THIS-ngrok.log" &
+  TUNNELPID=$!
+
+}
+
+get_tunnel_url() {
+
+  curl \
+    --silent \
+    --fail \
+    http://localhost:4040/api/tunnels \
+    | jq -r '.tunnels[] | select(.proto | contains("https")) | .public_url'
+
+}
+
+parsequeryparams() {
+
+  declare -a list
+  IFS='=&' list=($1) # need to investigate mapfile
+  for ((i = 0; i < ${#list[@]}; i += 2)); do
+    QUERYPARAMS[${list[$i]}]=${list[i + 1]}
+  done
+}
+
+exchange_token() {
+
+  local code=$1
+
+  curl "https://www.strava.com/api/v3/oauth/token" \
+    --silent \
+    --fail \
+    --data grant_type=authorization_code \
+    --data client_id="$CLIENT_ID" \
+    --data client_secret="$CLIENT_SECRET" \
+    --data code="$code"
+
+}
+
+cleanup() {
+
+  kill $TUNNELPID
+
+}
+
+main() {
+
+  trap cleanup EXIT
+  start_tunnel
+  sleep 1
+  show_start_url "$(get_tunnel_url)"
+  output="$(capture_request)"
+  # shellcheck disable=2034
+  read -r method query version <<< "$output"
+  parsequeryparams "${query#/?}"
+  exchange_token "${QUERYPARAMS[code]}" | jq .
+
+}
+
+main "$@"

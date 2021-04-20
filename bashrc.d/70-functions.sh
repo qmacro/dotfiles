@@ -64,7 +64,7 @@ cg() {
 
   # Change to a git repo
   local target
-  target=$(\
+  target=$(
     find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 \
       | sed -E 's/^(.+\/gh(\/.+?))$/\2\t\1/' \
       | fzf --with-nth=1 --select-1 --query=$1 --height=60% --reverse \
@@ -73,6 +73,27 @@ cg() {
 
   if [[ -n "$target" ]]; then
     cd "$target" && ls
+  fi
+
+}
+
+authenv() {
+
+  # Export env vars for auth, for a given service
+  # and identify (default 'qmacro').
+  local service=$1
+  local identity=${2:-qmacro}
+  if [[ -z $service ]]; then
+    echo "Specify service e.g. strava, youtube and optional identity (default qmacro)"
+  else
+    echo -n "Setting $identity auth env vars "
+    local envvar
+    for file in "$HOME/.auth/$service/$identity/"*; do
+      envvar="${service^^}_$(basename "$file")"
+      export "$envvar"="$(cat "$file")"
+      echo -n "$envvar "
+    done
+    echo
   fi
 
 }
