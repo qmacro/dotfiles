@@ -62,8 +62,8 @@ exchange_token() {
     --silent \
     --fail \
     --data grant_type=authorization_code \
-    --data client_id=$CLIENT_ID \
-    --data client_secret=$CLIENT_SECRET \
+    --data client_id="$CLIENT_ID" \
+    --data client_secret="$CLIENT_SECRET" \
     --data code="$code"
 
 }
