@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# Takes owner/repo/path and shows content of that resource from GitHub.
-# Assumes there's an extension on the resource name (e.g. yml) and uses
-# that for the value of bat's --language parameter.
+# Takes owner, repo and path and shows content of that resource from GitHub.
+# Also accepts optional language and colour parameter.
+# Uses gh, base64 and bat.
+
 
 declare owner=$1
 declare repo=$2

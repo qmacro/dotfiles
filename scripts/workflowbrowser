@@ -2,7 +2,7 @@
 
 # Find and browse GitHub Actions workflow definitions.
 # In addition to regular shell tools (such as sed), this
-# script uses gh, fzf, base64 and bat.
+# script uses gh and fzf.
 
 workflows() {
 
