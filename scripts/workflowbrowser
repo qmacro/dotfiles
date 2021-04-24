@@ -17,9 +17,8 @@ workflows() {
     --paginate \
     --cache "${GH_CACHETIME:-1h}" \
     --field "q=$ownertype:$owner path:.github/workflows/" \
-    --jq '.items[] | ["\(.repository.name)/\(.name)", .repository.name, .path] | @tsv' \
-    "/search/code" \
-    | sed "s/^/$owner\t$owner\//"
+    --jq '.items[] | ["\(.repository.full_name)/\(.name)", .repository.owner.login, .repository.name, .path] | @tsv' \
+    "/search/code"
 
 }
 
@@ -31,10 +30,10 @@ main() {
     <(workflows org qmacro-org) \
     <(workflows user qmacro) \
     | fzf \
-      --with-nth=2 \
+      --with-nth=1 \
       --delimiter='\t' \
-      --preview='showgithubcontent {1} {3} {4} yaml always' \
-      | cut -f 1,3,4
+      --preview='showgithubcontent {2} {3} {4} yaml always' \
+    | cut -f 2,3,4
 
 }
 
