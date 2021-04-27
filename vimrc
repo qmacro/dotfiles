@@ -20,6 +20,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
 Plug 'airblade/vim-gitgutter'
 Plug 'bfrg/vim-jq'
+Plug 'Yggdroot/indentLine'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -171,3 +172,14 @@ let g:lightline = {
       \   'gitbranch': 'gitbranch#name'
       \ },
       \ }
+
+" YAML help - will use installed `yamllint` via ALE, and
+" sets tab options appropriately, and also configures the
+" indentLine plugin - to start disabled, toggleable with <leader>i
+" and the concealcursor value is to address an issue with background
+" colours with cursorline.
+autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+nnoremap <leader>i :IndentLinesToggle<CR>
+let g:indentLine_char = '┊'
+let g:indentLine_enabled = 0
+let g:indentLine_concealcursor = 0
