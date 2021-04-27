@@ -10,3 +10,5 @@ alias python=/usr/local/bin/python3
 alias t=tmux
 alias cgr='cg && r'
 alias vig='vim -c "Goyo"'
+alias wfb='workflowbrowser'
+alias wfe='workflowbrowser | xargs showgithubcontent | vim --not-a-term -' # workflow edit
