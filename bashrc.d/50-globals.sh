@@ -14,3 +14,6 @@ privateenvvars="$HOME/.private_envvars.sh"
 
 # See https://github.blog/2021-03-11-scripting-with-github-cli/
 export GIT_PAGER='delta -s'
+
+# For use with the GitHub CLI 'gh' when making API calls
+export GH_CACHETIME=1h

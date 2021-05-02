@@ -5,7 +5,6 @@
 
 # API Docu: https://docs.github.com/en/rest/reference/actions
 
-
 declare -A pathinfo proplist
 #declare paginate="--paginate"
 declare paginate=''
@@ -19,13 +18,12 @@ checkrepo() {
     exit 1
   fi
 
-  if ! gh api --silent "/repos/$REPO" 2>/dev/null; then
+  if ! gh api --silent "/repos/$REPO" 2> /dev/null; then
     echo "Repository '$REPO' not found."
     exit 1
   fi
 
 }
-
 
 loaddefinitions() {
 
@@ -42,7 +40,6 @@ loaddefinitions() {
   proplist[steps]='.id, .name, .status, .conclusion, .number, .started_at, .completed_at'
 
 }
-
 
 main() {
 

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# A failed attempt to remove photos from an activity.
+# Basically there's no support for this in the API.
+
+declare ID=${1:-5125918494}
+declare ACCESS_TOKEN=${STRAVA_ACCESS_TOKEN:-No Strava access token}
+declare PHOTOS
+
+# READ
+PHOTOS=$(
+  curl \
+    --fail \
+    --silent \
+    --request GET \
+    --header "Authorization: Bearer $ACCESS_TOKEN" \
+    "https://www.strava.com/api/v3/activities/$ID" \
+    | jq .photos
+)
+
+echo "$PHOTOS"
+sleep 1
+#jq '.use_primary_photo = false' <<< "$PHOTOS"
+#echo "{\"photos\": $(jq '.use_primary_photo = false' <<< "$PHOTOS")"
+
+curl \
+  --verbose \
+  --fail \
+  --request PUT \
+  --header "Authorization: Bearer $ACCESS_TOKEN" \
+  --header "Content-Type: application/json" \
+  --data '{"photos":{}}' \
+  "https://www.strava.com/api/v3/activities/$ID"
+#  --data '{"photos":{"primary": null, "count": 0}}' \

@@ -11,11 +11,15 @@
 set -o errexit
 set -o pipefail
 
+# Load common functions
+readonly here="$(dirname "$0")"
+source "$here/github.sh"
+
 declare repo hostname
 
 jqscript() {
 
-    cat <<EOF
+  cat << EOF
       def symbol:
         sub("skipped"; "SKIP") |
         sub("success"; "GOOD") |
@@ -51,8 +55,9 @@ deleterun() {
   local run id result
   run=$1
   id="$(cut -f 3 <<< "$run")"
-  gh --hostname "$hostname" api -X DELETE "/repos/$repo/actions/runs/$id"
-  [[ $? = 0 ]] && result="OK!" || result="BAD"
+  gh --hostname "$hostname" api -X DELETE "/repos/$repo/actions/runs/$id" \
+  && result="OK!" \
+  || result="BAD"
   printf "%s\t%s\n" "$result" "$run"
 
 }
@@ -67,18 +72,8 @@ deleteruns() {
 
 }
 
-gethostname() {
-
-  # Given a git remote URL, extract the hostname from it
-  # e.g. get 'github.com' from 'https://github.com/qmacro/reponame.git'
-  local url=$1
-  echo "$url" | sed -E 's,^.+(://|@)([^/:]+).*$,\2,'
-
-}
-
 main() {
 
-  local url
   if [[ -n $1 ]]; then
     # If owner/repo passed as argument, take that, assume github.com.
     repo=$1
@@ -86,12 +81,12 @@ main() {
   else
     # Otherwise assume we're in a git repo, so use the placeholders
     # and grab the hostname from the origin remote.
-    if ! git status >/dev/null 2>&1; then
+    if ! git status > /dev/null 2>&1; then
       echo "No repo specified and not in a repo dir"
       exit 1
     fi
     repo=':owner/:repo'
-    hostname="$(gethostname "$(git remote get-url origin)")"
+    hostname="$(get_hostname)"
   fi
 
   selectruns | deleteruns
