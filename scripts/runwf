@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# Runs and immediately monitors a GitHub Actions workflow.
+# Requires gh.
+
+set -o errexit
+
+runworkflow() {
+
+  # Launches a workflow; there's nothing returned that we
+  # can use from this to get the ID of the workflow that was
+  # launched, though.
+  local wf=$1
+  gh workflow run "$wf"
+
+}
+
+getworkflowid() {
+
+  # List the most recent execution for the given workflow.
+  # If it's not already completed, return its ID.
+
+  local wf=$1
+
+  gh run list \
+    --limit 1 \
+    --workflow "$wf" \
+    | grep -vE '^completed\s+' \
+    | cut -f 8
+
+}
+
+findrunningworkflowid() {
+
+  # Try to determine the ID of a workflow, where that workflow
+  # is not already complete. Make a number of attempts before
+  # giving up.
+
+  local wf=$1
+  local tries=0
+  local maxtries=5
+  local sleeptime=0.5
+
+  while true; do
+    tries=$((tries + 1))
+    if [[ $tries -gt $maxtries ]]; then
+      return
+    fi
+    id="$(getworkflowid "$wf")"
+    if [[ -n $id ]]; then
+      echo "$id"
+      break
+    fi
+    sleep "$sleeptime"
+  done
+
+}
+
+main() {
+
+  # Launch the specified workflow, then try to get its ID;
+  # if successful, then start monitoring the workflow's execution.
+
+  local id wf
+
+  wf="${1:?Specify workflow (e.g. <workflowfile.yaml>)}"
+  runworkflow "$wf"
+  id="$(findrunningworkflowid "$wf")"
+
+  if [[ -z $id ]]; then
+    echo "Cannot determine ID of running workflow - aborting."
+    exit 1
+  else
+    gh run watch "$id"
+  fi
+
+}
+
+main "$@"
