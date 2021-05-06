@@ -12,3 +12,5 @@ alias cgr='cg && r'
 alias vig='vim -c "Goyo"'
 alias wfb='workflowbrowser'
 alias wfe='workflowbrowser | xargs showgithubcontent | vim --not-a-term -' # workflow edit
+alias branch='git checkout -b'
+alias pr='git push --set-upstream origin $(git branch --show-current) && gh pr create'
