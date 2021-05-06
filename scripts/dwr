@@ -46,7 +46,7 @@ selectruns() {
 
   gh --hostname "$hostname" api --paginate "/repos/$repo/actions/runs" \
     | jq -r -f <(jqscript) \
-    | fzf --multi
+    | fzf --multi --reverse
 
 }
 
