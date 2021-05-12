@@ -23,3 +23,6 @@ alias i='gh issue list'
 alias ic='gh issue create'
 alias iv='gh issue view'
 alias ie='gh issue edit'
+
+# Show directory symbol (/)
+alias ls='ls -p'
