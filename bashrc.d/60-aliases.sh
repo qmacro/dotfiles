@@ -17,3 +17,9 @@ alias pr='git push --set-upstream origin $(git branch --show-current) && gh pr c
 
 # See https://superuser.com/questions/763071/show-whitespace-characters-in-printout
 alias whitespace="sed 's/ /·/g;s/\t/￫/g;s/\r/§/g;s/$/¶/g'"
+
+# GitHub CLI - issues
+alias i='gh issue list'
+alias ic='gh issue create'
+alias iv='gh issue view'
+alias ie='gh issue edit'
