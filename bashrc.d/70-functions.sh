@@ -97,3 +97,8 @@ authenv() {
   fi
 
 }
+
+s() {
+  local IFS="+"
+  open "https://google.com/search?q=$*"
+}
