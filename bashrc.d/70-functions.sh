@@ -60,7 +60,7 @@ choose_tmux_session() {
 
 }
 
-cg() {
+g() {
 
   # Change to a git repo
   local target
