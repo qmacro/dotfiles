@@ -82,7 +82,7 @@ g() {
   )
 
   if [[ -n "$target" ]]; then
-    cd "$target" && ls
+    cd "$target" && ls -a && gs
   fi
 
 }

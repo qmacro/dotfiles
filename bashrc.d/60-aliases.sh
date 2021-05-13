@@ -20,9 +20,13 @@ alias whitespace="sed 's/ /·/g;s/\t/￫/g;s/\r/§/g;s/$/¶/g'"
 
 # GitHub CLI - issues
 alias i='gh issue list'
-alias ic='gh issue create'
+alias in='gh issue create'
 alias iv='gh issue view'
 alias ie='gh issue edit'
+alias ic='gh issue comment'
 
 # Show directory symbol (/)
 alias ls='ls -p'
+
+# More succinct git status
+alias gs='git status --short --branch'
