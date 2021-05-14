@@ -1,4 +1,8 @@
-Host pi* athertonmine athertonmine.hopto.org
+Host ds1621plus
+    User administrator
+    ForwardX11 no
+
+Host pi*
     User pi
 
 Host *mbp
