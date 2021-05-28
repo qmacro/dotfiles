@@ -2,7 +2,7 @@ Host ds1621plus
     User administrator
     ForwardX11 no
 
-Host pi*
+Host pi* athertonmine
     User pi
 
 Host *mbp
