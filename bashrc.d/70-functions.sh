@@ -82,7 +82,7 @@ g() {
   )
 
   if [[ -n "$target" ]]; then
-    cd "$target" && ls -a && gs
+    cd "$target" && ls -a && git status --short --branch
   fi
 
 }
@@ -108,7 +108,11 @@ authenv() {
 
 }
 
-s() {
+search() {
   local IFS="+"
   open "https://google.com/search?q=$*"
+}
+
+focus() {
+  [[ -n $TMUX ]] && tmux rename-session "$*"
 }
