@@ -103,6 +103,7 @@ let g:ale_fixers = {
 " -ci  : switch cases will be indented
 " -sr  : redirect ops will be followed by a space
 let g:ale_sh_shfmt_options='-i 2 -bn -ci -sr'
+let g:ale_markdown_markdownlint_options = '--config ~/.markdownlintrc'
 
 nmap <silent> <F8> :ALENextWrap<cr>
 nmap <silent> <S-F8> :ALEPreviousWrap<cr>
