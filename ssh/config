@@ -1,5 +1,6 @@
 Host ds1621plus
     User administrator
+    Port 2222
     ForwardX11 no
 
 Host pi* athertonmine
