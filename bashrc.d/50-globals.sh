@@ -17,3 +17,6 @@ export GIT_PAGER='delta -s'
 
 # For use with the GitHub CLI 'gh' when making API calls
 export GH_CACHETIME=1h
+
+# Controls colour output in the terminal (e.g. with ls)
+export CLICOLOR=true

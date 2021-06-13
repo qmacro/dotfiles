@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-# Show issues in a repo - i
-
-# Presents the labels in a repo for choosing,
-# combines them into a list, and then shows the
-# issues based on the labels selected.
-
-issues "$(urlencode "$(labels | paste -s -d ',' -)")" | cut -f 1

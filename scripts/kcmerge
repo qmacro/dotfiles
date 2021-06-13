@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Merges new kubeconfig file into main (default) kubeconfig.
+# Deletes this new kubeconfig file as the last step.
+
+set -o errexit
+
+declare newfile self tempfile kubeconfig
+
+newfile="${1:?Specify file to merge}"
+self="$(basename "$0")"
+tempfile="/tmp/$self.tempfile"
+kubeconfig="$HOME/.kube/config"
+
+KUBECONFIG="$newfile:$kubeconfig" kubectl config view --merge --flatten > "$tempfile"
+mv "$tempfile" "$kubeconfig"
+rm "$newfile"

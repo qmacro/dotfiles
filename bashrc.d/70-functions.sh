@@ -60,19 +60,29 @@ choose_tmux_session() {
 
 }
 
-cg() {
+g() {
 
   # Change to a git repo
+  # --------------------
+
   local target
+  local repo
+
+  # Look for a repo name in case a short form is given
+  repo=$(grep -E "^$1\s" "$HOME/.dotfiles/config/g/config.txt" | cut -f 2)
+
+  # Fall back to what was originally given if a short form can't be resolved
+  repo=${repo:-$1}
+
   target=$(
     find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 \
       | sed -E 's/^(.+\/gh(\/.+?))$/\2\t\1/' \
-      | fzf --with-nth=1 --select-1 --query="$1" --height=60% --reverse \
+      | fzf --with-nth=1 --select-1 --query="$repo" --height=60% --reverse \
       | cut -f 2
   )
 
   if [[ -n "$target" ]]; then
-    cd "$target" && ls
+    cd "$target" && ls -a && git status --short --branch
   fi
 
 }
@@ -96,4 +106,13 @@ authenv() {
     echo
   fi
 
+}
+
+search() {
+  local IFS="+"
+  open "https://google.com/search?q=$*"
+}
+
+focus() {
+  [[ -n $TMUX ]] && tmux rename-session "$*"
 }

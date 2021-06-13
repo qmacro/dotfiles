@@ -63,7 +63,7 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 
 " Edit and source .vimrc
-nnoremap <leader>ev :split $MYVIMRC<cr>
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :so $MYVIMRC<cr>
 
 " Remove all trailing whitespace on save
@@ -82,13 +82,19 @@ autocmd FileType markdown inoremap ppp :point_right:<space>
 " -------------------------------------------------------------------
 let g:ale_completion_enabled = 1
 let g:ale_sign_column_always = 1
+let g:ale_linters_explicit = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 1
+let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 let g:ale_linters = {
-      \ 'sh': ['shellcheck', 'language_server'],
+      \ 'sh':       ['shellcheck', 'language_server'],
+      \ 'yaml':     ['yamllint'],
+      \ 'markdown': ['markdownlint'],
       \ }
 let g:ale_fixers = {
-      \ 'sh': ['shfmt'],
-      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \ 'sh':       ['shfmt'],
+      \ '*':        ['remove_trailing_lines', 'trim_whitespace'],
       \}
 
 " shfmt options:
@@ -97,6 +103,7 @@ let g:ale_fixers = {
 " -ci  : switch cases will be indented
 " -sr  : redirect ops will be followed by a space
 let g:ale_sh_shfmt_options='-i 2 -bn -ci -sr'
+let g:ale_markdown_markdownlint_options = '--config ~/.markdownlintrc'
 
 nmap <silent> <F8> :ALENextWrap<cr>
 nmap <silent> <S-F8> :ALEPreviousWrap<cr>
