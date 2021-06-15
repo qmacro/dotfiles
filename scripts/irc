@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+docker run \
+  --rm \
+  --interactive \
+  --tty \
+  --name irssi \
+  --env TERM \
+  --user "$(id -u):$(id -g)" \
+  --log-driver=none \
+  irssi
+
+# --volume "$HOME/.irssi:/home/user/.irssi" \
