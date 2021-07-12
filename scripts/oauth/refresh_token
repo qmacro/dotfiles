@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Refreshes an access token. Requires values in following OAUTH env vars:
+
+readonly client_id="${OAUTH_CLIENT_ID:?No client ID available}"
+readonly client_secret="${OAUTH_CLIENT_SECRET:?No client secret available}"
+readonly refresh_token="${OAUTH_REFRESH_TOKEN:?No refresh token available}"
+readonly endpoint_root="${OAUTH_ENDPOINT_ROOT:?No endpoint root available}"
+
+main() {
+
+  local jsondata
+  jsondata=$(curl \
+    --fail \
+    --silent \
+    --data client_id="$client_id" \
+    --data client_secret="$client_secret" \
+    --data refresh_token="$refresh_token" \
+    --data grant_type=refresh_token \
+    "${endpoint_root}/token")
+
+  local rc=$?
+  if [[ "$rc" -gt 0 ]]; then
+    echo Failed to refresh token.
+    exit 1
+  fi
+
+  jq -r .access_token <<< "$jsondata"
+
+}
+
+main "$@"
