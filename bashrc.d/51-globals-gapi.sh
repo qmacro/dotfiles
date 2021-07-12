@@ -1,3 +1,5 @@
+# This file soon to be deprecated
+
 # For general Google API use
 export GAPI_ENDPOINT_AUTH=https://accounts.google.com/o/oauth2/v2/auth
 export GAPI_ENDPOINT_TOKEN=https://www.googleapis.com/oauth2/v3/token
