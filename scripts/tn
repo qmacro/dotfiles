@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# tn - tmux new
+
+tmux -u -S outer \
+  -f "$HOME/.dotfiles/tmux-outer.conf" \
+  new-session \; \
+  send-keys "unset TMUX && tmux -u -S inner -f $HOME/.dotfiles/tmux-inner.conf" C-m \;
