@@ -2,7 +2,7 @@
 
 # tn - tmux new
 
-tmux -u -S outer \
+tmux -u -L outer \
   -f "$HOME/.dotfiles/tmux-outer.conf" \
   new-session \; \
-  send-keys "unset TMUX && tmux -u -S inner -f $HOME/.dotfiles/tmux-inner.conf" C-m \;
+  send-keys "unset TMUX && tmux -u -f $HOME/.dotfiles/tmux-inner.conf" C-m \;
