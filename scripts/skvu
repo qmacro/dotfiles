@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Calls skv and URL-encodes the result
+urlencode "$(skv "$*")"
