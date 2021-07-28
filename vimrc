@@ -21,6 +21,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'airblade/vim-gitgutter'
 Plug 'bfrg/vim-jq'
 Plug 'Yggdroot/indentLine'
+Plug 'neoclide/jsonc.vim'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -72,6 +73,9 @@ autocmd BufWritePre * %s/\s\+$//e
 " Check leading whitespace
 set listchars=tab:▸·,eol:¬
 nnoremap <silent> <leader>l :set list!<cr>
+
+"devcontainer.json files contain comments, gah!
+autocmd BufNewFile,BufRead devcontainer.json set ft=jsonc
 
 " Quick insertions of various patterns when writing markdown
 autocmd FileType markdown inoremap ii -<space>[<space>]<space>
