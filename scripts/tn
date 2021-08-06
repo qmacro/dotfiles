@@ -3,7 +3,9 @@
 # tn - tmux new
 
 export TERM=screen-256color
-tmux -u -L outer \
+tmux \
+  -u \
+  -L outer \
   -f "$HOME/.dotfiles/tmux-outer.conf" \
-  new-session \; \
-  send-keys "unset TMUX && tmux -u -f $HOME/.dotfiles/tmux-inner.conf" C-m \;
+  new-session -s outer \; \
+  send-keys "unset TMUX && tmux"  C-m \;
