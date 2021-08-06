@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# tn - tmux new
+
+export TERM=screen-256color
+tmux \
+  -u \
+  -L outer \
+  -f "$HOME/.dotfiles/tmux-outer.conf" \
+  new-session -s outer \; \
+  send-keys "unset TMUX && tmux"  C-m \;

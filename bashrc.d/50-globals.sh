@@ -20,3 +20,6 @@ export GH_CACHETIME=1h
 
 # Controls colour output in the terminal (e.g. with ls)
 export CLICOLOR=true
+
+# Standards
+export XDG_CONFIG_HOME="$HOME/.config"

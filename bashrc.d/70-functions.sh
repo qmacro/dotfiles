@@ -114,5 +114,14 @@ search() {
 }
 
 focus() {
-  [[ -n $TMUX ]] && tmux rename-session "$*"
+  echo "$*" > "$HOME/.focus"
+}
+
+ss() {
+
+  # Gets most recent screenshot file & moves it to specified location
+  local shot dest=$1
+  shot="$(find "$HOME/Desktop/" -name "screenshot*at*png" | sort | tail -1)"
+  mv "$shot" "${dest}.png"
+
 }
