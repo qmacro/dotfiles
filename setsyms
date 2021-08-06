@@ -11,3 +11,5 @@ done
 
 # Directories
 ln -s -f "$dotfiles/bashrc.d" "$HOME/.bashrc.d"
+ln -s -f "$dotfiles/config/kitty" "$HOME/.config/kitty"
+
