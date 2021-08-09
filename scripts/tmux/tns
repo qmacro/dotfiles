@@ -6,8 +6,10 @@ main() {
 
   local name="${1:?Specify name for new session}"
 
-    tmux new-session -d -s "$name" -c "$PWD" \
-    && tmux switch-client -t "$name"
+  tmux has-session -t "$name" \
+    || tmux new-session -d -s "$name" -c "$PWD"
+
+  tmux switch-client -t "$name"
 
 }
 
