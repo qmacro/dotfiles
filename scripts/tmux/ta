@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# ta - (re) attach (to outer session)
+
+export TERM=screen-256color
+tmux \
+  -u \
+  -L outer \
+  attach-session

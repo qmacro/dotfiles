@@ -1,4 +1,4 @@
-export PATH=$PATH:$HOME/bin:$HOME/.dotfiles/scripts
+export PATH=$PATH:$HOME/bin:$HOME/.dotfiles/scripts:$HOME/.dotfiles/scripts/tmux
 export PATH=/usr/local/opt/openjdk/bin:$PATH # brew-installed Java
 
 # Temp/specific projects as WIP
