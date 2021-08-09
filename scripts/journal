@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# Allow creation of journal entry:
+# - can specify title on invocation (journal This Is The Title)
+# - edit the entry in Markdown
+# - checks there is some content
+# - confirm title (defaulting to any title given earlier)
+# - checks there is a non-empty title
+# - creates journal entry as issue in journal repo
+# See https://github.com/qmacro/thinking-aloud/issues/28.
+
+declare -r journalrepo="qmacro/test"
+
+main() {
+
+  local tmpfile title
+
+  tmpfile=$(mktemp /tmp/journal.XXX)
+
+  vim -c 'set ft=markdown' "$tmpfile" \
+    && test -s "$tmpfile" \
+    && echo -n "Title${*:+ ($*)}? " \
+    && read -r t \
+    && title="${t:-$*}" \
+    && test -n "$title" \
+    && gh issue create \
+      --repo "$journalrepo" \
+      --label entry \
+      --title "$(date '+%Y-%m-%d %H:%M:%S') $title" \
+      --body-file "$tmpfile" \
+    && sleep 2 \
+    && rm "$tmpfile"
+
+}
+
+main "$@"
