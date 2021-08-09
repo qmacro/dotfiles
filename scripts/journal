@@ -9,7 +9,7 @@
 # - creates journal entry as issue in journal repo
 # See https://github.com/qmacro/thinking-aloud/issues/28.
 
-declare -r journalrepo="qmacro/test"
+declare -r journalrepo="qmacro/thinking-aloud"
 
 main() {
 
