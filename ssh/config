@@ -17,6 +17,3 @@ Host github.com
 
 Host zino gargantubrain acer teemo
      User dj
-
-Host *
-     ForwardX11 yes
