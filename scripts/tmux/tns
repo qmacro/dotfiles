@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# tns - tmux new session
+
+main() {
+
+  local name="${1:?Specify name for new session}"
+
+  tmux has-session -t "$name" 2> /dev/null \
+    || tmux new-session -d -s "$name" -c "$PWD"
+
+  tmux switch-client -t "$name" || tmux attach-session -t "$name"
+
+}
+
+main "$@"
