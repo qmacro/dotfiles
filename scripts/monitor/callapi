@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# Assumes a service, e.g. strava, with two files:
+# - <service>-token.json either containing just an initial refresh_token,
+#                        or the result of a call to refresh (which would
+#                        then also include other properties such as
+#                        expires_at, access_token, etc).
+# - <service>-base.json  containing values for api, client id & secret.
+
+set -o errexit
+set -o pipefail
+declare service
+
+getbaseprop() {
+
+  # Retrieves the value of a given property from the 'base' file.
+
+  local property=$1
+  _getprop "$property" "base"
+
+}
+
+gettokenprop() {
+
+  # Retrieves the value of a given property from the 'token' file.
+
+  local property=$1
+  _getprop "$property" "token"
+
+}
+
+_getprop() {
+
+  # Retrieves the value of a given property from a JSON file, and
+  # if that's not found, doesn't fail, but returns an empty value.
+
+  local property=$1
+  local suffix=$2
+  local file
+  file="${service}${suffix:+-${suffix}}.json"
+  jq -r ".$property" "$file" 2> /dev/null || echo ''
+
+}
+
+refresh_token() {
+
+  # Performs the "refresh token" step of the Authentication Code flow,
+  # saving the data returned (which should include another refresh
+  # token, and a new access token and expiry date, amongst other things).
+  # The data is (re-)stored in the <service>-token.json file, via a temp
+  # file in case the refresh fails (in which case, the existing data
+  # will be preserved; the access token may be out of date but there's
+  # still the refresh token ready for another attempt). The JSON output
+  # is pretty-printed with jq.
+
+  curl \
+    --silent \
+    --fail \
+    --data client_id="$(getbaseprop client_id)" \
+    --data client_secret="$(getbaseprop client_secret)" \
+    --data grant_type=refresh_token \
+    --data refresh_token="$(gettokenprop refresh_token)" \
+    --url "$(getbaseprop api)/oauth/token" \
+    | jq . > temp.json
+
+  mv temp.json "${service}-token".json
+
+}
+
+call() {
+
+  # Make an API call, to the path given, which is appended to the API
+  # base. The JSON output is pretty-printed with jq.
+
+  local path=$1
+
+  curl \
+    --silent \
+    --fail \
+    --header "Authorization: Bearer $(gettokenprop access_token)" \
+    --url "$(getbaseprop api)${path}" \
+    | jq .
+
+}
+
+main() {
+
+  # Startup function - checks if the access token has expired (by
+  # comparing the expires_at with right now) and requests another
+  # if it has. Then it makes the API call specified.
+
+  local now expires_at
+
+  service=${1:?Specify service}
+  path=${2:?Specify API path to call}
+
+  expires_at=$(gettokenprop expires_at)
+  now=$(date '+%s')
+
+  # Refresh token if required (compare now with
+  # when the current token is due to expire).
+  if [[ $now -ge $expires_at ]]; then
+    echo Refreshing token ...
+    refresh_token
+  fi
+
+  call "$path"
+
+}
+
+main "$@"
