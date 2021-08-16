@@ -5,3 +5,13 @@ config/g/
 config/htop/
 id_rsa*
 known_hosts
+
+# Config files that contain sensitive info or are installed
+# there and don't need to be stored
+config/asciinema/install-id
+config/configstore/
+config/exercism/
+config/gcloud/
+config/gh/hosts.yml
+config/sapcp
+config/autocomplete/scripts/sapbtpcli-autocomplete.plugin.sh
