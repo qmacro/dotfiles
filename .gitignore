@@ -2,5 +2,6 @@
 *.swp
 host.aliases
 config/g/
+config/htop/
 id_rsa*
 known_hosts

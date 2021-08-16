@@ -7,9 +7,10 @@ if ! shopt -oq posix; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
-  elif [ -f "$(brew --prefix)/etc/bash_completion" ]; then
-    . "$(brew --prefix)/etc/bash_completion"
   fi
+  type brew 2>/dev/null \
+    && -f "$(brew --prefix)/etc/bash_completion" \
+    && "$(brew --prefix)/etc/bash_completion"
 fi
 
 # Exercism completion
