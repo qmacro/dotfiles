@@ -8,8 +8,8 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
-  type brew 2>/dev/null \
-    && -f "$(brew --prefix)/etc/bash_completion" \
+  type brew > /dev/null 2>&1 \
+    && [[ -f "$(brew --prefix)/etc/bash_completion" ]] \
     && "$(brew --prefix)/etc/bash_completion"
 fi
 
