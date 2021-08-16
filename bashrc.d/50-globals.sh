@@ -12,7 +12,7 @@ privateenvvars="$HOME/.private_envvars.sh"
 [ -f "$privateenvvars" ] && . "$privateenvvars"
 
 # See https://github.blog/2021-03-11-scripting-with-github-cli/
-export GIT_PAGER='delta -s'
+type delta 2>/dev/null && export GIT_PAGER='delta -s'
 
 # For use with the GitHub CLI 'gh' when making API calls
 export GH_CACHETIME=1h

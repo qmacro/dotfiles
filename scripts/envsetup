@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+
+symlink() {
+
+  local file=$1
+  if [[ -f "$DOTFILES/$file" ]]; then
+    ln -s "$DOTFILES/$file" "$HOME/.$file"
+    echo "Created symlink for '$file'"
+  else
+    echo "File '$file' cannot be symlinked - does not exist"
+  fi
+
+}
+
+main() {
+
+  for file in tmux.conf vimrc bashrc gitconfig; do
+    [[ ! -f "$HOME/.$file" ]] && symlink $file
+  done
+
+}
+
+main "$@"
+
