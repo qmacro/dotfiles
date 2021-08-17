@@ -9,7 +9,7 @@ cd "$(dirname "$SAPCP_CLIENTCONFIG")" || exit 1
 
 selected="$(
   find . -type f \
-    | grep -v -E '(commands.json)' \
+  | grep -v -E '(commands.json|sapcp)' \
     | sed 's/^\.\///' \
     | fzf --reverse --preview "btpctx --long {1}"
 )"
