@@ -74,7 +74,7 @@ main() {
     echo "User: ${email%%@*}"
     echo "${selected:+CURRENTLY SELECTED}"
   else
-    echo "${subdomain%-ga} / $subaccount"
+    echo "${email%%@*} / ${subdomain%-ga} / $subaccount"
   fi
 
 }
