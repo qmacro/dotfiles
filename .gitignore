@@ -13,5 +13,5 @@ config/configstore/
 config/exercism/
 config/gcloud/
 config/gh/hosts.yml
-config/sapcp
+config/btp/
 config/autocomplete/scripts/sapbtpcli-autocomplete.plugin.sh
