@@ -3,14 +3,23 @@
 # getbtpcli - Get (latest) btp CLI
 
 set -o errexit
+declare -r TARGETDIR="$HOME/bin"
 declare -r licence="tools.hana.ondemand.com/developer-license-3_1.txt"
+declare tempdir ver
+
+# Move to a temporary directory for extracting and checking
+tempdir="$(mktemp -d)"
+cd "$tempdir"
 
 echo "Proceed (with Enter) only if you accept the SAP Developer Licence 3.1"
-echo -n "(see $licence) ..."
+echo -n "(see https://$licence) ..."
 read -r proceed
 
 # Download tarball of latest version and unpack it
+echo Downloading and extracting ...
 curl \
+  --fail \
+  --silent \
   --location \
   --header "Cookie: eula_3_1_agreed=$licence; path=/;" \
   "https://tools.hana.ondemand.com/additional/btp-cli-darwin-amd64-latest.tar.gz" \
@@ -23,7 +32,16 @@ curl \
     "darwin-amd64/btp"
 
 # Remove any Apple quarantine
-xattr -d com.apple.quarantine btp 2>/dev/null || true
+xattr -d com.apple.quarantine ./btp 2> /dev/null || true
 
-# Get it to show the version
-./btp --version
+# Determine the version
+ver="$(./btp --version 2> /dev/null | ggrep -P -o '(?<=v)\d+\.\d+\.\d+')"
+
+# Move to target directory and set symlink then remove temporary dir
+cd "$TARGETDIR" \
+  && mv "$tempdir/btp" "./btp-$ver" \
+  && ln -f -s "btp-$ver" btp \
+  && rmdir "$tempdir"
+
+# Show version
+"./btp-$ver" --version 2> /dev/null
