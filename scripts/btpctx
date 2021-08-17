@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+# Output current btp CLI context
+
+set -o errexit
+set -o pipefail
+
+# ACCOUNTSDIR is where the account config files are,
+# including the 'sapcp' symlink.
+declare ACCOUNTSDIR
+ACCOUNTSDIR="$(dirname "${SAPCP_CLIENTCONFIG}")"
+
+getproperty() {
+
+  # Retrieve value of property in the account config file. The
+  # first leading period of the property name (from a jq perspective)
+  # is optional.
+
+  local file=$1
+  local prop=$2
+
+  [[ ! $prop =~ ^\. ]] && prop=".$prop"
+  jq -r "$prop" "$ACCOUNTSDIR/$file"
+
+}
+
+is_selected() {
+
+  # Returns true if the given account is the one
+  # that's currently selected via the sapcp symlink.
+
+  if [[ $(readlink "$ACCOUNTSDIR/sapcp") = "$1" ]]; then
+    echo true
+  fi
+
+}
+
+main() {
+
+  # Show a short or long version of the context of the
+  # account specified. If no account is specified, then
+  # the one currently selected (via the sapcp symlink)
+  # is assumed.
+
+  local subdomain subaccount email option selected
+
+  # Simplest-thing-that-could-possibly-work handling
+  # of test mode, given that we have an optional
+  # parameter to handle too.
+  if [[ $1 =~ ^- ]]; then
+    option=$1
+    shift
+  fi
+
+  local account="${1:-sapcp}"
+
+  subdomain="$(getproperty "$account" SubDomain)"
+  subaccount="$(getproperty "$account" Subaccount)"
+  email="$(getproperty "$account" Authentication.Mail)"
+
+  if [[ $subaccount =~ ^$ ]]; then
+    subaccount="(no subaccount targeted)"
+  else
+    subaccount="${subaccount:0:8}"
+  fi
+
+  # Is the account specified the one that is currently
+  # selected?
+  selected="$(is_selected "$account")"
+
+  if [[ $option =~ ^(-l|--long)$ ]]; then
+    echo "Subdomain: $subdomain"
+    echo "Subaccount: $subaccount"
+    echo "User: ${email%%@*}"
+    echo "${selected:+CURRENTLY SELECTED}"
+  else
+    echo "${subdomain%-ga} / $subaccount"
+  fi
+
+}
+
+main "$@"

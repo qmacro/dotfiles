@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Select from a list of account configurations for btp CLI.
+# Replace or set the symlink 'sapcp' to the selected account.
+
+declare selected
+
+cd "$(dirname "$SAPCP_CLIENTCONFIG")" || exit 1
+
+selected="$(
+  find . -type f \
+    | sed 's/^\.\///' \
+    | fzf --reverse --preview "btpctx --long {1}"
+)"
+
+[[ -n $selected ]] && ln -fs "$selected" sapcp
