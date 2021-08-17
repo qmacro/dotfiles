@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Select subaccount of global account in btp. If there's only
+# one, select it automatically.
+
+btp --format JSON list accounts/subaccount 2> /dev/null \
+  | jq -r '.value[] | [.displayName, .guid] | @tsv' \
+  | fzf --reverse --select-1 \
+  | cut -f 2 \
+  | xargs btp target --subaccount
