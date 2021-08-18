@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# btp account select
+
+# Select from a list of account configurations for btp CLI.
+
+cd "$(dirname "$SAPCP_CLIENTCONFIG")" || exit 1
+
+find . -type f \
+  | grep -v -E '(commands.json|sapcp)' \
+  | sed 's/^\.\///' \
+  | fzf --preview "btpctx --long {1}"
