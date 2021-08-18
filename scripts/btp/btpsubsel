@@ -3,8 +3,11 @@
 # Select subaccount of global account in btp. If there's only
 # one, select it automatically.
 
+set -o errexit
+set -o pipefail
+
 btp --format JSON list accounts/subaccount 2> /dev/null \
   | jq -r '.value[] | [.displayName, .guid] | @tsv' \
-  | fzf --reverse --select-1 \
+  | fzf --exit-0 --reverse --select-1 \
   | cut -f 2 \
   | xargs btp target --subaccount
