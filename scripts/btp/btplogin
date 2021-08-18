@@ -18,6 +18,7 @@ set -o errexit
 
 declare SUBDOMAIN
 declare SAPCP
+declare ACCOUNT
 
 # The name of the file used by btp (sapcp)
 SAPCP="$(basename "$SAPCP_CLIENTCONFIG")"
@@ -26,13 +27,16 @@ SAPCP="$(basename "$SAPCP_CLIENTCONFIG")"
 [[ -L "$SAPCP_CLIENTCONFIG" ]] && rm "$SAPCP_CLIENTCONFIG"
 
 # Steps:
+# - Show existing accounts and use one if selected
 # - Go through the btp login process
 # - Get the subdomain name from sapcp which is updated in the process
 # - Move into the directory where I'm managing the account files
 # - Copy the new sapcp file to an file named for that account
 # - Make sapcp a symlink again, pointing to that new account file
 
-btp login \
+ACCOUNT="$(btplstacc | fzf)"
+
+btp login "${ACCOUNT:+--subdomain $ACCOUNT}" "$*" \
   && SUBDOMAIN=$(jq -r .SubDomain "$SAPCP_CLIENTCONFIG") \
   && cd "$(dirname "$SAPCP_CLIENTCONFIG")" \
   && cp "$SAPCP" "$SUBDOMAIN" \
