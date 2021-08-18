@@ -27,16 +27,17 @@ SAPCP="$(basename "$SAPCP_CLIENTCONFIG")"
 [[ -L "$SAPCP_CLIENTCONFIG" ]] && rm "$SAPCP_CLIENTCONFIG"
 
 # Steps:
-# - Show existing accounts and use one if selected
-# - Go through the btp login process
+# - List existing accounts for selection
+# - Go through the btp login process for the selected account
 # - Get the subdomain name from sapcp which is updated in the process
 # - Move into the directory where I'm managing the account files
 # - Copy the new sapcp file to an file named for that account
 # - Make sapcp a symlink again, pointing to that new account file
 
-ACCOUNT="$(btplstacc | fzf)"
+ACCOUNT="$(btpaccsel)"
+echo "Account (subdomain) $ACCOUNT selected for login"
 
-btp login "${ACCOUNT:+--subdomain $ACCOUNT}" "$*" \
+btp login --subdomain "$ACCOUNT" \
   && SUBDOMAIN=$(jq -r .SubDomain "$SAPCP_CLIENTCONFIG") \
   && cd "$(dirname "$SAPCP_CLIENTCONFIG")" \
   && cp "$SAPCP" "$SUBDOMAIN" \
