@@ -194,3 +194,5 @@ nnoremap <leader>i :IndentLinesToggle<CR>
 let g:indentLine_char = '┊'
 let g:indentLine_enabled = 0
 let g:indentLine_concealcursor = 0
+
+set noswapfile nobackup
