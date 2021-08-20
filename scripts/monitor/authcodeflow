@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+# Provides a simple OAuth 2.0 Authorization Flow process to:
+#
+# 1) generate the /oauth/authorize URL
+# 2) open the URL in the default User Agent so the resource owner
+#    (a human) can confirm, in the service consent screen, the
+#    requested access (via the scope provided)
+# 3) capture the authorization code provided in the callback
+# 4) request an exchange of that code for an access token
+#
+# If successful, this should emit (to STDOUT) JSON output containing
+# the token along with other information (including token type, a
+# refresh token, and so on).
+
+# Uses:
+# - ncat (netcat++) to bind to and listen on a socket
+# - xdg-open to open the consent screen in the browser
+# - default port 8888 on localhost to listen for the callback
+#   (set PORT env var to override)
+
+# Takes two mandatory parameters:
+# - service (e.g. strava)
+# - scope (e.g. activity:read)
+
+set -o errexit
+set -o pipefail
+
+# For getbaseprop
+source oauthlib.sh
+
+declare -r PORT="${PORT:-8888}"
+declare -A QUERYPARAMS
+
+parsequeryparams() {
+
+  # Takes a query string and creates an associative array from it.
+  # name=dj&colour=green&number=3
+  # ->
+  # ${QUERYPARAMS[name]} = dj
+  # ${QUERYPARAMS[colour]} = green
+  # ${QUERYPARAMS[number]} = 3
+
+  declare -a list
+  IFS='=&' list=($1) # need to investigate mapfile
+  for ((i = 0; i < ${#list[@]}; i += 2)); do
+    QUERYPARAMS[${list[$i]}]=${list[i + 1]}
+  done
+}
+
+capturecode() {
+
+  # Listens out for an incoming HTTP request (using ncat) and parses
+  # the first line (which will be the HTTP request line, consisting of
+  # method relative-url HTTP-version) to get the relative URL. Given
+  # that we're expecting a redirect from an OAuth 2.0 authorisation flow
+  # step, giving us the authorisation code, the value of relative-url
+  # will be something like: /?foo=bar&code=xyz&scope=something etc.
+  #
+  # This relative URL is stripped of the initial /? and then sent to
+  # parsequeryparams to get parsed into the QUERYPARAMS associative
+  # array. From there we can get the actual code value ('xyz' in
+  # this example).
+
+  local query
+  read -r _ query \
+    <<< "$(ncat -l "$PORT" < <(printf "HTTP/1.0 200 OK\\r\\n\\r\\nOK"))"
+  parsequeryparams "${query#/?}"
+  echo "${QUERYPARAMS[code]}"
+
+}
+
+authorize() {
+
+  # Constructs and opens in the browser a URL representing the first step
+  # of the Authorization Code flow. This takes the resource owner (me) to
+  # the service consent page, asking me for access to the scope.
+
+  local scope=$1
+  local url
+
+  url="$(getbaseprop authentication_base)/authorize"
+  url+="?response_type=code"
+  url+="&approval_prompt=force"
+  url+="&scope=$scope"
+  url+="&client_id=$(getbaseprop client_id)"
+  url+="&redirect_uri=http://localhost:$PORT/"
+
+  xdg-open "$url"
+
+}
+
+gettoken() {
+
+  local code=$1
+  local url
+
+  curl \
+    --silent \
+    --fail \
+    --data "grant_type=authorization_code" \
+    --data "code=$code" \
+    --data "client_id=$(getbaseprop client_id)" \
+    --data "client_secret=$(getbaseprop client_secret)" \
+    --url "$(getbaseprop authentication_base)/token"
+
+}
+
+usage() {
+
+  cat << EO_USAGE
+flow - OAuth 2.0 Authorization Code flow helper
+Usage: flow <service> <scope>
+EO_USAGE
+
+}
+
+main() {
+
+  if [[ $# -lt 2 ]]; then
+    usage
+    exit 1
+  fi
+
+  local service=$1
+  local scope=$2
+
+  setservice "$service"
+  authorize "$scope"
+  gettoken "$(capturecode)"
+
+}
+
+main "$@"
