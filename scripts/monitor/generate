@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+declare service
+service=${1:?Specify service}
+v() { jq "$1" "${service}-data.json"; }
+source "${service}-template"
