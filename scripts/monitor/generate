@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare service
-service=${1:?Specify service}
-v() { jq "$1" "${service}-data.json"; }
-source "${service}-template"
+declare template
+template=${1:?Specify page (e.g. strava-ytd-template)}
+v() { jq -r "$1" "$template.json"; }
+source "$template.sh"

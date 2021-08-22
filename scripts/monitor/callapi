@@ -11,36 +11,8 @@ set -o errexit
 set -o pipefail
 declare service
 
-getbaseprop() {
-
-  # Retrieves the value of a given property from the 'base' file.
-
-  local property=$1
-  _getprop "$property" "base"
-
-}
-
-gettokenprop() {
-
-  # Retrieves the value of a given property from the 'token' file.
-
-  local property=$1
-  _getprop "$property" "token"
-
-}
-
-_getprop() {
-
-  # Retrieves the value of a given property from a JSON file, and
-  # if that's not found, doesn't fail, but returns an empty value.
-
-  local property=$1
-  local suffix=$2
-  local file
-  file="${service}${suffix:+-${suffix}}.json"
-  jq -r ".$property" "$file" 2> /dev/null || echo ''
-
-}
+# For getbaseprop gettokenprop
+source oauthlib.sh
 
 refresh_token() {
 
@@ -60,7 +32,7 @@ refresh_token() {
     --data client_secret="$(getbaseprop client_secret)" \
     --data grant_type=refresh_token \
     --data refresh_token="$(gettokenprop refresh_token)" \
-    --url "$(getbaseprop api)/oauth/token" \
+    --url "$(getbaseprop authentication_base)/oauth/token" \
     | jq . > temp.json
 
   mv temp.json "${service}-token".json
@@ -78,7 +50,7 @@ call() {
     --silent \
     --fail \
     --header "Authorization: Bearer $(gettokenprop access_token)" \
-    --url "$(getbaseprop api)${path}" \
+    --url "$(getbaseprop resource_base)${path}" \
     | jq .
 
 }

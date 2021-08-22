@@ -1,7 +1,1 @@
-{
-  "token_type": "Bearer",
-  "access_token": "SECRET",
-  "expires_at": 1628871741,
-  "expires_in": 7018,
-  "refresh_token": "SECRET"
-}
+/home/dj/strava-token.json
