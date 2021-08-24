@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+# tmux-based jq explorer (inspired by https://github.com/bfrg/vim-jqplay)
+
+# Uses tmux, jq, vim and entr.
+
+# Invocation:
+# jqte [-p | --process filterfile] jsonfile
+
+# The main invocation, just with a JSON file, is all that is needed,
+# i.e. jqte somedata.json
+
+# The other invocation, specifying a jq filter file with -p or --process,
+# is for processing the JSON with the contents of the filter file, via
+# entr.
+
+declare -r self=$0
+
+setup() {
+
+  local jsonfile filterfile
+
+  jsonfile=$1
+  filterfile="$(mktemp)"
+
+  # Start with basic filter
+  echo "." > "$filterfile"
+
+  # Create a new tmux window to explore the data in the JSON file,
+  # like this:
+
+  # +---------------------+----------------------+
+  # | output              | original JSON data   |
+  # |                     |                      |
+  # |                     |                      |
+  # |                     |                      |
+  # |          1          |                      |
+  # |                     |                      |
+  # |                     |          2           |
+  # |                     |                      |
+  # +---------------------+                      |
+  # | filter              |                      |
+  # |          3          |                      |
+  # |                     |                      |
+  # +---------------------+----------------------+
+
+  # The 'output' and 'original JSON data' panes (1 and 2) are
+  # read-only, and the 'filter' pane (3) is a vim session to edit the
+  # jq filter. Whenever that filter is saved (to a temporary scratch
+  # file) the output is re-rendered accordingly.
+
+  tmux new-window \; \
+    split-window -h \; \
+    send-keys "jq -C . $jsonfile | less -R" C-m \; \
+    select-pane -t 1 \; \
+    split-window -v -p 25 \; \
+    send-keys "vim -c 'set filetype=jq' $filterfile" C-m \; \
+    select-pane -t 1 \; \
+    send-keys "echo $filterfile | entr -c $self --process $filterfile $jsonfile" C-m \; \
+    select-pane -t 2
+
+}
+
+process() {
+
+  local jsonfile filterfile
+
+  filterfile=$1
+  jsonfile=$2
+
+  jq -f "$filterfile" "$jsonfile"
+
+}
+
+main() {
+
+  local process filterfile jsonfile
+
+  if [[ $1 =~ ^--?p(rocess)?$ ]]; then
+    process=true
+    shift
+    filterfile=$1
+    shift
+  fi
+
+  jsonfile=$1
+
+  if [[ -n $process ]]; then
+    process "$filterfile" "$jsonfile"
+  else
+    setup "$jsonfile"
+  fi
+
+}
+
+main "$@"
