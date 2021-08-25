@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Dotfiles setup - use after cloning dotfiles repo to .dotfiles
+
+dotfiles="$HOME/.dotfiles"
+
+# Files
+for i in inputrc vimrc tmux.conf gitconfig bashrc; do
+  ln -s -f "$dotfiles/$i" "$HOME/.$i"
+done
