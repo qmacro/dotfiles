@@ -51,12 +51,12 @@ setup() {
 
   tmux new-window \; \
     split-window -h \; \
-    send-keys "jq -C . $jsonfile | less -R" C-m \; \
+    send-keys "vim $jsonfile" C-m \; \
     select-pane -t 1 \; \
     split-window -v -p 25 \; \
-    send-keys "vim -c 'set filetype=jq' $filterfile" C-m \; \
+    send-keys "vim -c 'set filetype=jq' -c 'autocmd TextChanged,TextChangedI <buffer> silent write' $filterfile" C-m \; \
     select-pane -t 1 \; \
-    send-keys "echo $filterfile | entr -c $self --process $filterfile $jsonfile" C-m \; \
+    send-keys "ls $jsonfile $filterfile | entr -c $self --process $filterfile $jsonfile" C-m \; \
     select-pane -t 2
 
 }
