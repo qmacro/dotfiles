@@ -8,8 +8,9 @@ ARG UID=1031
 # This is a container user so I'm not working as root
 ARG USERNAME=user
 
-# The current latest version of tmux
+# The current latest version of various programs
 ARG TMUXVER=3.2a
+ARG YQVER=4.12.1
 
 RUN apt-get update \
   && apt-get install -y \
@@ -17,12 +18,15 @@ RUN apt-get update \
     ca-certificates \
     vim \
     jq \
+    bat \
     ncat \
     entr \
     wget \
     curl \
     gnupg \
     pass \
+    man \
+    bash-completion \
     lsb-release \
     openssh-server \
     sudo \
@@ -34,15 +38,6 @@ RUN apt-get update \
   && apt-get update \
   && apt-get install -y docker-ce-cli
 
-# Install latest tmux
-RUN apt-get install -y \
-  build-essential ncurses-dev libevent-dev \
-  && cd /tmp/ \
-  && wget https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz \
-  && tar xzf tmux-$TMUXVER.tar.gz \
-  && cd tmux-$TMUXVER \
-  && ./configure && make && make install
-
 # Install latest gh
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -51,6 +46,18 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
   | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
   && apt-get update \
   && apt-get install -y gh
+
+# Install latest yq
+RUN wget https://github.com/mikefarah/yq/releases/download/${YQVER}/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+
+# Install latest tmux
+RUN apt-get install -y \
+  build-essential ncurses-dev libevent-dev \
+  && cd /tmp/ \
+  && wget https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz \
+  && tar xzf tmux-$TMUXVER.tar.gz \
+  && cd tmux-$TMUXVER \
+  && ./configure && make && make install
 
 RUN adduser \
   --uid $UID \
