@@ -11,6 +11,7 @@ ARG USERNAME=user
 # The current latest version of various programs
 ARG TMUXVER=3.2a
 ARG YQVER=4.12.1
+ARG NODEVER=lts
 
 RUN apt-get update \
   && apt-get install -y \
@@ -29,6 +30,9 @@ RUN apt-get update \
     bash-completion \
     lsb-release \
     openssh-server \
+    shellcheck \
+    file \
+    build-essential \
     sudo \
   && curl -fsSL https://download.docker.com/linux/debian/gpg \
      | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
@@ -48,16 +52,20 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
   && apt-get install -y gh
 
 # Install latest yq
-RUN wget https://github.com/mikefarah/yq/releases/download/${YQVER}/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+RUN wget https://github.com/mikefarah/yq/releases/download/v${YQVER}/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
 
 # Install latest tmux
 RUN apt-get install -y \
-  build-essential ncurses-dev libevent-dev \
+  ncurses-dev libevent-dev \
   && cd /tmp/ \
   && wget https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz \
   && tar xzf tmux-$TMUXVER.tar.gz \
   && cd tmux-$TMUXVER \
   && ./configure && make && make install
+
+# Install specific Node.js
+RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - \
+  && apt-get install -y nodejs
 
 RUN adduser \
   --uid $UID \
@@ -68,17 +76,19 @@ RUN adduser \
   --gecos "Dev User" \
   $USERNAME
 
-# Add these to the earlier layer when done
-RUN apt-get install -y \
-  man
+
+# Install fff
+RUN cd /tmp \
+  && git clone https://github.com/dylanaraps/fff \
+  && cd fff \
+  && PREFIX=/home/$USERNAME make install
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 ENV TERM xterm-256color
 
-
 # Set up dotfiles
-RUN git clone https://github.com/qmacro/dotfiles.git .dotfiles \
+RUN git clone git@github.com:qmacro/dotfiles.git . \
   && cd .dotfiles \
   && ./dotsetup
 
