@@ -1,7 +1,9 @@
-Host pihole ds1621plus
-    User administrator
-    Port 2222
+Host zino gargantubrain acer teemo ds1621plus pihole
+    User dj
     ForwardX11 no
+
+Host pihole ds1621plus
+    Port 2222
 
 Host pi* athertonmine
     User pi
@@ -11,9 +13,3 @@ Host *mbp
 
 Host pixel
      Port 8022
-
-Host github.com
-     ForwardX11 no
-
-Host zino gargantubrain acer teemo
-     User dj
