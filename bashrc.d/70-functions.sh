@@ -125,3 +125,9 @@ ss() {
   mv "$shot" "${dest}.png"
 
 }
+
+f() {
+  # Invoke fff as f and cd on exit
+  fff "$@"
+  cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" ||:
+}
