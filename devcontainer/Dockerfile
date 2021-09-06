@@ -78,16 +78,20 @@ RUN adduser \
   $USERNAME
 
 
-# Install fff
+# Install fff and then ensure that bin/ and share/ are user-owned
 RUN cd /tmp \
   && git clone https://github.com/dylanaraps/fff \
   && cd fff \
-  && PREFIX=/home/$USERNAME make install
+  && PREFIX=/home/$USERNAME make install \
+  && chown -R $USERNAME:$USERNAME /home/$USERNAME/bin /home/$USERNAME/share
 
 # Install gitui
 RUN cd /tmp \
   && wget "https://github.com/extrawurst/gitui/releases/download/v$GITUIVER/gitui-linux-musl.tar.gz" \
   && tar -x -z -C /usr/bin/ -f "./gitui-linux-musl.tar.gz"
+
+# Change ownership of /tmp
+RUN chown $USERNAME:$USERNAME /tmp/
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
