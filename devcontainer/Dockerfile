@@ -12,6 +12,7 @@ ARG USERNAME=user
 ARG TMUXVER=3.2a
 ARG YQVER=4.12.1
 ARG NODEVER=lts
+ARG GITUIVER=0.17
 
 RUN apt-get update \
   && apt-get install -y \
@@ -83,15 +84,22 @@ RUN cd /tmp \
   && cd fff \
   && PREFIX=/home/$USERNAME make install
 
+# Install gitui
+RUN cd /tmp \
+  && wget "https://github.com/extrawurst/gitui/releases/download/v$GITUIVER/gitui-linux-musl.tar.gz" \
+  && tar -x -z -C /usr/bin/ -f "./gitui-linux-musl.tar.gz"
+
 USER $USERNAME
 WORKDIR /home/$USERNAME
 ENV TERM xterm-256color
 
 # Set up dotfiles
-RUN git clone git@github.com:qmacro/dotfiles.git . \
+RUN git clone https://github.com/qmacro/dotfiles.git .dotfiles \
   && cd .dotfiles \
-  && ./dotsetup
+  && ./dotsetup \
+  && git remote set-url origin git@github.com:qmacro/dotfiles.git
 
-# Set up
+# Install vim plugins
+RUN vim +'PlugInstall --sync' +qa > /dev/null 2>&1
 
 CMD ["bash"]
