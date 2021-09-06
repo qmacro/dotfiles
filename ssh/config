@@ -1,4 +1,4 @@
-Host zino gargantubrain acer teemo ds1621plus pihole
+Host zino gargantubrain acer teemo ds1621plus pihole debian
     User dj
     ForwardX11 no
 
