@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+declare CONNAME=dev
+declare CONTEXT=synology
+declare HOMELOC=/var/services/homes
+
+docker context use "$CONTEXT"
+
+docker run \
+  --volume "$HOMELOC/dj/.ssh":/home/user/.ssh \
+  --volume "$HOMELOC/dj/work":/home/user/work \
+  --name "$CONNAME" \
+  --interactive \
+  --tty \
+  devtainer
