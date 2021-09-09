@@ -1,8 +1,9 @@
-Host zino gargantubrain acer teemo ds1621plus pihole debian
+Host zino gargantubrain acer teemo pihole debian
     User dj
     ForwardX11 no
 
 Host pihole ds1621plus
+    User dj
     Port 2222
 
 Host pi* athertonmine
