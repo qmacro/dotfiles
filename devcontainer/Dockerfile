@@ -69,6 +69,16 @@ RUN apt-get install -y \
 RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - \
   && apt-get install -y nodejs
 
+# Install cf CLI (v7)
+RUN wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add - \
+  && echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list \
+  && apt-get update \
+  && apt-get install -y cf7-cli
+
+# Install latest kubectl
+RUN curl -L -o /usr/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+  && chmod +x /usr/bin/kubectl
+
 RUN adduser \
   --uid $UID \
   --quiet \
