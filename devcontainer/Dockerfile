@@ -13,6 +13,7 @@ ARG TMUXVER=3.2a
 ARG YQVER=4.12.1
 ARG NODEVER=lts
 ARG GITUIVER=0.17
+ARG BATVER=0.18.3
 
 RUN apt-get update \
   && apt-get install -y \
@@ -20,7 +21,6 @@ RUN apt-get update \
     ca-certificates \
     vim \
     jq \
-    bat \
     ncat \
     entr \
     wget \
@@ -43,6 +43,11 @@ RUN apt-get update \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
   && apt-get update \
   && apt-get install -y docker-ce-cli
+
+# Install latest bat
+RUN cd /tmp/ \
+  && wget "https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-musl_${BATVER}_amd64.deb" \
+  && dpkg -i "./bat-musl_${BATVER}_amd64.deb"
 
 # Install latest gh
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
