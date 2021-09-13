@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 # Select subaccount of global account in btp. If there's only
-# one, select it automatically.
+# one, select it automatically. This used to then use 'btp target'
+# to set the selected subaccount as the target for btp CLI. It
+# doesn't, now.
 
 set -o errexit
 set -o pipefail
 
 btp --format JSON list accounts/subaccount 2> /dev/null \
-  | jq -r '.value[] | [.displayName, .guid] | @tsv' \
-  | fzf --exit-0 --reverse --select-1 \
-  | cut -f 2 \
-  | xargs btp target --subaccount
+  | jq -r '.value[] | [.region, .displayName, .guid] | @tsv' \
+  | fzf --exit-0 --select-1 \
+  | cut -f 3
