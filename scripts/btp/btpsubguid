@@ -21,7 +21,7 @@ gethier() {
 
 main() {
 
-  local hierarchy guid displayname
+  local hierarchy guid displayname rc=0
 
   displayname="${2:-$1}"
 
@@ -34,9 +34,14 @@ main() {
   guid="$(grep -P -o "^subaccount\s+\K(\S+)(?=\s+$displayname)" <<< "$hierarchy")"
 
   # Set the subdomain as target if requested
-  [[ $1 == -t ]] || [[ $1 == --target ]] && btp target --subaccount "$guid"
+  [[ $1 == -t ]] || [[ $1 == --target ]] && {
+    btp target --subaccount "$guid" &> /dev/null
+    rc=$?
+  }
 
   echo "$guid"
+  return $rc
+
 }
 
 main "$@"
