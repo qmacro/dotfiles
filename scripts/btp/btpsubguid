@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# bsg - BTP Subaccount GUID
+
+# Gets the GUID for the given subaccount, which is specified
+# by name as the first and only parameter. For example:
+# $ btpsubguid trial
+# b8a33bf9-b155-4736-aadf-582dae8fd65a
+
+# Requires the btp CLI. Will direct you to log in first if
+# you're not already logged in.
+
+
+gethier() {
+  btp get accounts/global-account --show-hierarchy 2> /dev/null
+}
+
+main() {
+
+  local displayname=${1:?Specify subaccount name}
+  local hierarchy
+  hierarchy="$(gethier)" || { btp login && hierarchy="$(gethier)"; }
+  grep -P -o "^subaccount\s+\K(\S+)\s+(?=$displayname)" <<< "$hierarchy"
+
+}
+
+main "$@"
