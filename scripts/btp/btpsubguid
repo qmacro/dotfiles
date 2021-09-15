@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-# bsg - BTP Subaccount GUID
+# btpsubguid - BTP Subaccount GUID
 
-# Gets the GUID for the given subaccount, which is specified
-# by name as the first and only parameter. For example:
-# $ btpsubguid trial
-# b8a33bf9-b155-4736-aadf-582dae8fd65a
+# Usage: btpsubguid [-t|--target] subaccountname
 
-# Requires the btp CLI. Will direct you to log in first if
-# you're not already logged in.
+# Returns the GUID for the given subaccount, which is specified
+# by name. If the option -t or --target is specified, it will
+# also set that subaccount as the target.
 
+# Requires the btp CLI. Will direct you to log in first if you're
+# not already logged in.
+
+# Uses the "${2:-$1}" technique seen in fff - see
+# https://qmacro.org/autodidactics/2021/09/03/exploring-fff-part-1-main/
+# for details.
 
 gethier() {
   btp get accounts/global-account --show-hierarchy 2> /dev/null
@@ -17,11 +21,22 @@ gethier() {
 
 main() {
 
-  local displayname=${1:?Specify subaccount name}
-  local hierarchy
-  hierarchy="$(gethier)" || { btp login && hierarchy="$(gethier)"; }
-  grep -P -o "^subaccount\s+\K(\S+)\s+(?=$displayname)" <<< "$hierarchy"
+  local hierarchy guid displayname
 
+  displayname="${2:-$1}"
+
+  [[ -z $displayname ]] && {
+    echo "No subaccount name specified"
+    exit 1
+  }
+
+  hierarchy="$(gethier)" || { btp login && hierarchy="$(gethier)"; }
+  guid="$(grep -P -o "^subaccount\s+\K(\S+)(?=\s+$displayname)" <<< "$hierarchy")"
+
+  # Set the subdomain as target if requested
+  [[ $1 == -t ]] || [[ $1 == --target ]] && btp target --subaccount "$guid"
+
+  echo "$guid"
 }
 
 main "$@"
