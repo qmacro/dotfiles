@@ -157,7 +157,7 @@ RUN cd /tmp/ \
   --location \
   --url "https://raw.githubusercontent.com/SAP-samples/sap-tech-bytes/2021-09-01-btp-cli/getbtpcli" \
   && chmod +x getbtpcli \
-  && $HOME/bin/getbtpcli
+  && echo -ne '\n' | ./getbtpcli
 
 RUN echo "What are you focusing on?" > $HOME/.focus
 CMD ["tmux", "-u", "new", "-s", "main"]
