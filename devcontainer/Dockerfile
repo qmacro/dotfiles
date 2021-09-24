@@ -14,6 +14,7 @@ ARG YQVER=4.12.1
 ARG NODEVER=lts
 ARG GITUIVER=0.17
 ARG BATVER=0.18.3
+ARG GLOWVER=1.4.1
 
 RUN apt-get update \
   && apt-get install -y \
@@ -36,6 +37,7 @@ RUN apt-get update \
     build-essential \
     sudo \
     fzf \
+    uuid-runtime \
   && curl -fsSL https://download.docker.com/linux/debian/gpg \
      | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
   && echo \
@@ -74,6 +76,27 @@ RUN apt-get install -y \
 RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - \
   && apt-get install -y nodejs
 
+# Install global npm modules
+RUN npm install -g \
+  @sap/cds-dk \
+  @sap/generator-fiori \
+  @sapui5/generator-sapui5-templates \
+  @ui5/cli \
+  fx \
+  docsify-cli \
+  bash-language-server \
+  eslint \
+  http-server \
+  httpie \
+  jwt-cli \
+  lorem-ipsum \
+  prettier \
+  lodash \
+  ramda \
+  url-decode-encode-cli \
+  yarn \
+  yo
+
 # Install cf CLI (v7)
 RUN wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add - \
   && echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list \
@@ -106,6 +129,11 @@ RUN cd /tmp \
   && wget "https://github.com/extrawurst/gitui/releases/download/v$GITUIVER/gitui-linux-musl.tar.gz" \
   && tar -x -z -C /usr/bin/ -f "./gitui-linux-musl.tar.gz"
 
+# Install glow
+RUN cd /tmp \
+  && wget "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" \
+  && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
+
 # Change ownership of /tmp
 RUN chown $USERNAME:$USERNAME /tmp/
 
@@ -122,4 +150,14 @@ RUN git clone https://github.com/qmacro/dotfiles.git .dotfiles \
 # Install vim plugins
 RUN vim +'PlugInstall --sync' +qa > /dev/null 2>&1
 
-CMD ["bash"]
+# Install btp CLI
+RUN cd /tmp/ \
+  && curl \
+  --remote-name \
+  --location \
+  --url "https://raw.githubusercontent.com/SAP-samples/sap-tech-bytes/2021-09-01-btp-cli/getbtpcli" \
+  && chmod +x getbtpcli \
+  && $HOME/bin/getbtpcli
+
+RUN echo "What are you focusing on?" > $HOME/.focus
+CMD ["tmux", "-u", "new", "-s", "main"]

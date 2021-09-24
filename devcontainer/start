@@ -9,6 +9,7 @@ docker context use "$CONTEXT"
 docker run \
   --volume "$HOMELOC/dj/.ssh":/home/user/.ssh \
   --volume "$HOMELOC/dj/work":/home/user/work \
+  --volume "$HOMELOC/dj/.config/gh":/home/user/work/.config/gh \
   --name "$CONNAME" \
   --interactive \
   --tty \
