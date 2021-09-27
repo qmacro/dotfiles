@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# btpguid - return BTP subaccount/directory GUIDs
+
+# Usage: btpguid [-t|--target] displayname
+
+# Returns the GUID for the given subaccount or directory, which is
+# specified by name. If the option -t or --target is specified, it
+# will also set that subaccount or directory as the target.
+
+# Requires the btp CLI. Will direct you to log in first if you're
+# not already logged in.
+
+# It uses the detail from the output of this command:
+# btp get accounts/global-account --show-hierarchy
+
+# The output looks like this:
+
+# Showing details for global account af39080b-1527-40a1-b78a-3b605af7e811...
+#
+# ├─ c35b11e4trial (af39080b-1527-40a1-b78a-3b605af7e811 - global account)
+# │  ├─ trial (b6501bff-e0ac-4fdf-8898-81f305d25335 - subaccount)
+# │  ├─ techedhouse (e57c5b13-9480-4a68-9c04-a603d7a017a9 - directory)
+#
+# type:            id:                                    display name:   parent id:
+# global account   af39080b-1527-40a1-b78a-3b605af7e811   c35b11e4trial
+# subaccount       b6501bff-e0ac-4fdf-8898-81f305d25335   trial           af39080b-...
+# directory        e57c5b13-9480-4a68-9c04-a603d7a017a9   techedhouse     af39080b-...
+
+# It's the second part of the output (the table) that is used.
+
+# Uses the "${2:-$1}" technique seen in fff - see
+# https://qmacro.org/autodidactics/2021/09/03/exploring-fff-part-1-main/
+# for details.
+
+gethier() {
+  btp get accounts/global-account --show-hierarchy 2> /dev/null
+}
+
+main() {
+
+  local hierarchy subtype guid displayname rc=0
+
+  displayname="${2:-$1}"
+
+  [[ -z $displayname ]] && {
+    echo "No display name specified"
+    exit 1
+  }
+
+  hierarchy="$(gethier)" || { btp login && hierarchy="$(gethier)"; }
+  read -r subtype guid <<< "$(grep -P -o "^(subaccount|directory)\s+(\S+)(?=\s+$displayname)" <<< "$hierarchy")"
+
+  # Set the subtype as target if requested
+  [[ $1 == -t ]] || [[ $1 == --target ]] && {
+    btp target "--${subtype}" "$guid" &> /dev/null
+    rc=$?
+  }
+
+  echo "$guid"
+  return $rc
+
+}
+
+main "$@"
