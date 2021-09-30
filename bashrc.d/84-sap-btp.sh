@@ -23,7 +23,8 @@ btpgo () {
 
   clear && \
     btplogin "${1:?Specify account}" \
-    && btp get accounts/global-account --show-hierarchy
+    && btp get accounts/global-account --show-hierarchy \
+    && btpctx > "$HOME/.status"
 
 }
 
