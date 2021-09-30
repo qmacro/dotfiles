@@ -1,44 +1,35 @@
 #!/usr/bin/env bash
 
-# Experimental
-
-# I need to use this instead of using 'btp login' directly, so that
-# the authentication data for account X is not overwritten by the
-# login process (via the sapcp file), when logging in for account Y.
-
-# This possibility exists because I am maintaining sapcp as a symlink
-# pointer to one of multiple account data files, like this:
-
-# -rw------- 348 7f81446xtrial-ga
-# -rw------- 330 82715b8ytrial-ga
-# -rw------- 520 cde3af7ztrial-ga
-# lrwxr-xr-x  16 sapcp -> 7f81446xtrial-ga
-
 set -o errexit
 
-declare SUBDOMAIN
-declare SAPCP
-declare ACCOUNT
+# Logs the user in with the account specified.
 
-# The name of the file used by btp (sapcp)
-SAPCP="$(basename "$SAPCP_CLIENTCONFIG")"
+# Store global account name and password in pass store:
+# btp/<account>/ga (e.g. fffffffftrial)
+# and btp/<account>/password (e.g. sekrit).
 
-# Remove any existing sapcp file, iff it's a symlink
-[[ -L "$SAPCP_CLIENTCONFIG" ]] && rm "$SAPCP_CLIENTCONFIG"
+declare URL="https://cpcli.cf.eu10.hana.ondemand.com"
 
-# Steps:
-# - List existing accounts for selection
-# - Go through the btp login process for the selected account
-# - Get the subdomain name from sapcp which is updated in the process
-# - Move into the directory where I'm managing the account files
-# - Copy the new sapcp file to an file named for that account
-# - Make sapcp a symlink again, pointing to that new account file
+username() {
 
-ACCOUNT="$(btpaccsel)"
-echo "Account (subdomain) $ACCOUNT selected for login"
+  local account=$1
+  echo "qmacro+$account@gmail.com"
 
-btp login --subdomain "$ACCOUNT" \
-  && SUBDOMAIN=$(jq -r .SubDomain "$SAPCP_CLIENTCONFIG") \
-  && cd "$(dirname "$SAPCP_CLIENTCONFIG")" \
-  && cp "$SAPCP" "$SUBDOMAIN" \
-  && ln -f -s "$SUBDOMAIN" "$SAPCP"
+}
+
+main() {
+
+  local account="${1:?No account specified}"
+
+  # Cause script to abend if no account data stored
+  pass "btp/$account" > /dev/null
+
+  btp login \
+    --url "$URL" \
+    --user "$(username "$account")" \
+    --subdomain "$(pass "btp/$account/ga")-ga" \
+    --password "$(pass "btp/$account/password")"
+
+}
+
+main "$@"

@@ -11,11 +11,19 @@ test -f "$btpautocomplete" \
   && source "$btpautocomplete" \
   && bind 'set show-all-if-ambiguous on'
 
-btp ()
-{
-    if [[ $1 =~ ^(get|list)$ ]]; then
-        "$HOME/bin/btp" "$@" | trunc
-    else
-        "$HOME/bin/btp" "$@"
-    fi
+btp () {
+  if [[ $1 =~ ^(get|list)$ ]]; then
+      "$HOME/bin/btp" "$@" | trunc
+  else
+      "$HOME/bin/btp" "$@"
+  fi
 }
+
+btpgo () {
+
+  clear && \
+    btplogin "${1:?Specify account}" \
+    && btp get accounts/global-account --show-hierarchy
+
+}
+
