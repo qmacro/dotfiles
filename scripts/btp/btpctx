@@ -22,15 +22,10 @@ getproperty() {
 
 main() {
 
-  # Show a short or long version of the context from the config file.
+  # Show a short version of the context from the config file.
 
   local configfile="${1:-$SAPCP_CLIENTCONFIG}"
-  local subdomain subaccount email option
-
-  if [[ $1 =~ ^- ]]; then
-    option=$1
-    shift
-  fi
+  local subdomain subaccount email
 
   subdomain="$(getproperty "$configfile" SubDomain)"
   subaccount="$(getproperty "$configfile" Subaccount)"
@@ -42,13 +37,7 @@ main() {
     subaccount="${subaccount:0:8}"
   fi
 
-  if [[ $option =~ ^(-l|--long)$ ]]; then
-    echo "Subdomain: $subdomain"
-    echo "Subaccount: $subaccount"
-    echo "User: ${email%%@*}"
-  else
-    echo "${email%%@*} / ${subdomain%-ga} / $subaccount"
-  fi
+  echo "${email%%@*} / ${subdomain%-ga} / $subaccount"
 
 }
 
