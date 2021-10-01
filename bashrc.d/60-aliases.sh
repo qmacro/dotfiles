@@ -32,4 +32,3 @@ alias t=tmux
 alias i='gh issue list'
 alias v=vim
 alias ts='killall tmux; tstartup'
-alias bgu=btpguid
