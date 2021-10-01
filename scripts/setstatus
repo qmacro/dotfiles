@@ -7,11 +7,10 @@ for ((;;)); {
   cp "$HOME/.weather" "$STATUS"
   sleep $DELAY
 
-  btpctx > "/tmp/.status"
-  mv /tmp/.status "$HOME/"
+  btpctx > "/tmp/.status" && mv /tmp/.status "$STATUS"
   sleep $DELAY
 
-  head -1 "$HOME/.focus" > "$HOME/.status"
+  head -1 "$HOME/.focus" > "$STATUS"
   sleep $DELAY
 
 }
