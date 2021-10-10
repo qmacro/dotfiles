@@ -5,7 +5,9 @@
 
 set -o errexit
 
-declare -r PLATFORM="$(uname -s)"
+declare -r PLATFORM
+PLATFORM="$(uname -s)"
+
 declare -r ARCH="${PLATFORM,,}-amd64"
 declare -r TARGETDIR="$HOME/bin"
 declare -r LICENCE="tools.hana.ondemand.com/developer-license-3_1.txt"
@@ -35,19 +37,22 @@ retrieve() {
 
   # Download tarball of latest version and extract the btp binary
 
-  local tempdir=$1
+  local desired=$1
+  local tempdir=$2
+  local filename="btp-cli-$ARCH-$desired.tar.gz"
 
-  curl \
-    --fail \
-    --silent \
-    --location \
-    --header "Cookie: eula_3_1_agreed=$LICENCE; path=/;" \
-    "https://tools.hana.ondemand.com/additional/btp-cli-$ARCH-latest.tar.gz" \
-    | tar \
-      --file - \
+  cd "$tempdir" \
+    && curl \
+      --fail \
+      --silent \
+      --location \
+      --output "$filename" \
+      --header "Cookie: eula_3_1_agreed=$LICENCE; path=/;" \
+      "https://tools.hana.ondemand.com/additional/$filename" \
+    && tar \
+      --file "$filename" \
       --extract \
       --gunzip \
-      --directory "$tempdir" \
       --strip-components 1 \
       "$ARCH/btp"
 
@@ -55,10 +60,11 @@ retrieve() {
 
 get_version() {
 
-  # Determine the version (uses the proper grep, from GNU)
+  # Determine the version (uses the proper grep, from GNU). We need to point to a temp, empty
+  # config file because older versions of btp don't like seeing newer versions of any config content.
 
-  local file=$1
-  "$file" --version 2> /dev/null | grep -P -o '(?<=v)\d+\.\d+\.\d+'
+  local tempdir=$1
+  "$tempdir/btp" --config "$tempdir/config" --version 2> /dev/null | grep -P -o '(?<=v)\d+\.\d+\.\d+'
 
 }
 
@@ -67,10 +73,15 @@ main() {
   # Move to a temporary directory; extract and check version, and
   # (unless --test mode) install, setting up symlink.
 
-  local tempdir ver testmode=false
+  local desired tempdir ver testmode=false
 
   # Determine if we're in test mode
-  [[ $1 =~ ^(-t|--test)$ ]] && testmode=true
+  [[ $1 =~ ^(-t|--test)$ ]] && {
+    testmode=true
+    shift
+  }
+
+  desired="${1:-latest}"
 
   # Couple of setup activities if we're going to try to install
   # - make sure the target dir exists
@@ -84,20 +95,23 @@ main() {
   tempdir="$(mktemp -d)"
 
   # Retrieve latest tarball and extract the binary
-  retrieve "$tempdir"
+  retrieve "$desired" "$tempdir" || {
+    echo "Failed to find version $desired"
+    exit 1
+  }
 
   # Dequarantine if on macOS
   [[ $PLATFORM =~ Darwin ]] && dequarantine "$tempdir/btp"
 
   # Determine version
-  ver="$(get_version "$tempdir/btp")"
-  echo "Latest version is $ver"
+  ver="$(get_version "$tempdir")"
+  echo "Version is $ver"
 
   # Unless we're in test mode, move binary to target directory and
   # set symlink
   if [[ $testmode = false ]]; then
     cd "$TARGETDIR" \
-      && mv "$tempdir/btp" "./btp-$ver" \
+      && cp "$tempdir/btp" "./btp-$ver" \
       && ln -f -s "btp-$ver" btp
   fi
 
