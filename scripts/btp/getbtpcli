@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
-# getbtpcli - Get (latest) btp CLI. Has a test mode (-t or --test) to
-# just retrieve & check what the latest version is, without installing.
+# getbtpcli - Get btp CLI. Specify a version, or have it default to
+# getting the latest. Has a test mode (-t or --test) to just retrieve
+# and show what the version is (only really makes sense when defaulting
+# to latest), without installing.
+
+# Usage: getbtpcli [-t|--test] [version]
+# Examples:
+# getbtpcli         gets & installs latest version; shows the version nr
+# getbtpcli --test  gets & shows what the latest version is; no install
+# getbtpcli 2.8.0   gets & installs version 2.8.0, shows the version nr
 
 set -o errexit
 
@@ -111,7 +119,7 @@ main() {
   # set symlink
   if [[ $testmode = false ]]; then
     cd "$TARGETDIR" \
-      && cp "$tempdir/btp" "./btp-$ver" \
+      && mv "$tempdir/btp" "./btp-$ver" \
       && ln -f -s "btp-$ver" btp
   fi
 
