@@ -13,7 +13,7 @@
 
 set -o errexit
 
-declare -r PLATFORM
+declare PLATFORM
 PLATFORM="$(uname -s)"
 
 declare -r ARCH="${PLATFORM,,}-amd64"
