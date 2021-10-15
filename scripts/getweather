@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-curl --silent "wttr.in/Manchester?format=3" | head -1 > "$HOME/.weather"
+curl --silent "wttr.in/Manchester?format=4" | head -1 > ~/.weather

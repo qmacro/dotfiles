@@ -29,7 +29,7 @@ btp () {
   if [[ $1 =~ ^(get|list)$ ]]; then
       btpwrapper "$@" | trunc
   else
-      btpwrapper "$@"
+      "$HOME/bin/btp" "$@"
   fi
 }
 

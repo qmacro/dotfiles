@@ -114,7 +114,7 @@ search() {
 }
 
 focus() {
-  echo "$*" > "$HOME/.focus"
+  echo "$*" | tee "$HOME/.focus" > "$HOME/.status"
 }
 
 ss() {
