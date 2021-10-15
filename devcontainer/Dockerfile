@@ -15,6 +15,7 @@ ARG NODEVER=lts
 ARG GITUIVER=0.17
 ARG BATVER=0.18.3
 ARG GLOWVER=1.4.1
+ARG SHFMTVER=3.3.1
 
 RUN apt-get update \
   && apt-get install -y \
@@ -134,6 +135,10 @@ RUN cd /tmp \
 RUN cd /tmp \
   && wget "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" \
   && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
+
+# Install shfmt
+RUN curl -L -o /usr/bin/shfmt "https://github.com/mvdan/sh/releases/download/v${SHFMTVER}/shfmt_v${SHFMTVER}_linux_amd64" \
+  && chmod +x /usr/bin/shfmt
 
 # Change ownership of /tmp
 RUN chown $USERNAME:$USERNAME /tmp/
