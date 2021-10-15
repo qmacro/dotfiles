@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+declare -r DELAY=30
+declare -r STATUS="$HOME/.status"
+
+for ((;;)); {
+#  cp "$HOME/.weather" "$STATUS"
+#  sleep $DELAY
+
+  btpctx > "/tmp/.status" && mv /tmp/.status "$STATUS"
+  sleep $DELAY
+
+  head -1 "$HOME/.focus" > "$STATUS"
+  sleep $DELAY
+
+}

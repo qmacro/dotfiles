@@ -11,9 +11,23 @@ test -f "$btpautocomplete" \
   && source "$btpautocomplete" \
   && bind 'set show-all-if-ambiguous on'
 
+btpwrapper () {
+
+  local OUTFILE="/tmp/btpcli"
+
+  if "$HOME/bin/btp" "$@" > "$OUTFILE.out" 2> "$OUTFILE.err"; then
+    cat "$OUTFILE.out"
+  else
+    rc=$?
+    cat "$OUTFILE.err"
+    return $rc
+  fi
+
+}
+
 btp () {
   if [[ $1 =~ ^(get|list)$ ]]; then
-      "$HOME/bin/btp" "$@" | trunc
+      btpwrapper "$@" | trunc
   else
       "$HOME/bin/btp" "$@"
   fi
@@ -23,7 +37,17 @@ btpgo () {
 
   clear && \
     btplogin "${1:?Specify account}" \
-    && btp get accounts/global-account --show-hierarchy
+    && btp get accounts/global-account --show-hierarchy \
+    && btpctx > "$HOME/.status"
 
 }
 
+bgu () {
+
+  btpguid "$@"
+
+  if [[ $# -gt 1 ]]; then
+    btpctx > "$HOME/.status"
+  fi
+
+}

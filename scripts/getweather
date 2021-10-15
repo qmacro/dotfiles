@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+curl --silent "wttr.in/Manchester?format=4" | head -1 > ~/.weather
