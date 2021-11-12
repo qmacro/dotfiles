@@ -40,6 +40,7 @@ RUN apt-get update \
     fzf \
     uuid-runtime \
     cron \
+    pandoc \
   && curl -fsSL https://download.docker.com/linux/debian/gpg \
      | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
   && echo \
@@ -124,7 +125,8 @@ RUN cd /tmp \
   && git clone https://github.com/dylanaraps/fff \
   && cd fff \
   && PREFIX=/home/$USERNAME make install \
-  && chown -R $USERNAME:$USERNAME /home/$USERNAME/bin /home/$USERNAME/share
+  && chown -R $USERNAME:$USERNAME /home/$USERNAME/bin /home/$USERNAME/share \
+  && rm -rf /tmp/fff
 
 # Install gitui
 RUN cd /tmp \
@@ -139,6 +141,12 @@ RUN cd /tmp \
 # Install shfmt
 RUN curl -L -o /usr/bin/shfmt "https://github.com/mvdan/sh/releases/download/v${SHFMTVER}/shfmt_v${SHFMTVER}_linux_amd64" \
   && chmod +x /usr/bin/shfmt
+
+# Install steampipe
+RUN /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/turbot/steampipe/main/install.sh)"
+
+# Install Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # Change ownership of /tmp
 RUN chown $USERNAME:$USERNAME /tmp/
@@ -165,5 +173,8 @@ RUN cd /tmp/ \
   && chmod +x getbtpcli \
   && echo -ne '\n' | ./getbtpcli
 
-RUN echo "What are you focusing on?" > $HOME/.focus
+# Set focus reminder
+RUN echo "What are you focusing on?" | tee $HOME/.status > $HOME/.focus
+
+# Off we go - based on tmux, the terminal multiplexer
 CMD ["tmux", "-u", "new", "-s", "main"]
