@@ -16,3 +16,5 @@ config/gh/hosts.yml
 config/btp/
 config/autocomplete/scripts/sapbtpcli-autocomplete.plugin.sh
 config/kitty/kitty-themes/
+config/so/
+config/weechat/
