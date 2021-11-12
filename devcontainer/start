@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
 declare CONNAME=dev
-declare HOMELOC=/var/services/homes
+declare HOMELOC=$HOME
 
-docker run \
-  --volume "$HOMELOC/dj/.ssh":/home/user/.ssh \
-  --volume "$HOMELOC/dj/.gnupg":/home/user/.gnupg \
-  --volume "$HOMELOC/dj/.password-store":/home/user/.password-store \
-  --volume "$HOMELOC/dj/.config/gh":/home/user/work/.config/gh \
-  --volume "$HOMELOC/dj/work":/home/user/work \
+docker container rm "$CONNAME" 2> /dev/null
+docker container run \
+  --volume "$HOMELOC/.ssh":/home/user/.ssh \
+  --volume "$HOMELOC/.gnupg":/home/user/.gnupg \
+  --volume "$HOMELOC/.steampipe":/home/user/.steampipe \
+  --volume "$HOMELOC/.password-store":/home/user/.password-store \
+  --volume "$HOMELOC/.config":/home/user/.config \
+  --volume "$HOMELOC/onedrive":/home/user/onedrive \
   --name "$CONNAME" \
   --interactive \
   --tty \
