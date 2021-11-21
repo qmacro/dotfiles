@@ -41,6 +41,9 @@ RUN apt-get update \
     uuid-runtime \
     cron \
     pandoc \
+    newsboat \
+    lynx \
+    w3m \
   && curl -fsSL https://download.docker.com/linux/debian/gpg \
      | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
   && echo \
