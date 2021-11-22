@@ -10,7 +10,7 @@ docker container run \
   --volume "$HOMELOC/.steampipe":/home/user/.steampipe \
   --volume "$HOMELOC/.password-store":/home/user/.password-store \
   --volume "$HOMELOC/.config":/home/user/.config \
-  --volume "$HOMELOC/onedrive":/home/user/onedrive \
+  --volume "$HOMELOC/onedrive":/home/user/work \
   --name "$CONNAME" \
   --interactive \
   --tty \

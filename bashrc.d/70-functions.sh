@@ -75,7 +75,7 @@ g() {
   repo=${repo:-$1}
 
   target=$(
-    find ~/Projects/gh -type d -mindepth 3 -maxdepth 3 \
+    find "$WORK/gh" -type d -mindepth 3 -maxdepth 3 \
       | sed -E 's/^(.+\/gh(\/.+?))$/\2\t\1/' \
       | fzf --with-nth=1 --select-1 --query="$repo" --height=60% --reverse \
       | cut -f 2
