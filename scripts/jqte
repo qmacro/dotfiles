@@ -54,7 +54,7 @@ setup() {
     send-keys "vim $jsonfile" C-m \; \
     select-pane -t 2 \; \
     split-window -v -p 25 \; \
-    send-keys "vim -c 'set filetype=jq' -c 'autocmd TextChanged,TextChangedI <buffer> silent write' $filterfile" C-m \; \
+    send-keys "vim -c 'set filetype=jq' -c 'autocmd TextChanged,InsertLeave <buffer> silent write' $filterfile" C-m \; \
     select-pane -t 1 \; \
     send-keys "ls $jsonfile $filterfile | entr -c $self --process $filterfile $jsonfile" C-m \; \
     select-pane -t 3
