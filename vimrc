@@ -197,3 +197,5 @@ let g:indentLine_enabled = 0
 let g:indentLine_concealcursor = 0
 
 set noswapfile nobackup
+
+autocmd BufNewFile,BufRead /tmp/journal.* :autocmd TextChanged,TextChangedI <buffer> silent write
