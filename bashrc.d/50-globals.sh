@@ -25,3 +25,5 @@ export CLICOLOR=true
 export XDG_CONFIG_HOME="$HOME/.config"
 
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+# Use Docker's newer BuildKit backend
+export DOCKER_BUILDKIT=1
