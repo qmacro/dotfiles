@@ -19,11 +19,10 @@ newpost() {
     blog=$(chooseblog)
 
     if [[ -n "$blog" ]]; then
-      location="$HOME/Projects/gh/github.com/qmacro/$blog"
-      cd "$location" || exit 1
-
-      vim +7 "$location/$(createnewpost "$@")"
-      git status
+      location="$WORK/gh/github.com/qmacro/$blog"
+      cd "$location" \
+        && vim +7 "$location/$(createnewpost "$@")" \
+        && git status
     fi
 
   fi
@@ -129,5 +128,5 @@ ss() {
 f() {
   # Invoke fff as f and cd on exit
   fff "$@"
-  cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" ||:
+  cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" || :
 }
