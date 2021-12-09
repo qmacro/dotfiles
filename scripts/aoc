@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC1090
+source "$DOTFILES/bashrc.d/70-functions.sh"
+
+cd "$HOME/work/aoc" || exit 1
+declare day="${1:+$(printf "%02d" "$1")}"
+[[ -z $day ]] && day="$(date +%d)"
+
+focus "Advent of Code Day $day"
+
+tmux new-window -n "AOC-$day"\; \
+  split-window -h \; \
+  send-keys "export TEST=1" C-m "ls -1 day${day}* | entr -c ./day$day.js" C-m \; \
+  select-pane -t 1 \; \
+  send-keys "vim day$day.js" C-m \;
