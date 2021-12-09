@@ -93,9 +93,10 @@ let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 let g:ale_linters = {
-      \ 'sh':       ['shellcheck', 'language_server'],
-      \ 'yaml':     ['yamllint'],
-      \ 'markdown': ['markdownlint'],
+      \ 'sh':         ['shellcheck', 'language_server'],
+      \ 'yaml':       ['yamllint'],
+      \ 'markdown':   ['markdownlint'],
+      \ 'dockerfile': ['hadolint'],
       \ }
 let g:ale_fixers = {
       \ 'sh':       ['shfmt'],
