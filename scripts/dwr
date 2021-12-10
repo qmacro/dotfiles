@@ -6,7 +6,10 @@
 # retrieve the workflow runs for that repo and present them in a
 # list. Selected runs will be deleted. Uses the GitHub API.
 
-# Requires gh (GitHub CLI) and jq (JSON processor)
+# Requirements:
+# - gh (GitHub CLI - https://github.com/cli/cli )
+# - jq (JSON processor - https://stedolan.github.io/jq/ )
+# - fzf (Command-line fuzzy finder - https://github.com/junegunn/fzf )
 
 set -o errexit
 set -o pipefail
@@ -55,7 +58,7 @@ deleterun() {
   local run id result
   run=$1
   id="$(cut -f 3 <<< "$run")"
-  gh --hostname "$hostname" api -X DELETE "/repos/$repo/actions/runs/$id" \
+  gh --hostname "$hostname" api -X DELETE "/repos/$repo/actions/runs/$id"  --silent \
   && result="OK!" \
   || result="BAD"
   printf "%s\t%s\n" "$result" "$run"
@@ -83,6 +86,10 @@ main() {
     # and grab the hostname from the origin remote.
     if ! git status > /dev/null 2>&1; then
       echo "No repo specified and not in a repo dir"
+      echo "Usage: dwr owner/repo - eg: dwr qmacro/thinking-aloud"
+      echo "While in cli selector use:"
+      echo "  - tab button to select"
+      echo "  - enter button to execute the deletes of selected entries"
       exit 1
     fi
     repo=':owner/:repo'
