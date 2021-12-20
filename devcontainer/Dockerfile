@@ -10,40 +10,41 @@ ARG USERNAME=user
 
 # The current latest version of various programs
 ARG TMUXVER=3.2a
-ARG YQVER=4.12.1
+ARG YQVER=4.16.1
 ARG NODEVER=lts
-ARG GITUIVER=0.17
+ARG GITUIVER=0.19.0
 ARG BATVER=0.18.3
 ARG GLOWVER=1.4.1
-ARG SHFMTVER=3.3.1
+ARG SHFMTVER=3.4.1
 
 RUN apt-get update \
   && apt-get install -y \
     apt-transport-https \
-    ca-certificates \
-    vim \
-    jq \
-    ncat \
-    entr \
-    wget \
-    curl \
-    gnupg \
-    pass \
-    man \
     bash-completion \
-    lsb-release \
-    openssh-server \
-    shellcheck \
-    file \
     build-essential \
-    sudo \
-    fzf \
-    uuid-runtime \
+    ca-certificates \
     cron \
-    pandoc \
-    newsboat \
+    curl \
+    delta \
+    entr \
+    file \
+    fzf \
+    gnupg \
+    jq \
+    lsb-release \
     lynx \
+    man \
+    ncat \
+    newsboat \
+    openssh-server \
+    pandoc \
+    pass \
+    shellcheck \
+    sudo \
+    uuid-runtime \
+    vim \
     w3m \
+    wget \
   && curl -fsSL https://download.docker.com/linux/debian/gpg \
      | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
   && echo \
@@ -51,6 +52,11 @@ RUN apt-get update \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
   && apt-get update \
   && apt-get install -y docker-ce-cli
+
+# Install lf
+RUN cd /tmp/ \
+  && wget "https://github.com/gokcehan/lf/releases/download/r26/lf-linux-amd64.tar.gz" \
+  && tar -C /usr/local/bin/ -xzf lf-linux-amd64.tar.gz lf
 
 # Install latest bat
 RUN cd /tmp/ \
@@ -112,6 +118,10 @@ RUN wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.k
 # Install latest kubectl
 RUN curl -L -o /usr/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
   && chmod +x /usr/bin/kubectl
+
+# Install Dockerfile linter hadolint
+RUN curl -L -o /usr/bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64" \
+  && chmod +x /usr/bin/hadolint
 
 RUN adduser \
   --uid $UID \

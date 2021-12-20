@@ -107,6 +107,12 @@
             bits: 0,
         ),
     ),
+    open_options: (
+        code: Char('o'),
+        modifiers: (
+            bits: 0,
+        ),
+    ),
     move_left: (
         code: Left,
         modifiers: (
@@ -275,6 +281,12 @@
             bits: 0,
         ),
     ),
+    log_mark_commit: (
+        code: Char(' '),
+        modifiers: (
+            bits: 0,
+        ),
+    ),
     commit_amend: (
         code: Char('a'),
         modifiers: (
@@ -317,6 +329,18 @@
             bits: 0,
         ),
     ),
+    rebase_branch: (
+        code: Char('R'),
+        modifiers: (
+            bits: 1,
+        ),
+    ),
+    compare_commits: (
+        code: Char('C'),
+        modifiers: (
+            bits: 1,
+        ),
+    ),
     tags: (
         code: Char('T'),
         modifiers: (
@@ -347,6 +371,12 @@
             bits: 1,
         ),
     ),
+    file_find: (
+        code: Char('f'),
+        modifiers: (
+            bits: 0,
+        ),
+    ),
     force_push: (
         code: Char('P'),
         modifiers: (
@@ -360,7 +390,7 @@
         ),
     ),
     abort_merge: (
-        code: Char('M'),
+        code: Char('A'),
         modifiers: (
             bits: 1,
         ),
@@ -369,6 +399,12 @@
         code: Char('U'),
         modifiers: (
             bits: 1,
+        ),
+    ),
+    stage_unstage_item: (
+        code: Enter,
+        modifiers: (
+            bits: 0,
         ),
     ),
 )

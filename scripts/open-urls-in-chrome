@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+# Create a new Chrome window, then read in a list of URLs and open each
+# one in a new tab in that Chrome window. Quick and dirty, but it works.
+#
+# To get a new window and its ID - open an empty placeholder URL in a
+# new window, this returns the ID of the new tab (not window); the
+# window ID is one less than the ID of the new tab (potentially brittle,
+# but meh).
+
+declare windowid tabid url
+
+# Open new window with placeholder tab
+tabid="$(chrome-cli open about:blank -n | awk '/^Id:/ { print $2 }')"
+windowid="$((tabid - 1))"
+
+# Open URLs in new tabs of that new window
+while read -r url; do
+  chrome-cli open "$url" -w "$windowid" > /dev/null && echo "$url"
+done
+
+# Close the tab containing the original placeholder URL
+chrome-cli close -t "$tabid"

@@ -36,7 +36,7 @@ set encoding=utf-8
 set ts=2
 set expandtab
 set shiftwidth=2
-set number relativenumber
+set number norelativenumber
 set splitbelow splitright
 set linebreak
 
