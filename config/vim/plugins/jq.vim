@@ -1,0 +1,1 @@
+Plug 'bfrg/vim-jq'

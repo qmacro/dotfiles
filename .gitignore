@@ -1,5 +1,7 @@
 .DS_Store
 *.swp
+.*.un~
+*~
 *.lock
 host.aliases
 config/g/
