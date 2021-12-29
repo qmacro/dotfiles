@@ -126,37 +126,11 @@ call plug#end()
 " Miscellaneous
 "--------------------------------------------------------------------------
 
-"" Disables automatic commenting on newline
-"autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-"
-"" Remove all trailing whitespace on save
-"autocmd BufWritePre * %s/\s\+$//e
-"
-""devcontainer.json files contain comments, gah!
-"autocmd BufNewFile,BufRead devcontainer.json set ft=jsonc
-"
-"" See https://github.com/neovim/neovim/issues/5559#issuecomment-258143499
-"let g:is_bash = 1
-"
-"" Ignore markdown complaints about underscores
-"" (see https://github.com/tpope/vim-markdown/issues/21)
-"autocmd FileType markdown syn match markdownError "\w\@<=\w\@="
-"
-"
-"" YAML help - will use installed `yamllint` via ALE, and
-"" sets tab options appropriately, and also configures the
-"" indentLine plugin - to start disabled, toggleable with <leader>i
-"" and the concealcursor value is to address an issue with background
-"" colours with cursorline.
-"autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-"nnoremap <leader>i :IndentLinesToggle<CR>
-"let g:indentLine_char = '┊'
-"let g:indentLine_enabled = 0
-"let g:indentLine_concealcursor = 0
-"
-"autocmd BufNewFile,BufRead /tmp/journal.* :autocmd TextChanged,TextChangedI <buffer> silent write
-"
-"augroup filetypes
-"  au!
-"  autocmd BufNewFile,BufRead Dockerfile* set filetype=dockerfile
-"augroup END
+"devcontainer.json files contain comments, gah!
+autocmd BufNewFile,BufRead devcontainer.json set ft=jsonc
+
+" Ignore markdown complaints about underscores
+" (see https://github.com/tpope/vim-markdown/issues/21)
+autocmd FileType markdown syn match markdownError "\w\@<=\w\@="
+
+autocmd BufNewFile,BufRead /tmp/journal.* :autocmd TextChanged,TextChangedI <buffer> silent write
