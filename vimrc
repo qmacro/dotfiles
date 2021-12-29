@@ -23,6 +23,7 @@ Plug 'bfrg/vim-jq'
 Plug 'Yggdroot/indentLine'
 Plug 'neoclide/jsonc.vim'
 Plug 'bfrg/vim-jqplay'
+Plug 'fladson/vim-kitty'
 
 " Add plugins to &runtimepath
 call plug#end()
