@@ -9,7 +9,7 @@ alias vig='vim -c "Goyo"'
 alias wfb='workflowbrowser'
 alias wfe='workflowbrowser | xargs showgithubcontent | vim --not-a-term -' # workflow edit
 alias branch='git checkout -b'
-alias pr='git push --set-upstream origin $(git branch --show-current) && gh pr create'
+alias pr='git push --set-upstream origin $(git branch --show-current) && gh pr create --body'
 
 # See https://superuser.com/questions/763071/show-whitespace-characters-in-printout
 alias whitespace="sed 's/ /·/g;s/\t/￫/g;s/\r/§/g;s/$/¶/g'"
