@@ -1,0 +1,1 @@
+Plug 'itchyny/vim-gitbranch'
