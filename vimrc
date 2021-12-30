@@ -2,6 +2,7 @@
 "--------------------------------------------------------------------------
 " General settings
 "--------------------------------------------------------------------------
+set encoding=utf-8
 set expandtab
 set shiftwidth=4
 set tabstop=4
@@ -9,7 +10,7 @@ set hidden
 set signcolumn=yes
 set relativenumber
 set number
-set undofile
+set noundofile
 set nospell
 set title
 set ignorecase
@@ -102,22 +103,22 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-source ~/.config/vim/plugins/lightline.vim
-source ~/.config/vim/plugins/gitbranch.vim
 source ~/.config/vim/plugins/ale.vim
-source ~/.config/vim/plugins/fzf.vim
-source ~/.config/vim/plugins/goyo-and-limelight.vim
 source ~/.config/vim/plugins/fugitive.vim
-source ~/.config/vim/plugins/surround.vim
-source ~/.config/vim/plugins/repeat.vim
-source ~/.config/vim/plugins/unimpaired.vim
+source ~/.config/vim/plugins/fzf.vim
+source ~/.config/vim/plugins/gitbranch.vim
 source ~/.config/vim/plugins/gitgutter.vim
-source ~/.config/vim/plugins/jq.vim
-source ~/.config/vim/plugins/indentline.vim
-source ~/.config/vim/plugins/jsonc.vim
-source ~/.config/vim/plugins/jqplay.vim
-source ~/.config/vim/plugins/kitty.vim
+source ~/.config/vim/plugins/goyo-and-limelight.vim
 source ~/.config/vim/plugins/incsearch.vim
+source ~/.config/vim/plugins/indentline.vim
+source ~/.config/vim/plugins/jq.vim
+source ~/.config/vim/plugins/jqplay.vim
+source ~/.config/vim/plugins/jsonc.vim
+source ~/.config/vim/plugins/kitty.vim
+source ~/.config/vim/plugins/lightline.vim
+source ~/.config/vim/plugins/repeat.vim
+source ~/.config/vim/plugins/surround.vim
+source ~/.config/vim/plugins/unimpaired.vim
 
 call plug#end()
 
@@ -133,3 +134,8 @@ autocmd BufNewFile,BufRead devcontainer.json set ft=jsonc
 autocmd FileType markdown syn match markdownError "\w\@<=\w\@="
 
 autocmd BufNewFile,BufRead /tmp/journal.* :autocmd TextChanged,TextChangedI <buffer> silent write
+
+augroup filetypes
+  au!
+  autocmd BufNewFile,BufRead Dockerfile* set filetype=dockerfile
+augroup END
