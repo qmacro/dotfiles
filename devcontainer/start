@@ -14,4 +14,4 @@ docker container run \
   --name "$CONNAME" \
   --interactive \
   --tty \
-  devtainer
+  devcontainer

@@ -1,40 +1,38 @@
-FROM debian:latest
-MAINTAINER "DJ Adams"
-SHELL ["/bin/bash", "-c"]
+FROM debian:11 as base
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# This is the user ID of my user on the Docker host - adjust to suit
-ARG UID=1031
+# Add Docker as source for apt
+RUN apt-get update && apt-get install -y curl gpg lsb-release \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* \
+  && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# This is a container user so I'm not working as root
-ARG USERNAME=user
-
-# The current latest version of various programs
-ARG TMUXVER=3.2a
-ARG YQVER=4.16.1
-ARG NODEVER=lts
-ARG GITUIVER=0.19.0
-ARG BATVER=0.18.3
-ARG GLOWVER=1.4.1
-ARG SHFMTVER=3.4.1
+# Add Cloud Foundry (CLI) as source for apt
+RUN curl -fsSL "https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key" | apt-key add - \
+  && echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list
 
 RUN apt-get update \
-  && apt-get install -y \
+ && apt-get install -y \
     apt-transport-https \
     bash-completion \
     build-essential \
     ca-certificates \
+    cf7-cli \
     cron \
     curl \
     delta \
+    docker-ce-cli \
     entr \
     file \
     fzf \
     gnupg \
     jq \
+    libevent-dev \
     lsb-release \
     lynx \
     man \
     ncat \
+    ncurses-dev \
     newsboat \
     openssh-server \
     pandoc \
@@ -45,50 +43,22 @@ RUN apt-get update \
     vim \
     w3m \
     wget \
-  && curl -fsSL https://download.docker.com/linux/debian/gpg \
-     | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
-  && echo \
-  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
-  && apt-get update \
-  && apt-get install -y docker-ce-cli
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
-# Install lf
-RUN cd /tmp/ \
-  && wget "https://github.com/gokcehan/lf/releases/download/r26/lf-linux-amd64.tar.gz" \
-  && tar -C /usr/local/bin/ -xzf lf-linux-amd64.tar.gz lf
+WORKDIR /tmp/
+ARG DEST=/usr/local/bin
 
-# Install latest bat
-RUN cd /tmp/ \
-  && wget "https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-musl_${BATVER}_amd64.deb" \
-  && dpkg -i "./bat-musl_${BATVER}_amd64.deb"
-
-# Install latest gh
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-    | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
-  && echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-  | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-  && apt-get update \
-  && apt-get install -y gh
-
-# Install latest yq
-RUN wget https://github.com/mikefarah/yq/releases/download/v${YQVER}/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
-
-# Install latest tmux
-RUN apt-get install -y \
-  ncurses-dev libevent-dev \
-  && cd /tmp/ \
-  && wget https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz \
-  && tar xzf tmux-$TMUXVER.tar.gz \
-  && cd tmux-$TMUXVER \
-  && ./configure && make && make install
+# Install tmux - terminal multiplexer
+ARG TMUXVER=3.2a
+RUN curl -fsSL "https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz" | tar -xzf - \
+  && cd "tmux-$TMUXVER" && ./configure && make && make install
 
 # Install specific Node.js
-RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - \
-  && apt-get install -y nodejs
+ARG NODEVER=lts
+RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - && apt-get install -y nodejs
 
-# Install global npm modules
+# Install global npm modules for Node.js
 RUN npm install -g \
   @sap/cds-dk \
   @sap/generator-fiori \
@@ -109,20 +79,53 @@ RUN npm install -g \
   yarn \
   yo
 
-# Install cf CLI (v7)
-RUN wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add - \
-  && echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list \
-  && apt-get update \
-  && apt-get install -y cf7-cli
+# Install bat - cat with wings
+ARG BATVER=0.18.3
+RUN curl -fsSLO "https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-musl_${BATVER}_amd64.deb" && dpkg -i "./bat-musl_${BATVER}_amd64.deb"
 
-# Install latest kubectl
-RUN curl -L -o /usr/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
-  && chmod +x /usr/bin/kubectl
+# Install glow - terminal based Markdown rendering
+ARG GLOWVER=1.4.1
+RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
+
+# Install gh - CLI for GitHub
+ARG GHVER=2.4.0
+RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
+
+# Install yq - YAML query tool
+ARG YQVER=4.16.1
+RUN curl -fsSL "https://github.com/mikefarah/yq/releases/download/v${YQVER}/yq_linux_amd64" -o "$DEST/yq" && chmod +x "$DEST/yq"
+
+# Install lf - a terminal file manager
+ARG LFVER=26
+RUN curl -fsSL "https://github.com/gokcehan/lf/releases/download/r${LFVER}/lf-linux-amd64.tar.gz" | tar -C "$DEST" -xzf - lf
+
+# Install gitui - a git TUI
+ARG GITUIVER=0.19.0
+RUN curl -fsSL "https://github.com/extrawurst/gitui/releases/download/v${GITUIVER}/gitui-linux-musl.tar.gz" | tar -C "$DEST" -xzf -
+
+# Install shfmt - shell script formatter
+ARG SHFMTVER=3.4.1
+RUN curl -fsSL "https://github.com/mvdan/sh/releases/download/v${SHFMTVER}/shfmt_v${SHFMTVER}_linux_amd64" -o "$DEST/shfmt" && chmod +x "$DEST/shfmt"
+
+# Install kubectl - Kubernetes CLI
+RUN curl -fsSL "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" -o "$DEST/kubectl" && chmod +x "$DEST/kubectl"
 
 # Install Dockerfile linter hadolint
-RUN curl -L -o /usr/bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64" \
-  && chmod +x /usr/bin/hadolint
+ARG HADOLINTVER=2.8.0
+RUN curl -fsSL "https://github.com/hadolint/hadolint/releases/download/v${HADOLINTVER}/hadolint-Linux-x86_64" -o "$DEST/hadolint" && chmod +x "$DEST/hadolint"
 
+# Install Steampipe - SQL for APIs
+RUN /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/turbot/steampipe/main/install.sh)"
+
+# Install Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Clean up temp dir
+RUN rm -rf /tmp/*
+
+# Set up non-root user
+ARG USERNAME=user
+ARG UID=1031
 RUN adduser \
   --uid $UID \
   --quiet \
@@ -130,64 +133,21 @@ RUN adduser \
   --shell /bin/bash \
   --home /home/$USERNAME \
   --gecos "Dev User" \
-  $USERNAME
-
-
-# Install fff and then ensure that bin/ and share/ are user-owned
-RUN cd /tmp \
-  && git clone https://github.com/dylanaraps/fff \
-  && cd fff \
-  && PREFIX=/home/$USERNAME make install \
-  && chown -R $USERNAME:$USERNAME /home/$USERNAME/bin /home/$USERNAME/share \
-  && rm -rf /tmp/fff
-
-# Install gitui
-RUN cd /tmp \
-  && wget "https://github.com/extrawurst/gitui/releases/download/v$GITUIVER/gitui-linux-musl.tar.gz" \
-  && tar -x -z -C /usr/bin/ -f "./gitui-linux-musl.tar.gz"
-
-# Install glow
-RUN cd /tmp \
-  && wget "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" \
-  && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
-
-# Install shfmt
-RUN curl -L -o /usr/bin/shfmt "https://github.com/mvdan/sh/releases/download/v${SHFMTVER}/shfmt_v${SHFMTVER}_linux_amd64" \
-  && chmod +x /usr/bin/shfmt
-
-# Install steampipe
-RUN /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/turbot/steampipe/main/install.sh)"
-
-# Install Azure CLI
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-
-# Change ownership of /tmp
-RUN chown $USERNAME:$USERNAME /tmp/
+  $USERNAME \
+ && chown $USERNAME:$USERNAME /tmp/
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 ENV TERM xterm-256color
 
 # Set up dotfiles
-RUN git clone https://github.com/qmacro/dotfiles.git .dotfiles \
-  && cd .dotfiles \
-  && ./dotsetup \
-  && git remote set-url origin git@github.com:qmacro/dotfiles.git
+RUN git clone https://github.com/qmacro/dotfiles.git && cd dotfiles/ && ./dotsetup
 
-# Install vim plugins
+# Install Vim plugins
 RUN vim +'PlugInstall --sync' +qa > /dev/null 2>&1
 
-# Install btp CLI
-RUN cd /tmp/ \
-  && curl \
-  --remote-name \
-  --location \
-  --url "https://raw.githubusercontent.com/SAP-samples/sap-tech-bytes/2021-09-01-btp-cli/getbtpcli" \
-  && chmod +x getbtpcli \
-  && echo -ne '\n' | ./getbtpcli
-
 # Set focus reminder
-RUN echo "What are you focusing on?" | tee $HOME/.status > $HOME/.focus
+RUN echo "What are you focusing on?" | tee "$HOME/.status" > "$HOME/.focus"
 
 # Off we go - based on tmux, the terminal multiplexer
 CMD ["tmux", "-u", "new", "-s", "main"]
