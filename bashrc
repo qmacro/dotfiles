@@ -10,7 +10,7 @@ case $- in
   *) return ;;
 esac
 
-export DOTFILES="$HOME/.dotfiles"
+export DOTFILES="$HOME/dotfiles"
 
 for rcfile in "$DOTFILES"/bashrc.d/*.sh; do
   # shellcheck disable=SC1090
