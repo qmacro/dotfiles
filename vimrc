@@ -9,7 +9,6 @@ set hidden
 set signcolumn=yes
 set relativenumber
 set number
-set termguicolors
 set undofile
 set nospell
 set title
