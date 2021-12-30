@@ -7,8 +7,7 @@ definition=$1
 
 # Bring in the required env for the script
 cftarget
-source ~/.dotfiles/scripts/utils
-
+source ~/dotfiles/scripts/utils
 
 # Retrieve an access token using the Client Credentials grant type
 get_access_token() {
@@ -17,7 +16,7 @@ get_access_token() {
     --netrc \
     --data "grant_type=client_credentials" \
     "${UAAROOT}/oauth/token" \
-  | jq -r .access_token ;
+    | jq -r .access_token
 }
 
 # Present all workflow definitions, allow selection of one
@@ -28,9 +27,8 @@ select_workflow_definition() {
     "${WORKFLOWAPIROOT}/v1/workflow-definitions" \
     | jq -r '.[] | "\(.id) (v \(.version))"' \
     | fzf ${FZF_OPTS} --prompt "Select workflow definition: " \
-    | cut -d ' ' -f 1 ;
+    | cut -d ' ' -f 1
 }
-
 
 # List instances of a workflow definition
 select_instances() {
@@ -42,7 +40,6 @@ select_instances() {
     | fzf ${FZF_OPTS} --multi --prompt "Select instances to delete: " \
     | awk '{print $1}'
 }
-
 
 ########################################################################
 

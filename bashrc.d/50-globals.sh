@@ -1,7 +1,6 @@
 export EDITOR=vim
 export WORK="$HOME/work"
 
-# ln -s -f "$HOME/.dotfiles/host.aliases" "$HOME/.config/"
 export HOSTALIASES="$HOME/.config/host.aliases"
 export BLOG_REPO_LOCATION="$HOME/Projects"
 

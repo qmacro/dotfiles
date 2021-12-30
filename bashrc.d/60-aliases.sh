@@ -25,10 +25,8 @@ alias ls='ls -p -a'
 
 # Single char aliases
 alias s='git status'
-alias d="cd \$HOME/.dotfiles; tmux -L outer has-session -t outer 2>/dev/null && tns dotfiles"
 alias k=kubectl
 alias r=ranger
 alias t=tmux
 alias i='gh issue list'
 alias v=vim
-alias ts='killall tmux; tstartup'

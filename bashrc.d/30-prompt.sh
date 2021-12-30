@@ -10,7 +10,7 @@ export GIT_PS1_DESCRIBE_STYLE='contains'
 export GIT_PS1_SHOWUPSTREAM='auto'
 
 # shellcheck disable=SC1090
-. "$HOME/.dotfiles/git-prompt.sh"
+. "$HOME/dotfiles/git-prompt.sh"
 
 __showlocation() {
   # Don't show work userids

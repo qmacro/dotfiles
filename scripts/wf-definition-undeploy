@@ -4,7 +4,7 @@
 
 # Bring in the required env for the script
 source cpenv-home
-source ~/.dotfiles/scripts/utils
+source ~/dotfiles/scripts/utils
 
 
 # Retrieve an access token using the Client Credentials grant type
