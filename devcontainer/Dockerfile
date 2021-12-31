@@ -42,6 +42,7 @@ RUN apt-get update \
     uuid-runtime \
     vim \
     w3m \
+    wamerican-large \
     wget \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*

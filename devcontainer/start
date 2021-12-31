@@ -11,6 +11,7 @@ docker container run \
   --volume "$HOMELOC/.password-store":/home/user/.password-store \
   --volume "$HOMELOC/.config":/home/user/.config \
   --volume "$HOMELOC/onedrive":/home/user/work \
+  --publish 8000:8000 \
   --name "$CONNAME" \
   --interactive \
   --tty \
