@@ -4,8 +4,8 @@
 "--------------------------------------------------------------------------
 set encoding=utf-8
 set expandtab
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=2
+set tabstop=2
 set hidden
 set signcolumn=yes
 set relativenumber
