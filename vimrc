@@ -16,7 +16,7 @@ set title
 set ignorecase
 set smartcase
 set wildmode=longest:full,full
-set nowrap
+set wrap
 set list
 set listchars=tab:▸\ ,trail:·
 set mouse=a
