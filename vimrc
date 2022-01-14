@@ -139,3 +139,11 @@ augroup filetypes
   au!
   autocmd BufNewFile,BufRead Dockerfile* set filetype=dockerfile
 augroup END
+
+"--------------------------------------------------------------------------
+" Appearance (experimental)
+"--------------------------------------------------------------------------
+highlight MatchParens ctermbg=240
+highlight Visual ctermbg=240
+highlight LineNr ctermfg=107
+highlight Statement ctermfg=99
