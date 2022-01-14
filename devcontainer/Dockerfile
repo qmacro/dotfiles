@@ -42,7 +42,7 @@ RUN apt-get update \
     uuid-runtime \
     vim \
     w3m \
-    wamerican-large \
+    wamerican-small \
     wget \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
@@ -149,6 +149,30 @@ RUN vim +'PlugInstall --sync' +qa > /dev/null 2>&1
 
 # Set focus reminder
 RUN echo "What are you focusing on?" | tee "$HOME/.status" > "$HOME/.focus"
+
+# Install btp CLI
+RUN cd /tmp/ \
+  && curl \
+  --remote-name \
+  --location \
+  --url "https://raw.githubusercontent.com/SAP-samples/sap-tech-bytes/2021-09-01-btp-cli/getbtpcli" \
+  && chmod +x getbtpcli \
+  && echo -ne '\n' | ./getbtpcli
+
+# Install ijq
+ARG IJQVER=0.3.6
+RUN curl \
+    --silent \
+    --location \
+    --url "https://git.sr.ht/~gpanders/ijq/refs/download/v$IJQVER/ijq-$IJQVER-linux-x86_64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /home/$USERNAME/bin/ \
+      --strip-components 1 \
+      --wildcards \
+      ijq-$IJQVER/ijq
 
 # Off we go - based on tmux, the terminal multiplexer
 CMD ["tmux", "-u", "new", "-s", "main"]
