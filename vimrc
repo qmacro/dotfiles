@@ -144,6 +144,8 @@ augroup END
 " Appearance (experimental)
 "--------------------------------------------------------------------------
 highlight MatchParens ctermbg=240
+highlight Search ctermbg=240
 highlight Visual ctermbg=240
 highlight LineNr ctermfg=107
 highlight Statement ctermfg=99
+highlight Comment cterm=italic
