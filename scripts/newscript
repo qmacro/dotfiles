@@ -21,7 +21,7 @@ main() {
 
 }
 
-main "$@"
+main "\$@"
 EOF
   chmod +x "$script"
 fi
