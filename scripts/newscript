@@ -6,6 +6,22 @@ declare script=$1
 if [[ ! -f "$script" ]]; then
   cat > "$script" << EOF
 #!/usr/bin/env bash
+
+set -euo pipefail
+
+somefunction() {
+
+  :
+
+}
+
+main() {
+
+  somefunction
+
+}
+
+main "$@"
 EOF
   chmod +x "$script"
 fi
