@@ -34,7 +34,7 @@ set laststatus=2 " Have a status line even with a single file
 "--------------------------------------------------------------------------
 " Key mappings
 "--------------------------------------------------------------------------
-let mapleader = ","
+let mapleader = " "
 
 " Prevent any use of the cursor keys by mapping them to 'no operation'
 map <Up>    <nop>
@@ -119,6 +119,8 @@ source ~/.config/vim/plugins/lightline.vim
 source ~/.config/vim/plugins/repeat.vim
 source ~/.config/vim/plugins/surround.vim
 source ~/.config/vim/plugins/unimpaired.vim
+source ~/.config/vim/plugins/vimspector.vim
+source ~/.config/vim/plugins/maximizer.vim
 
 call plug#end()
 
@@ -143,7 +145,7 @@ augroup END
 "--------------------------------------------------------------------------
 " Appearance (experimental)
 "--------------------------------------------------------------------------
-highlight MatchParens ctermbg=240
+highlight MatchParen ctermbg=240
 highlight Search ctermbg=240
 highlight Visual ctermbg=240
 highlight LineNr ctermfg=107
