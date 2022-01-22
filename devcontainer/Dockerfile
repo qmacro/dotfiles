@@ -40,7 +40,7 @@ RUN apt-get update \
     shellcheck \
     sudo \
     uuid-runtime \
-    vim \
+    vim-nox \
     w3m \
     wamerican-small \
     wget \
