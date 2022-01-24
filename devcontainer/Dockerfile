@@ -15,6 +15,7 @@ RUN apt-get update \
  && apt-get install -y \
     apt-transport-https \
     bash-completion \
+    bc \
     build-essential \
     ca-certificates \
     cf7-cli \
