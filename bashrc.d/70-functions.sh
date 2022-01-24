@@ -130,3 +130,8 @@ f() {
   fff "$@"
   cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" || :
 }
+
+nd() {
+  # Create new directory and cd into it
+  mkdir "$1" && { cd $_ || :; }
+}
