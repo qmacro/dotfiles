@@ -31,6 +31,7 @@ set hlsearch
 set incsearch
 set laststatus=2 " Have a status line even with a single file
 set conceallevel=2
+set linebreak
 
 "--------------------------------------------------------------------------
 " Key mappings
