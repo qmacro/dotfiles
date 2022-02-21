@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # For SAP's btp CLI
 
 # Where to store the config
@@ -11,7 +13,7 @@ test -f "$btpautocomplete" \
   && source "$btpautocomplete" \
   && bind 'set show-all-if-ambiguous on'
 
-btpwrapper () {
+btpwrapper() {
 
   local OUTFILE="/tmp/btpcli"
 
@@ -25,24 +27,24 @@ btpwrapper () {
 
 }
 
-btp () {
+btp() {
   if [[ $1 =~ ^(get|list)$ ]]; then
-      btpwrapper "$@" | trunc
+    btpwrapper "$@" | trunc
   else
-      "$HOME/bin/btp" "$@"
+    "$HOME/bin/btp" "$@"
   fi
 }
 
-btpgo () {
+btpgo() {
 
-  clear && \
-    btplogin "${1:?Specify account}" \
+  clear \
+    && btplogin "${1:?Specify account}" \
     && btp get accounts/global-account --show-hierarchy \
     && btpctx > "$HOME/.status"
 
 }
 
-bgu () {
+bgu() {
 
   btpguid "$@"
 
@@ -51,3 +53,5 @@ bgu () {
   fi
 
 }
+
+alias btphier='btp get accounts/global-account --show-hierarchy'
