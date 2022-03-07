@@ -38,6 +38,7 @@ RUN apt-get update \
     openssh-server \
     pandoc \
     pass \
+    postgresql \
     shellcheck \
     sudo \
     uuid-runtime \
@@ -90,7 +91,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.5.1
+ARG GHVER=2.5.2
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
@@ -174,6 +175,48 @@ RUN curl \
       --strip-components 1 \
       --wildcards \
       ijq-$IJQVER/ijq
+
+# Install Service Manager CLI tool
+ARG SMCTLVER=1.11.12
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/Peripli/service-manager-cli/releases/download/v$SMCTLVER/smctl-v$SMCTLVER-linux-amd64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /home/$USERNAME/bin/ \
+      smctl
+
+# Install Exercism
+ARG EXERCISMVER=3.0.13
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/exercism/cli/releases/download/v$EXERCISMVER/exercism-$EXERCISMVER-linux-x86_64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /home/$USERNAME/bin/ \
+      exercism
+
+# Install bats
+ARG BATSVER=1.6.0
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/bats-core/bats-core/archive/refs/tags/v$BATSVER.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /tmp/ \
+  && cd "/tmp/bats-core-$BATSVER" \
+  && ./install.sh "$HOME"
+
+
 
 # Off we go - based on tmux, the terminal multiplexer
 CMD ["tmux", "-u", "new", "-s", "main"]
