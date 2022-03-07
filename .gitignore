@@ -14,6 +14,7 @@ known_hosts
 config/asciinema/install-id
 config/configstore/
 config/exercism/
+config/stack/
 config/gcloud/
 config/gh/hosts.yml
 config/btp/
