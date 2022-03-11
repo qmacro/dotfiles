@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Determine the Cloud Foundry API endpoint for a given Cloud Foundry
+# environment instance connected to a subaccount on BTP. Subaccount
+# is identified by display name specified as a parameter, default is
+# "trial".
+
+set -o errexit
+set -o pipefail
+
+getsubguid() {
+
+  # Get GUID for given subaccount display name
+
+  local subname=$1
+  btp --format json list accounts/subaccount 2> /dev/null \
+    | jq -r --arg subname "$subname" '.value[] | select(.displayName == $subname) | .guid'
+
+}
+
+getsubenvinst() {
+
+  # Get details (JSON) of an environment instance for a given subaccount GUID
+  local subguid=$1
+  btp --format json list accounts/environment-instance --subaccount "$subguid" 2> /dev/null \
+    | jq -r --arg subguid "$subguid" '.environmentInstances[] | select(.environmentType == "cloudfoundry" and .subaccountGUID == $subguid)'
+
+}
+
+getapiendpoint() {
+
+  # Given JSON details of a CF environment instance, parse out the API endpoint URL
+  local cfenvjson=$1
+  jq -r '.labels | fromjson | ."API Endpoint:"' <<< "$cfenvjson"
+
+}
+
+main() {
+
+  local displayname="${1:-trial}"
+  getapiendpoint "$(getsubenvinst "$(getsubguid "$displayname")")"
+
+}
+
+main "$@"
