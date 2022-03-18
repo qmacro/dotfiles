@@ -216,6 +216,18 @@ RUN curl \
   && cd "/tmp/bats-core-$BATSVER" \
   && ./install.sh "$HOME"
 
+# Install slides (presentations in terminal)
+ARG SLIDESVER=0.7.3
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/maaslalani/slides/releases/download/v$SLIDESVER/slides_${SLIDESVER}_linux_amd64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /home/$USERNAME/bin/ \
+      slides
 
 
 # Off we go - based on tmux, the terminal multiplexer
