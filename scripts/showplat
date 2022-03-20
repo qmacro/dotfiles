@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+main() {
+
+  local id cfendpoint trialguid
+  local id="${1:?Specify BTP account ID e.g. 'blue'}"
+  btplogin "$id" 2> /dev/null
+  btp get accounts/global-account --show-hierarchy 2> /dev/null | trunc
+  trialguid="$(btpguid trial)"
+  [[ -n $trialguid ]] && btp target --subaccount "$trialguid"
+
+  cfendpoint="$(get_cf_api_endpoint)"
+  cf login -a "$cfendpoint" -u "qmacro+$id@gmail.com" -p "$(pass "btp/$id/password")"
+  cf apps
+  cf services
+
+}
+
+main "$@"

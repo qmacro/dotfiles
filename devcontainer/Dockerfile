@@ -91,7 +91,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.5.2
+ARG GHVER=2.6.0
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
@@ -216,6 +216,18 @@ RUN curl \
   && cd "/tmp/bats-core-$BATSVER" \
   && ./install.sh "$HOME"
 
+# Install slides (presentations in terminal)
+ARG SLIDESVER=0.7.3
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/maaslalani/slides/releases/download/v$SLIDESVER/slides_${SLIDESVER}_linux_amd64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /home/$USERNAME/bin/ \
+      slides
 
 
 # Off we go - based on tmux, the terminal multiplexer

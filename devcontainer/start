@@ -3,6 +3,7 @@
 declare CONNAME=dev
 declare HOMELOC=$HOME
 
+docker context use default
 docker container rm "$CONNAME" 2> /dev/null
 docker container run \
   --volume "$HOMELOC/.ssh":/home/user/.ssh \
