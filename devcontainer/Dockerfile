@@ -29,6 +29,7 @@ RUN apt-get update \
     gnupg \
     jq \
     libevent-dev \
+    libgraph-easy-perl \
     lsb-release \
     lynx \
     man \
