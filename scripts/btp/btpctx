@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Output current btp CLI context. Expects name of config file, defaults
-# to value of $SAPCP_CLIENTCONFIG.
+# to value of $BTP_CLIENTCONFIG.
 
 set -o errexit
 set -o pipefail
@@ -24,7 +24,7 @@ main() {
 
   # Show a short version of the context from the config file.
 
-  local configfile="${1:-$SAPCP_CLIENTCONFIG}"
+  local configfile="${1:-$BTP_CLIENTCONFIG}"
   local subdomain subaccount email
 
   subdomain="$(getproperty "$configfile" SubDomain)"

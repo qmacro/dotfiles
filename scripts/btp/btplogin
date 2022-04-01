@@ -4,18 +4,12 @@ set -o errexit
 
 # Logs the user in with the account specified.
 
-# Store global account name and password in pass store:
-# btp/<account>/ga (e.g. fffffffftrial)
-# and btp/<account>/password (e.g. sekrit).
+# Store global account name, user and password in pass store:
+# - btp/<account>/ga (e.g. fffffffftrial)
+# - btp/<account>/user (e.g. qmacro+blue@gmail.com)
+# - btp/<account>/password (e.g. sekrit)
 
 declare URL="https://cpcli.cf.eu10.hana.ondemand.com"
-
-username() {
-
-  local account=$1
-  echo "qmacro+$account@gmail.com"
-
-}
 
 main() {
 
@@ -26,7 +20,7 @@ main() {
 
   btp login \
     --url "$URL" \
-    --user "$(username "$account")" \
+    --user "$(pass "btp/$account/user")" \
     --subdomain "$(pass "btp/$account/ga")-ga" \
     --password "$(pass "btp/$account/password")"
 
