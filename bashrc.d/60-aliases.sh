@@ -21,7 +21,7 @@ alias ie='gh issue edit'
 alias ic='gh issue comment'
 
 # Show directory symbol (/) and hidden directories
-alias ls='ls -p -a'
+alias ls='ls -p -a --color=auto'
 
 # Single char aliases
 alias s='git status'
