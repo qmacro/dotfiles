@@ -31,3 +31,6 @@ alias t=tmux
 alias i='gh issue list'
 alias v=vim
 alias d='cd $DOTFILES'
+
+# js - JSON scroll
+alias js='jq -C . | less -R'
