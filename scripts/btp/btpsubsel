@@ -10,5 +10,5 @@ set -o pipefail
 
 btp --format JSON list accounts/subaccount 2> /dev/null \
   | jq -r '.value[] | [.region, .displayName, .guid] | @tsv' \
-  | fzf --exit-0 --select-1 \
+  | fzf --with-nth=1,2 --exit-0 --select-1 \
   | cut -f 3
