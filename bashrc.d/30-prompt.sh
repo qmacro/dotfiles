@@ -29,18 +29,17 @@ __is_theia() {
 
 __prompt_command() {
   local EXIT="$?"
+  local promptcolour reset=$'\[\e[0m\]'
+  local locationcolour=$'\[\e[0;34m\]'
+  local symbols="▶ "
 
   # Location is shown in the Tmux status bar. But if Tmux
   # isn't running, show it in a prompt line.
-  PS1=""
-  PS1="# $(__showlocation "$USER")$(__git_ps1)\\n"
+  PS1="${locationcolour}# $(__showlocation "$USER")$(__git_ps1)\\n${reset}"
 
   # Make prompt red if last command failed
-  if [ $EXIT != 0 ]; then
-    PS1+=$'\[\e[0;31m\]; \[\e[0m\]'
-  else
-    PS1+=$'; '
-  fi
+  [[ $EXIT == 0 ]] && promptcolour=$'\[\e[0;32m\]' || promptcolour=$'\[\e[0;31m\]'
+  PS1+="${promptcolour}${symbols}${reset}"
 }
 
 PROMPT_COMMAND=__prompt_command
