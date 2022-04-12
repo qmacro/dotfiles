@@ -31,7 +31,7 @@ __prompt_command() {
   local EXIT="$?"
   local promptcolour reset=$'\[\e[0m\]'
   local locationcolour=$'\[\e[0;34m\]'
-  local symbols="▶ "
+  local symbols="; "
 
   # Location is shown in the Tmux status bar. But if Tmux
   # isn't running, show it in a prompt line.
