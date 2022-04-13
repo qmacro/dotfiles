@@ -32,8 +32,8 @@ create_autorunner() {
   local watch=$2
   cat << EO_AUTORUNNER > "$file" && chmod +x "$file"
 #!/usr/bin/env bash
-[[ \${1,,} =~ ^all$ ]] && ALL="BATS_RUN_SKIPPED=true"
-ls $watch | \$ALL entr -c bats $testscript
+[[ \${1,,} =~ ^all$ ]] && all=true
+find $watch | BATS_RUN_SKIPPED=\$all entr -c bats $testscript
 EO_AUTORUNNER
 
 }
@@ -66,26 +66,27 @@ main() {
   local autorunnername="runtests"
   local dir="$exercismhome/$track/$exercise"
 
-  # Abort if there's already an Exercism directory for the given exercise
-  # (otherwise the existing solution would be overwritten), unless the -f
-  # option has been used
-  [[ -d $dir && -z $force ]] && die "Exercise directory for '$exercise' already exists "
-
   # Abort if tmux isn't running
   [[ -n $TMUX ]] || die "tmux is not running"
 
-  # Download exercise and move into that exercise directory
-  exercism download --track="$track" --exercise="$exercise"
-  cd "$exercismhome/$track/$exercise" || die "Cannot move to new exercise directory"
-
   exercisescript="${exercise//-/_}"
+
+  # We want to avoid automatically clobbering any existing solution, so only
+  # download the Exercism exercise and create the skeleton solution file
+  # if the directory doesn't already exist, or, if it exists but the 'force'
+  # option has been used.
+  if [[ ! -d $dir || (-d $dir && -n $force) ]]; then
+    exercism download --track="$track" --exercise="$exercise"
+    write_template "$dir/$exercisescript.sh"
+  fi
+
+  # Download exercise and move into that exercise directory
+  cd "$dir" || die "Cannot move to new exercise directory"
+
   testscript="$(gettestscript "$exercisescript")"
 
   # Set up autorunner script
   create_autorunner "$autorunnername" "$exercisescript.sh $testscript"
-
-  # Create skeleton solution file
-  write_template "$exercisescript.sh"
 
   # Set up new tmux window with bats running on the right
   # and the README, test & solution scripts in an editor on the left
