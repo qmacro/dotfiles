@@ -29,9 +29,11 @@ gettestscript() {
 create_autorunner() {
 
   local file=$1
+  local watch=$2
   cat << EO_AUTORUNNER > "$file" && chmod +x "$file"
 #!/usr/bin/env bash
-ls *.bats *.sh | entr -c bats $testscript
+[[ \${1,,} =~ ^all$ ]] && ALL="BATS_RUN_SKIPPED=true"
+ls $watch | \$ALL entr -c bats $testscript
 EO_AUTORUNNER
 
 }
@@ -80,7 +82,7 @@ main() {
   testscript="$(gettestscript "$exercisescript")"
 
   # Set up autorunner script
-  create_autorunner "$autorunnername"
+  create_autorunner "$autorunnername" "$exercisescript.sh $testscript"
 
   # Create skeleton solution file
   write_template "$exercisescript.sh"
@@ -88,7 +90,8 @@ main() {
   # Set up new tmux window with bats running on the right
   # and the README, test & solution scripts in an editor on the left
   tmux new-window -n exercism
-  tmux split-pane -h "./$autorunnername"
+  tmux split-pane -h
+  tmux send-keys -t "main:exercism.2" "./runtests" Enter
   tmux send-keys -t "main:exercism.1" "vim -p $testscript $exercisescript.sh README.md" Enter
   tmux select-pane -t "main:exercism.1"
 
