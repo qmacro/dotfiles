@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# Downloads and sets up for a new Exercism exercise in the Bash track
+
+declare exercismhome="$HOME/work/Exercism"
+declare track=bash
+
+set -eo pipefail
+
+die() {
+
+  echo "$1"
+  exit 1
+
+}
+
+gettestscript() {
+
+  local exercisescript=$1
+
+  # Tries to determine which is the test script.
+  # Usually it's either <exercise>_test.sh or <exercise>.bats
+  [[ -f "${exercisescript}_test.sh" ]] && echo "${exercisescript}_test.sh" && return
+  [[ -f "${exercisescript}.bats" ]] && echo "${exercisescript}.bats" && return
+  die "Cannot determine test script"
+
+}
+
+create_autorunner() {
+
+  local file=$1
+  cat << EO_AUTORUNNER > "$file" && chmod +x "$file"
+#!/usr/bin/env bash
+ls *.bats *.sh | entr -c bats $testscript
+EO_AUTORUNNER
+
+}
+
+write_template() {
+
+  local file=$1
+  cat << EO_TEMPLATE > "$file"
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+main() {
+
+  :
+
+}
+
+main "\$@"
+EO_TEMPLATE
+
+}
+
+main() {
+
+  [[ $1 =~ ^(-f|--force)$ ]] && force=true && shift
+
+  local exercise="${1:?Specify Bash track exercise}"
+  local testscript exercisescript
+  local autorunnername="runtests"
+  local dir="$exercismhome/$track/$exercise"
+
+  # Abort if there's already an Exercism directory for the given exercise
+  # (otherwise the existing solution would be overwritten), unless the -f
+  # option has been used
+  [[ -d $dir && -z $force ]] && die "Exercise directory for '$exercise' already exists "
+
+  # Abort if tmux isn't running
+  [[ -n $TMUX ]] || die "tmux is not running"
+
+  # Download exercise and move into that exercise directory
+  exercism download --track="$track" --exercise="$exercise"
+  cd "$exercismhome/$track/$exercise" || die "Cannot move to new exercise directory"
+
+  exercisescript="${exercise//-/_}"
+  testscript="$(gettestscript "$exercisescript")"
+
+  # Set up autorunner script
+  create_autorunner "$autorunnername"
+
+  # Create skeleton solution file
+  write_template "$exercisescript.sh"
+
+  # Set up new tmux window with bats running on the right
+  # and the README, test & solution scripts in an editor on the left
+  tmux new-window -n exercism
+  tmux split-pane -h "./$autorunnername"
+  tmux send-keys -t "main:exercism.1" "vim -p $testscript $exercisescript.sh README.md" Enter
+  tmux select-pane -t "main:exercism.1"
+
+}
+
+main "$@"

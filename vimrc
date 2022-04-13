@@ -65,6 +65,7 @@ vnoremap > >gv
 
 nnoremap <leader>w :w<cr>
 nnoremap <leader>q :q<cr>
+nnoremap <leader>t :tabNext<cr>
 
 nmap <silent> <leader>l :set list!<cr>
 
