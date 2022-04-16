@@ -1,0 +1,23 @@
+#!/usr/bin/env bats
+
+load ../slugify
+
+@test "Simple string" {
+  result="$(slugify "hello")"
+  [ "$result" == "hello" ]
+}
+
+@test "Space at the end" {
+  result="$(slugify "testing 123 ")"
+  [ "$result" == "testing-123" ]
+}
+
+@test "Uppercase characters" {
+  result="$(slugify "Hello There")"
+  [ "$result" == "hello-there" ]
+}
+
+@test "Non-alphanumerics" {
+  result="$(slugify "This string's quite long!")"
+  [ "$result" == "this-strings-quite-long" ]
+}

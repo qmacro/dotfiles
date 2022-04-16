@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC1090
+
 # Sets me up for writing a new blog post
 
 declare bloghome="$HOME/work/gh/github.com/qmacro/qmacro.github.io"
 declare windowname="blog post"
+declare location="${0%/*}"
 
-set -eo pipefail
+# Experimental lib functions
+
+source "$location/lib/slugify"
+source "$location/lib/yyyymmdd"
+
+set -euo pipefail
 shopt -s extglob
 
 die() { echo "$1" && exit 1; }
@@ -26,34 +34,21 @@ EO_TEMPLATE
 
   # Add tags metadata if needed
   if [[ "${#tags[@]}" -gt 0 ]]; then
-
     echo "tags:" >> "$filename"
     for tag in "${tags[@]}"; do
       echo "  - $tag" >> "$filename"
     done
-    echo "---" >> "$filename"
-
   fi
-}
 
-slugify() {
-
-  # Create a slug from the given title, by removing any chars
-  # that are not alphanumeric or space, lowercasing everything,
-  # and then changing any space chars to dashes.
-  local title yyyymmdd
-  title="${1//[![:alnum:] ]/}"
-  title="${title,,}"
-  title="${title// /-}"
-  yyyymmdd="$(date +%Y-%m-%d)"
-  echo "$yyyymmdd-${title:?Cannot generate slug from title}"
+  # Add end-of-frontmatter
+  echo "---" >> "$filename"
 
 }
 
 generate_filename() {
 
   local title=$1
-  echo "$bloghome/src/posts/$(slugify "$title").md"
+  echo "$bloghome/src/posts/$(yyyymmdd)-$(slugify "$title").md"
 
 }
 
