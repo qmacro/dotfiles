@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+slugify() {
+
+  # Create a slug from the given string.
+  local str
+  str="${1//[![:alnum:] ]/}"  # only alphanumerics & spaces
+  str="${str,,}"              # lowercase
+  str="${str% }"              # trim
+  str="${str// /-}"           # spaces to dashes
+  echo "${str:?Cannot generate slug}"
+
+}

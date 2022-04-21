@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC1090
+
+# Sets me up for writing a new blog post
+
+declare bloghome="$HOME/work/gh/github.com/qmacro/qmacro.github.io"
+declare windowname="blog post"
+declare location="${0%/*}"
+
+# Experimental lib functions
+
+source "$location/lib/slugify"
+source "$location/lib/yyyymmdd"
+
+set -euo pipefail
+shopt -s extglob
+
+die() { echo "$1" && exit 1; }
+
+create_file() {
+
+  local filename=$1
+  local title=$2
+  shift
+  shift
+  local tags=("$@")
+
+  cat << EO_TEMPLATE > "$filename"
+---
+layout: post
+title: $title
+EO_TEMPLATE
+
+  # Add tags metadata if needed
+  if [[ "${#tags[@]}" -gt 0 ]]; then
+    echo "tags:" >> "$filename"
+    for tag in "${tags[@]}"; do
+      echo "  - $tag" >> "$filename"
+    done
+  fi
+
+  # Add end-of-frontmatter
+  echo "---" >> "$filename"
+
+}
+
+generate_filename() {
+
+  local title=$1
+  echo "$bloghome/src/posts/$(yyyymmdd)-$(slugify "$title").md"
+
+}
+
+main() {
+
+  local title filename
+
+  # Abort if tmux isn't running
+  [[ -n $TMUX ]] || die "tmux is not running"
+
+  # Abort also if no title is given
+  : "${1:?Specify blog post title}"
+
+  filename="$(generate_filename "$1")"
+
+  # Create the blog post file if it doesn't already exist
+  [[ ! -f "$filename" ]] && create_file "$filename" "$@"
+
+  # Set up new tmux window with bats running on the right
+  # and the README, test & solution scripts in an editor on the left
+  cd "$bloghome"
+  tmux new-window -n "$windowname"
+  tmux split-pane -h -l 40%
+  tmux send-keys -t "main:$windowname.2" "yarn dev" Enter
+  tmux send-keys -t "main:$windowname.1" "vim + $filename" Enter
+  tmux select-pane -t "main:$windowname.1"
+
+}
+
+main "$@"
