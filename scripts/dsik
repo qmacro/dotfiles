@@ -2,17 +2,24 @@
 
 # Delete Service Instance with Keys (dsik)
 
-instance=$1
-
+set -euo pipefail
 source utils
 
-# Delete any keys first
-keys=$(cf sk ${instance} | sed 1,3d | awk '{print $1}')
-for key in ${keys}; do
-  log Deleting service key ${key}
-  cf dsk -f ${instance} ${key}
-done
+main() {
 
-# Now we can delete the instance
-log Deleting service instance ${instance}
-cf ds -f ${instance}
+  local instance=$1
+
+  # Delete any keys first
+  keys="$(cf sk "${instance}" | sed 1,3d | awk '{print $1}')"
+  for key in ${keys}; do
+    log Deleting service key "${key}"
+    cf dsk -f "${instance}" "${key}"
+  done
+
+  # Now we can delete the instance
+  log "Deleting service instance ${instance}"
+  cf ds -f "${instance}"
+
+}
+
+main "$@"
