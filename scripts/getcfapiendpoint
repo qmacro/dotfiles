@@ -5,25 +5,17 @@
 # is identified by display name specified as a parameter, default is
 # "trial".
 
-set -o errexit
-set -o pipefail
-
-getsubguid() {
-
-  # Get GUID for given subaccount display name
-
-  local subname=$1
-  btp --format json list accounts/subaccount 2> /dev/null \
-    | jq -r --arg subname "$subname" '.value[] | select(.displayName == $subname) | .guid'
-
-}
+set -euo pipefail
 
 getsubenvinst() {
 
   # Get details (JSON) of an environment instance for a given subaccount GUID
   local subguid=$1
   btp --format json list accounts/environment-instance --subaccount "$subguid" 2> /dev/null \
-    | jq -r --arg subguid "$subguid" '.environmentInstances[] | select(.environmentType == "cloudfoundry" and .subaccountGUID == $subguid)'
+    | jq \
+      -r \
+      --arg subguid "$subguid" \
+      '.environmentInstances[] | select(.environmentType == "cloudfoundry" and .subaccountGUID == $subguid)'
 
 }
 
@@ -37,8 +29,8 @@ getapiendpoint() {
 
 main() {
 
-  local displayname="${1:-trial}"
-  getapiendpoint "$(getsubenvinst "$(getsubguid "$displayname")")"
+  local subaccountguid="${1:?Specify subaccount GUID}"
+  getapiendpoint "$(getsubenvinst "$subaccountguid")"
 
 }
 
