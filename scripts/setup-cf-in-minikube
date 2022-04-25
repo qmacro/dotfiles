@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+# A quick script that captures what I did to set up my own Cloud
+# Foundry (CF) locally. This is CF on Kubernetes, via the cf-for-k8s
+# initiative. I use minikube on my local macOS machine to provide
+# a Kubernetes cluster.
+
+set -eo pipefail
+
+# There are specific versions of Kubernetes that cf-for-k8s supports.
+declare kubernetes_version="1.19.2"
+
+# This is for storing working files (yes, it's a relative dir).
+declare tmp_dir="./tmp"
+
+# Setup for minikube (adjust to suit your host).
+declare mini_cpus=6
+declare mini_memory=12g
+
+setup_minikube() {
+
+  # Start up a minikube cluster and return the IP address. Use the
+  # VM driver "hyperkit" (I had problems with networking using the docker
+  # driver on macOS).
+  minikube start \
+    --cpus="$mini_cpus" \
+    --memory="$mini_memory" \
+    --kubernetes-version="$kubernetes_version" \
+    --driver=hyperkit
+  minikube addons enable metrics-server
+
+}
+
+start_tunnel() {
+
+  # Take the password and use with sudo to start the tunnel. The
+  # jiggerypokery with the temporary file seems like an OK way to
+  # pass the password to sudo as safely as possible without it
+  # leaking into the process info.
+  local password=$1
+  local tempfile
+  tempfile="$(mktemp)"
+  echo "$password" > "$tempfile"
+  chmod 400 "$tempfile"
+  cat "$tempfile" | sudo -S minikube tunnel &> "$tmp_dir/tunnel.log" &
+  rm -f "$tempfile"
+
+}
+
+get_dockerhub_info() {
+
+  local filename=$1
+  local repository_prefix username password
+  if [[ -s "$filename" ]]; then
+    cat "$filename"
+  else
+    read -rp "Repository prefix: " repository_prefix
+    read -rp "Username: " username
+    read -rsp "Password: " password
+    cat << EO_DOCKER
+app_registry:
+  hostname: https://index.docker.io/v1/
+  repository_prefix: "$repository_prefix"
+  username: "$username"
+  password: "$password"
+EO_DOCKER
+  fi
+
+}
+
+build_config() {
+
+  # There's a ton of config required; this is mostly in the config/ directory
+  # in the repo, and the initial config can be generated as shown here.
+  local minikube_ip=$1
+  local dockerhub_info=$2
+
+  ./hack/generate-values.sh -d "${minikube_ip}.nip.io" > "$tmp_dir/cf-values.yml"
+
+  # Add Docker Hub info
+  cat "$dockerhub_info" >> "$tmp_dir/cf-values.yml"
+
+  # Add extra required settings
+  cat << EOF >> "$tmp_dir/cf-values.yml"
+enable_automount_service_account_token: true
+remove_resource_requirements: true
+use_first_party_jwt_tokens: true
+EOF
+
+  ytt -f config -f "$tmp_dir/cf-values.yml" > "$tmp_dir/cf-for-k8s-rendered.yml"
+
+}
+
+deploy_cf() {
+
+  # This is basically a huge deployment, described by the giant YAML construct
+  # that was built and stored in the cf-for-k8s-rendered file.
+  kapp deploy -a cf -f "$tmp_dir/cf-for-k8s-rendered.yml" -y
+
+}
+
+login_cf() {
+
+  # The nip.io DNS service will turn a domain name, even one with a subdomain,
+  # into an IP address, the IP address that forms the core part of it. Lovely!
+  # Here we're using it to determine the fully qualified domain name of the CF
+  # API endpoint, and then logging in. The admin password has been generated and
+  # stored in the initial cf-values file.
+  local minikube_ip=$1
+  cf api --skip-ssl-validation "https://api.${minikube_ip}.nip.io"
+  cf auth admin "$(yq e .cf_admin_password "$tmp_dir/cf-values.yml")"
+
+}
+
+main() {
+
+  local minikube_ip dockerhub_info
+
+  # Download repo and move into it; this contains all the tools,
+  # scripts and base configuration for running CF in Kubernetes.
+  git clone "https://github.com/cloudfoundry/cf-for-k8s.git"
+  cd cf-for-k8s/ || exit 1
+  mkdir "$tmp_dir"
+
+  # We'll use minikube to provide a Kubernetes cluster; and we'll
+  # need the IP address for access later
+  setup_minikube
+  minikube_ip="$(minikube ip)"
+
+  # Because the minikube tunnel needs to run as root (in particular
+  # for the HTTPS port 443) we should start it with sudo, for which
+  # we need the password before starting the tunnel up.
+  read -srp "sudo password: "
+  start_tunnel "$REPLY"
+
+  # Once minikube is up and running, and there's tunnel access, we
+  # can start to build the configuration for running CF in Kubernetes.
+  # The IP address is passed as this will form the core of the domain
+  # name (which is resolved by the excellent nip.io service).
+  # We need information on the Docker Hub registry, specifically repository
+  # and authentication details. Get this first.
+  dockerhub_info="$(get_dockerhub_info "$@")"
+  build_config "$minikube_ip" "$dockerhub_info"
+
+  # Once the config is built, it's time to deploy.
+  #deploy_cf
+
+  # At this stage, CF should be up and running, as a series of pods in
+  # the minikube Kubernetes cluster (in the cf-system namespace). So now
+  # it's time to connect the cf CLI to the Cloud Foundry endpoint, which
+  # again is formed based on a domain form of the IP address via nip.io.
+  #login_cf "$minikube_ip"
+
+}
+
+main "$@"
