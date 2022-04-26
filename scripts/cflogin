@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Logs the user in with the account specified. Assumes CF target
+# has been set already.
+
+# Uses btp user and password from pass store:
+# - btp/<account>/user (e.g. qmacro+blue@gmail.com)
+# - btp/<account>/password (e.g. sekrit)
+
+main() {
+
+  local account="${1:?No account specified}"
+
+  # Cause script to abend if no account data stored
+  pass "btp/$account" > /dev/null
+
+  cf login \
+    -u "$(pass "btp/$account/user")" \
+    -p "$(pass "btp/$account/password")"
+
+}
+
+main "$@"
