@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# bsp - BTP subaccount property
+
+# Invoke with a property name (e.g. guid or subdomain)
+# and it will return the value for that property. Assumes
+# you're logged on with the btp CLI and targeting a specific
+# subaccount. If no property name is given, the entire JSON
+# object is returned. If a property name is given that doesn't
+# exist, exit is with a non-zero return code.
+
+set -euo pipefail
+
+main() {
+
+  local property=$1
+  local data
+  data="$(btp --format json get accounts/subaccount 2> /dev/null)"
+  jq --exit-status -r ".$property" <<< "$data"
+
+}
+
+main "${1:-}"
