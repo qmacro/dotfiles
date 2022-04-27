@@ -93,7 +93,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.8.0
+ARG GHVER=2.9.0
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
@@ -127,6 +127,13 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # Clean up temp dir
 RUN rm -rf /tmp/*
+
+# Install Speedtest CLI
+RUN curl \
+  --silent \
+  --url "https://install.speedtest.net/app/cli/install.deb.sh" \
+  | bash \
+  && apt-get -y install speedtest
 
 # Set up non-root user
 ARG USERNAME=user
@@ -230,7 +237,6 @@ RUN curl \
       --file - \
       --directory /home/$USERNAME/bin/ \
       slides
-
 
 # Off we go - based on tmux, the terminal multiplexer
 CMD ["tmux", "-u", "new", "-s", "main"]

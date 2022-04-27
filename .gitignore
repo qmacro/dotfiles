@@ -26,3 +26,4 @@ config/weechat/
 config/docker/
 config/newsboat/cache.db
 config/k9s/config.yml
+config/ookla/speedtest.json
