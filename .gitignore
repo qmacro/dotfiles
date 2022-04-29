@@ -22,6 +22,7 @@ config/autocomplete/scripts/sapbtpcli-autocomplete.plugin.sh
 config/kitty/theme.conf
 config/kitty/kitty-themes/
 config/so/
+config/cf/
 config/weechat/
 config/docker/
 config/newsboat/cache.db
