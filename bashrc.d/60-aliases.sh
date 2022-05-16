@@ -34,3 +34,5 @@ alias d='cd $DOTFILES'
 
 # js - JSON scroll
 alias js='jq -C . | less -R'
+
+alias scratch='cd $HOME/work/scratch/'
