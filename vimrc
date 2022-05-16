@@ -124,6 +124,7 @@ source ~/.config/vim/plugins/surround.vim
 source ~/.config/vim/plugins/unimpaired.vim
 source ~/.config/vim/plugins/vimspector.vim
 source ~/.config/vim/plugins/maximizer.vim
+source ~/.config/vim/plugins/vim-cds.vim
 
 call plug#end()
 
