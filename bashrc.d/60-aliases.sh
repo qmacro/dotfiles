@@ -24,7 +24,7 @@ alias ic='gh issue comment'
 alias ls='ls -p -a --color=auto'
 
 # Single char aliases
-alias s='git status'
+alias s='cd $HOME/work/scratch'
 alias k=kubectl
 alias r=ranger
 alias t=tmux
@@ -35,4 +35,4 @@ alias d='cd $DOTFILES'
 # js - JSON scroll
 alias js='jq -C . | less -R'
 
-alias scratch='cd $HOME/work/scratch/'
+alias st='git status'
