@@ -12,6 +12,7 @@ docker container run \
   --volume "$HOMELOC/.password-store":/home/user/.password-store \
   --volume "$HOMELOC/.config":/home/user/.config \
   --volume "$HOMELOC/work":/home/user/work \
+  --publish 4004:4004 \
   --publish 8000:8000 \
   --name "$CONNAME" \
   --interactive \
