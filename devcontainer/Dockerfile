@@ -36,6 +36,7 @@ RUN apt-get update \
     man \
     ncat \
     ncurses-dev \
+    neofetch \
     newsboat \
     openssh-server \
     pandoc \

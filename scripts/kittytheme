@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+declare kittyconfig="$HOME/.config/kitty"
+declare newtheme
+
+newtheme="$(
+  find "$kittyconfig/kitty-themes/themes" -name '*.conf' \
+    | sed -E 's/^.+\/(.+)\.conf$/\1/' \
+    | fzf
+)"
+
+sed -i -E "s/\/themes\/.+\./\/themes\/$newtheme\./" "$kittyconfig/kitty.conf"
