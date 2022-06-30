@@ -129,13 +129,6 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # Clean up temp dir
 RUN rm -rf /tmp/*
 
-# Install Speedtest CLI
-RUN curl \
-  --silent \
-  --url "https://install.speedtest.net/app/cli/install.deb.sh" \
-  | bash \
-  && apt-get -y install speedtest
-
 # Set up non-root user
 ARG USERNAME=user
 ARG UID=1031
