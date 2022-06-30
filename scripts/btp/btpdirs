@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# List directory names and GUIDs
+
+set -euo pipefail
+
+main() {
+
+  btp \
+    --format json \
+    get accounts/global-account --show-hierarchy \
+    2> /dev/null \
+    | jq -r '
+      recurse
+      | objects
+      | select(has("directoryFeatures"))
+      | [.guid, .displayName] 
+      | @tsv
+      '
+
+}
+
+main "$@"

@@ -105,3 +105,10 @@ ssp() {
   done < <(grep '^http' /tmp/pending.dat)
 
 }
+
+js() {
+
+  # JSON scroll
+  jq -C . < "$1" | less -R
+
+}
