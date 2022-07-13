@@ -113,7 +113,6 @@ source ~/.config/vim/plugins/gitbranch.vim
 source ~/.config/vim/plugins/gitgutter.vim
 source ~/.config/vim/plugins/goyo-and-limelight.vim
 source ~/.config/vim/plugins/incsearch.vim
-source ~/.config/vim/plugins/indentline.vim
 source ~/.config/vim/plugins/jq.vim
 source ~/.config/vim/plugins/jqplay.vim
 source ~/.config/vim/plugins/jsonc.vim
