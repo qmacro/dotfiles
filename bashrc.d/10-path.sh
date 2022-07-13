@@ -1,8 +1,5 @@
 export PATH="/usr/local/opt/openjdk/bin:$PATH" # brew-installed Java
 
-# Brew-installed Node.js v12
-export PATH="/usr/local/opt/node@12/bin:$PATH"
-
 # Brew-installed Gnu utils
 export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
