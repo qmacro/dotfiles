@@ -31,5 +31,6 @@ alias t=tmux
 alias i='gh issue list'
 alias v=vim
 alias d='cd $DOTFILES'
+alias r=reset
 
 alias st='git status'
