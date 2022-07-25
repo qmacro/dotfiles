@@ -94,7 +94,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.13.0
+ARG GHVER=2.14.2
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
@@ -206,7 +206,7 @@ RUN curl \
       exercism
 
 # Install bats
-ARG BATSVER=1.6.0
+ARG BATSVER=1.7.0
 RUN curl \
     --silent \
     --location \
