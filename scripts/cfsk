@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# cfsk: Cloud Foundry Service Key
+
+# Takes three parameters:
+# service (mandatory)
+# plan    (mandatory)
+# name    (optional, defaults to <service>-<plan>)
+
+# Does the following:
+# - Creates a service instance with the plan specified
+# - Creates a service key for that
+# - Outputs the service key
+
+# Does not:
+# - Check whether existing instances or keys exist
+# - Check quotas or entitlements
+
+set -euo pipefail
+
+main() {
+
+  local service="${1:?Specify service name}"
+  local plan="${2:?Specify service plan}"
+  local instance_name="${3:-$service-$plan}"
+  local key_name="$instance_name-key"
+
+  cf create-service "$service" "$plan" "$instance_name" \
+    && cf create-service-key "$instance_name" "$key_name" \
+    && cf service-key "$instance_name" "$key_name" | sed '1,2d'
+
+}
+
+main "$@"
