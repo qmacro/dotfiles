@@ -69,6 +69,8 @@ nnoremap <leader>t :tabNext<cr>
 
 nmap <silent> <leader>l :set list!<cr>
 
+noremap <C-w>v <esc>:vnew<cr>
+
 " When text is wrapped, move by terminal rows, not lines, unless a count is provided
 "noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 "noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
