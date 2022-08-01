@@ -94,7 +94,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.14.2
+ARG GHVER=2.14.3
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
@@ -165,7 +165,7 @@ RUN cd /tmp/ \
   && echo -ne '\n' | ./getbtpcli
 
 # Install ijq
-ARG IJQVER=0.3.6
+ARG IJQVER=0.4.0
 RUN curl \
     --silent \
     --location \
