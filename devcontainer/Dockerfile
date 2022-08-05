@@ -70,16 +70,17 @@ RUN npm install -g \
   @sap/generator-fiori \
   @sapui5/generator-sapui5-templates \
   @ui5/cli \
-  fx \
-  docsify-cli \
   bash-language-server \
+  docsify-cli \
   eslint \
+  fx \
   http-server \
   httpie \
   jwt-cli \
-  lorem-ipsum \
-  prettier \
   lodash \
+  lorem-ipsum \
+  markdownlint-cli \
+  prettier \
   ramda \
   url-decode-encode-cli \
   yarn \
@@ -169,7 +170,7 @@ ARG IJQVER=0.4.0
 RUN curl \
     --silent \
     --location \
-    --url "https://git.sr.ht/~gpanders/ijq/refs/download/v$IJQVER/ijq-$IJQVER-linux-x86_64.tar.gz" \
+    --url "https://git.sr.ht/~gpanders/ijq/refs/download/v$IJQVER/ijq-$IJQVER-linux-amd64.tar.gz" \
     | tar \
       --extract \
       --gunzip \
