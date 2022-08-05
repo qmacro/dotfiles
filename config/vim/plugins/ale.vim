@@ -21,7 +21,7 @@ let g:ale_fixers = {
 let g:ale_sh_shfmt_options='-i 2 -bn -ci -sr'
 let g:ale_markdown_markdownlint_options = '--config ~/.markdownlintrc'
 
-nmap <silent> <F8> :ALENextWrap<cr>
-nmap <silent> <S-F8> :ALEPreviousWrap<cr>
+nmap <silent> <C-]> :ALENextWrap<cr>
+nmap <silent> <C-[> :ALEPreviousWrap<cr>
 nmap <silent> <leader>ad :ALEGoToDefinition<cr>
 nmap <silent> <leader>ar :ALEFindReferences<cr>
