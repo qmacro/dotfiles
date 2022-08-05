@@ -19,7 +19,7 @@ let g:ale_fixers = {
 
 " See https://github.com/SAP-samples/devtoberfest-2021/tree/main/topics/Week2_Best_Practices/challenge#consistent-source-formatting
 let g:ale_sh_shfmt_options='-i 2 -bn -ci -sr'
-let g:ale_markdown_markdownlint_options = '--config ~/.markdownlintrc'
+let g:ale_markdown_markdownlint_options = '--config ~/.config/markdownlint/markdownlintrc'
 
 nmap <silent> <C-]> :ALENextWrap<cr>
 nmap <silent> <C-[> :ALEPreviousWrap<cr>
