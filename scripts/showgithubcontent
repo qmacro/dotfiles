@@ -16,4 +16,4 @@ gh api \
   --jq '.content' \
   "/repos/$owner/$repo/contents/$path" \
   | base64 --decode -i - \
-  | bat --color "$color" --theme gruvbox --plain --language "$language" -
+  | bat --color "$color" --plain --language "$language" -
