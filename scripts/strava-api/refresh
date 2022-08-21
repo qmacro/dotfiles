@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+declare VERBOSE
+declare TOKENFILE="${TOKENFILE:-tokendata.json}"
+
+log() {
+
+  [[ -n $VERBOSE ]] && echo "$1"
+
+}
+
+getvalue() {
+
+  # Returns the value of a given property from the token file
+
+  local property=$1
+  jq --raw-output ".$property" "$TOKENFILE"
+
+}
+
+timeleft() {
+
+  # Returns time left on current token, in seconds
+
+  local expires_at now
+  expires_at="$(getvalue expires_at)"
+  now="$(date +%s)"
+  echo $((expires_at - now))
+
+}
+
+main() {
+
+  local force
+
+  while [[ $# -gt 0 ]]; do
+    [[ $1 =~ ^(-f|--force)$ ]] && force=true
+    [[ $1 =~ ^(-v|--verbose)$ ]] && VERBOSE=true
+    shift
+  done
+
+  local remaining onehour=$((60 * 60))
+  remaining="$(timeleft)"
+  log "Remaining token lifetime is $remaining seconds"
+  if [[ -n $force || ($remaining -lt $onehour) ]]; then
+    log "refresh"
+  fi
+
+}
+
+: "${STRAVA_CLIENTID:?Env var STRAVA_CLIENTID not set.}"
+: "${STRAVA_CLIENTSECRET:?Env var STRAVA_CLIENTSECRET not set.}"
+
+main "$@"
