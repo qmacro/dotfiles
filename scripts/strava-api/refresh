@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-set -eo pipefail
+set -o pipefail
 
 declare VERBOSE
 declare TOKENFILE="${TOKENFILE:-tokendata.json}"
 
 log() {
 
-  [[ -n $VERBOSE ]] && echo "$1"
+  [[ -n $VERBOSE ]] && echo >&2 "$1"
 
 }
 
@@ -31,6 +31,21 @@ timeleft() {
 
 }
 
+refreshtoken() {
+
+  log "Refreshing token"
+
+  curl \
+    --silent \
+    --fail \
+    --data client_id="$STRAVA_CLIENTID" \
+    --data client_secret="$STRAVA_CLIENTSECRET" \
+    --data refresh_token="$(getvalue refresh_token)" \
+    --data grant_type=refresh_token \
+    --url "https://www.strava.com/api/v3/oauth/token"
+
+}
+
 main() {
 
   local force
@@ -44,9 +59,9 @@ main() {
   local remaining onehour=$((60 * 60))
   remaining="$(timeleft)"
   log "Remaining token lifetime is $remaining seconds"
-  if [[ -n $force || ($remaining -lt $onehour) ]]; then
-    log "refresh"
-  fi
+  [[ -n $force || ($remaining -lt $onehour) ]] && refreshtoken
+
+  exit 0
 
 }
 
