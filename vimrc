@@ -19,7 +19,7 @@ set wildmode=longest:full,full
 set wrap
 set list
 set listchars=tab:▸\ ,trail:·
-set mouse=a
+set mouse-=a
 set nojoinspaces
 set splitright
 set confirm
