@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+set -o pipefail
+
+declare VERBOSE
+declare TOKENFILE="${TOKENFILE:-tokendata.json}"
+
+log() {
+
+  [[ -n $VERBOSE ]] && echo >&2 "$1"
+
+}
+
+getvalue() {
+
+  # Returns the value of a given property from the token file
+
+  local property=$1
+  jq --raw-output ".$property" "$TOKENFILE"
+
+}
+
+timeleft() {
+
+  # Returns time left on current token, in seconds
+
+  local expires_at now
+  expires_at="$(getvalue expires_at)"
+  now="$(date +%s)"
+  echo $((expires_at - now))
+
+}
+
+refreshtoken() {
+
+  log "Refreshing token"
+
+  curl \
+    --silent \
+    --fail \
+    --data client_id="$STRAVA_CLIENTID" \
+    --data client_secret="$STRAVA_CLIENTSECRET" \
+    --data refresh_token="$(getvalue refresh_token)" \
+    --data grant_type=refresh_token \
+    --url "https://www.strava.com/api/v3/oauth/token"
+
+}
+
+main() {
+
+  local force
+
+  while [[ $# -gt 0 ]]; do
+    [[ $1 =~ ^(-f|--force)$ ]] && force=true
+    [[ $1 =~ ^(-v|--verbose)$ ]] && VERBOSE=true
+    shift
+  done
+
+  local remaining onehour=$((60 * 60))
+  remaining="$(timeleft)"
+  log "Remaining token lifetime is $remaining seconds"
+  [[ -n $force || ($remaining -lt $onehour) ]] && refreshtoken
+
+  exit 0
+
+}
+
+: "${STRAVA_CLIENTID:?Env var STRAVA_CLIENTID not set.}"
+: "${STRAVA_CLIENTSECRET:?Env var STRAVA_CLIENTSECRET not set.}"
+
+main "$@"
