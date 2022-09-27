@@ -3,7 +3,7 @@
 	name = DJ Adams
 [credential "https://github.com"]
 	username = qmacro
-	helper = !/usr/bin/gh auth git-credential
+	helper = !/usr/local/bin/gh auth git-credential
 [credential "https://github.tools.sap"]
 	username = i347491
 	helper = !/usr/bin/gh auth git-credential
