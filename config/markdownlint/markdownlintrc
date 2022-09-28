@@ -3,5 +3,8 @@
   "default": true,
 
   // Disable line length check
-  "MD013": false
+  "MD013": false,
+
+  // Disable inner html check
+  "MD033": false
 }
