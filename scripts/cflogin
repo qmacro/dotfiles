@@ -17,6 +17,7 @@ main() {
   pass "btp/$account" > /dev/null
 
   cf login \
+    -a "$(pass "btp/$account/cfapiendpoint")" \
     -u "$(pass "btp/$account/user")" \
     -p "$(pass "btp/$account/password")"
 
