@@ -35,3 +35,4 @@ alias r=reset
 
 alias st='git status'
 alias dpa='docker ps -a --format "table {{.Names}}\t{{.State}}\t{{.RunningFor}}\t{{.Networks}}\t{{.Mounts}}"'
+alias dcl='docker context list'
