@@ -4,8 +4,8 @@ set -o errexit
 
 # Logs the user in with the account specified.
 
-# Store global account name, user and password in pass store:
-# - btp/<account>/ga (e.g. fffffffftrial)
+# Store global account subdomain, user and password in pass store:
+# - btp/<account>/subdomain (e.g. fffffffftrial-ga)
 # - btp/<account>/user (e.g. qmacro+blue@gmail.com)
 # - btp/<account>/password (e.g. sekrit)
 
@@ -21,7 +21,7 @@ main() {
   btp login \
     --url "$URL" \
     --user "$(pass "btp/$account/user")" \
-    --subdomain "$(pass "btp/$account/ga")-ga" \
+    --subdomain "$(pass "btp/$account/subdomain")" \
     --password "$(pass "btp/$account/password")"
 
 }
