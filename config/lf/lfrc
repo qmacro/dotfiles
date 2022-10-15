@@ -103,9 +103,9 @@ set hidden
 
 # Add some commands for JSON files
 cmd cfx ${{ fx "$f" }}
-cmd cijq ${{ ijq "$f" }}
-cmd cjs ${{ jq -C . < "$f" | less -R }}
+cmd cijq ${{ ijq $f }}
+cmd cijqs $IFS="$(printf '\n\t')"; cat $fx | ijq -s
 
 map Jf cfx
 map Ji cijq
-map Js cjs
+map Js cijqs
