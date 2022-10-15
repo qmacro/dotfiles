@@ -100,3 +100,12 @@ cmd zip ${{
 }}
 
 set hidden
+
+# Add some commands for JSON files
+cmd cfx ${{ fx "$f" }}
+cmd cijq ${{ ijq "$f" }}
+cmd cjs ${{ jq -C . < "$f" | less -R }}
+
+map Jf cfx
+map Ji cijq
+map Js cjs
