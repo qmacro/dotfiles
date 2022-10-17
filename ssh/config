@@ -1,3 +1,7 @@
+Host 192.168.86.100
+    HostName 192.168.86.100
+    User dj
+
 Host zino gargantubrain acer teemo pihole debian
     User dj
     ForwardX11 no

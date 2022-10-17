@@ -100,3 +100,28 @@ cmd zip ${{
 }}
 
 set hidden
+
+# Add some commands for JSON files
+cmd cfx ${{ fx "$f" }}
+cmd cijq ${{ ijq $f }}
+cmd cijqs $IFS="$(printf '\n\t')"; cat $fx | ijq -s
+
+map Jf cfx
+map Ji cijq
+map Js cijqs
+
+# Config to select all files
+# See https://github.com/gokcehan/lf/wiki/Tips#select-all-files-or-directories-in-the-current-directory
+cmd select-all-files ${{
+    { echo "$fs"; find -L "$(pwd)" -mindepth 1 -maxdepth 1 -type f; } |
+        if [ "$lf_hidden" = "false" ]; then
+          # remove any hidden files so you only select files you can see.
+          grep -v '/\.[^/]\+$'
+        else
+          cat
+        fi |
+        sed '/^$/d' | sort | uniq -u |
+        xargs -d '\n' -r -I{} lf -remote "send $id toggle {}"
+}}
+
+map Sa select-all-files

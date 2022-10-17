@@ -1,4 +1,4 @@
-export EDITOR=vim
+export EDITOR=nvim
 export WORK="$HOME/work"
 
 export HOSTALIASES="$HOME/.config/host.aliases"
