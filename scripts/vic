@@ -3,4 +3,4 @@
 # Great idea from Mr Rob - convenience wrapper around vim
 # to edit the script that I specify, without having to specify
 # where it is in the PATH.
-vim "$(which "$1")"
+$EDITOR "$(which "$1")"

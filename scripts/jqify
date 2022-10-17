@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Grab the latest successful ijq invocation and put it in a new jq script
+: "${1:?Specify a name for the new script}"
+cat << EOF > "$1"
+#!/usr/bin/env jq
+
+EOF
+tail -1 "$HOME/.local/share/ijq/history" >> "$1"
