@@ -121,7 +121,7 @@ cmd select-all-files ${{
           cat
         fi |
         sed '/^$/d' | sort | uniq -u |
-        xargs -d '\n' -r -I{} lf -remote "send $id toggle {}"
+        xargs -r -I{} lf -remote "send $id toggle {}"
 }}
 
 map Sa select-all-files
