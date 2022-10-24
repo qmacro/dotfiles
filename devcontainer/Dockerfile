@@ -97,7 +97,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.17
+ARG GHVER=2.18.1
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
