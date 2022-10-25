@@ -87,3 +87,30 @@ require('lspconfig').jsonls.setup {
     }
   }
 }
+
+-- From https://github.com/samhh/dotfiles/blob/99e67298fbcb61d7398ad1850f3c2df31d90bd0d/home/.config/nvim/plugin/lsp.lua#L120-L130
+local function setup_diags()
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics,
+    {
+      virtual_text = true,
+      signs = true,
+      update_in_insert = false,
+      underline = true,
+    }
+  )
+end
+
+setup_diags()
+
+-- From https://neovim.discourse.group/t/how-to-suppress-warning-undefined-global-vim/1882/3
+require('lspconfig').sumneko_lua.setup {
+  settings = {
+    Lua = {
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+    },
+  },
+}
