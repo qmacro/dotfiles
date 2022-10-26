@@ -1,0 +1,6 @@
+#!/bin/sh
+
+case "$1" in
+    *.md) glow -s dark "$1";;
+    *) highlight -O ansi "$1";;
+esac

@@ -125,3 +125,5 @@ cmd select-all-files ${{
 }}
 
 map Sa select-all-files
+
+set previewer ~/.config/lf/previewer
