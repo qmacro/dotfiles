@@ -5,7 +5,7 @@
 # Sets me up for writing a new blog post
 
 declare bloghome="$HOME/work/gh/github.com/qmacro/qmacro.github.io"
-declare windowname="blog post"
+declare windowname="blogpost"
 declare location="${0%/*}"
 
 # Experimental lib functions
