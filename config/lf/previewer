@@ -1,6 +1,7 @@
 #!/bin/sh
 
 case "$1" in
+    *.jq) bat --style=plain --color=always "$1";;
     *.md) glow -s dark "$1";;
     *) highlight -O ansi "$1";;
 esac

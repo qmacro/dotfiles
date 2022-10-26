@@ -42,6 +42,9 @@ require('packer').startup(function(use)
   -- JSON Schema store Support
   use 'b0o/schemastore.nvim'
 
+  -- Syntax highlighting
+  use 'vito-c/jq.vim'
+
 end)
 
 vim.opt.signcolumn = 'yes'
