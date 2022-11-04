@@ -1,35 +1,39 @@
 #!/usr/bin/env bash
 
+# Ignore "Can't follow non-constant source" errors
 # shellcheck disable=SC1090
 
 # Sets me up for writing a new blog post
 
 declare bloghome="$HOME/work/gh/github.com/qmacro/qmacro.github.io"
-declare windowname="blogpost"
 declare location="${0%/*}"
 
 # Experimental lib functions
-
 source "$location/lib/slugify"
-source "$location/lib/yyyymmdd"
 
 set -euo pipefail
 shopt -s extglob
 
-die() { echo "$1" && exit 1; }
-
 create_file() {
 
+  #[[ ! -f "$filename" ]] && create_file "$filename" "$title" "$postdate" "${tags[@]}"
   local filename=$1
   local title=$2
+  local postdate=$3
   shift
   shift
-  local tags=("$@")
+  shift
+
+  # Ignore this instance of "Quote to prevent word splitting/globbing"
+  # to be able to pull the rest of the arguments into the tags array.
+  # shellcheck disable=SC2206
+  local tags=($@)
 
   cat << EO_TEMPLATE > "$filename"
 ---
 layout: post
 title: $title
+date: $postdate
 EO_TEMPLATE
 
   # Add tags metadata if needed
@@ -47,8 +51,37 @@ EO_TEMPLATE
 
 generate_filename() {
 
-  local title=$1
-  echo "$bloghome/src/posts/$(yyyymmdd)-$(slugify "$title").md"
+  # Generates a filename from the postdate and a slugified version
+  # of the post title.
+  local postdate=$1
+  local title=$2
+  echo "$bloghome/src/posts/$postdate-$(slugify "$title").md"
+
+}
+
+get_tags_and_date() {
+
+  # Takes a space separated list of tags (potentially empty)
+  # and determines what the tags are, picking anything that looks
+  # like a date (yyyy-mm-dd) out and using that as the postdate,
+  # defaulting to today's date if such a value is not provided.
+  local tags i
+  local postdate
+
+  postdate="$(date +%Y-%m-%d)"
+
+  # Look through the tags, capturing a postdate if there is one,
+  # and consolidating the tags into an array.
+  for i in "$@"; do 
+    if [[ $i =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+      postdate=$i
+    else
+      tags+=("$i")
+    fi
+  done
+
+  # Return the postdate first, followed by any tags
+  echo "$postdate" "${tags[@]}"
 
 }
 
@@ -56,25 +89,22 @@ main() {
 
   local title filename
 
-  # Abort if tmux isn't running
-  [[ -n $TMUX ]] || die "tmux is not running"
+  # Get title, which must be provided
+  title="${1:?Specify blog post title}"
+  shift
 
-  # Abort also if no title is given
-  : "${1:?Specify blog post title}"
+  # Get postdate & tags from the rest of the values provided
+  read -r postdate tags < <(get_tags_and_date "$@")
 
-  filename="$(generate_filename "$1")"
+  # Generate the name for the Markdown file
+  filename="$(generate_filename "$postdate" "$title")"
 
   # Create the blog post file if it doesn't already exist
-  [[ ! -f "$filename" ]] && create_file "$filename" "$@"
+  [[ ! -f "$filename" ]] && create_file "$filename" "$title" "$postdate" "${tags[@]}"
 
-  # Set up new tmux window with bats running on the right
-  # and the README, test & solution scripts in an editor on the left
   cd "$bloghome"
-  tmux new-window -n "$windowname"
-  tmux split-pane -h -l 40%
-  tmux send-keys -t "main:$windowname.2" "yarn dev" Enter
-  tmux send-keys -t "main:$windowname.1" "vim + $filename" Enter
-  tmux select-pane -t "main:$windowname.1"
+  cat "$filename"
+  rm "$filename"
 
 }
 
