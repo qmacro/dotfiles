@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+somefunction() {
+
+  :
+
+}
+
+die() { echo "$1" && exit 1; }
+
+de_entify() {
+
+  local str
+  read -r str < /dev/stdin
+  echo "$str" \
+  | sed '
+    s/&#8211;/-/;
+    s/&#8230;/.../;
+    s/&lt;/</;
+    s/&gt;/>/;
+    s/:/-/;
+    '
+
+}
+
+get_title() {
+
+  local url=$1
+  curl \
+    --silent \
+    --url "$url" \
+    | grep \
+      --perl-regexp \
+      --only-matching \
+      "(?<=<title>)(.+)(?= \| SAP Blogs)" \
+    | de_entify
+
+}
+
+
+get_postdate() {
+
+  # Pick out the yyyy mm and dd values from the URL and return
+  # a yyyy-mm-dd postdate string.
+  local url=$1
+  echo "$url" \
+    | sed -E 's|.+\.com/([0-9]{4})/([0-9]{2})/([0-9]{2})/.+|\1-\2-\3|'
+
+}
+
+main() {
+
+  local url="${1:?Specify URL of post to save}"
+  [[ $url =~ ^https://blogs.sap.com ]] || die "Doesn't look like a SAP Community blog post URL"
+
+  # Call newpost with the title and postdate as well as the 'sapcommunity' tag
+  newpost "$(get_title "$@")" "$(get_postdate "$@")" "sapcommunity"
+
+}
+
+main "$@"
