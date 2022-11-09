@@ -5,6 +5,12 @@
 
 # Sets me up for writing a new blog post
 
+# Has a new special mode for execution from `savepost`; supply
+# a tag in this form: sapcommunity-<sapcommunity-post-url> and 
+# the tag 'sapcommunity' will be added, plus an 'Originally posted
+# on SAP Community' link will be added at the bottom of the body,
+# with a link to the URL provided.
+
 declare bloghome="$HOME/work/gh/github.com/qmacro/qmacro.github.io"
 declare location="${0%/*}"
 
@@ -23,6 +29,7 @@ create_file() {
   shift
   shift
   shift
+  local originalurl
 
   # Ignore this instance of "Quote to prevent word splitting/globbing"
   # to be able to pull the rest of the arguments into the tags array.
@@ -40,12 +47,22 @@ EO_TEMPLATE
   if [[ "${#tags[@]}" -gt 0 ]]; then
     echo "tags:" >> "$filename"
     for tag in "${tags[@]}"; do
+      if [[ $tag =~ ^sapcommunity- ]]; then 
+        originalurl="${tag#sapcommunity-}"
+        tag=sapcommunity 
+      fi
       echo "  - $tag" >> "$filename"
     done
   fi
 
   # Add end-of-frontmatter
   echo "---" >> "$filename"
+
+  # Add link to original URL if needed
+  if [[ -n $originalurl ]]; then
+    echo "" >> "$filename"
+    echo "[Originally published on SAP Community]($originalurl)" >> "$filename"
+  fi
 
 }
 
@@ -100,11 +117,13 @@ main() {
   filename="$(generate_filename "$postdate" "$title")"
 
   # Create the blog post file if it doesn't already exist
-  [[ ! -f "$filename" ]] && create_file "$filename" "$title" "$postdate" "${tags[@]}"
+  if [[ ! -f "$filename" ]]; then
+    create_file "$filename" "$title" "$postdate" "${tags[@]}"
+  fi
 
-  cd "$bloghome"
-  cat "$filename"
-  rm "$filename"
+  # if 
+
+  $EDITOR "$filename"
 
 }
 
