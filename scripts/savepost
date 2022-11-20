@@ -55,8 +55,10 @@ main() {
   local url="${1:?Specify URL of post to save}"
   [[ $url =~ ^https://blogs.sap.com ]] || die "Doesn't look like a SAP Community blog post URL"
 
-  # Call newpost with the title and postdate as well as the 'sapcommunity' tag
-  newpost "$(get_title "$@")" "$(get_postdate "$@")" "sapcommunity"
+  read -r -p "Saving post $url ..."
+
+  # Call newpost with the title and postdate as well as the 'sapcommunity' tag with URL
+  newpost "$(get_title "$@")" "$(get_postdate "$@")" "sapcommunity-$url"
 
 }
 
