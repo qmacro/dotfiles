@@ -7,7 +7,7 @@ if [[ ! -f "$script" ]]; then
   cat > "$script" << EOF
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 
 somefunction() {
 
