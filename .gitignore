@@ -30,3 +30,4 @@ config/newsboat/cache.db
 config/k9s/config.yml
 config/ookla/speedtest.json
 config/toot/
+config/ngrok/
