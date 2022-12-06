@@ -6,38 +6,24 @@
 set -o errexit
 set -o pipefail
 
-getproperty() {
+getcontext() {
 
-  # Retrieve value of property in the account config file. The
-  # first leading period of the property name (from a jq perspective)
-  # is optional.
+  # A new version, based on what seems to be an updated structure
+  # in the config file contents. Assuming for now that the entries
+  # in the TargetHierarchy array are in some sort of meaningful order.
+  local configfile=$1
 
-  local file=$1
-  local prop=$2
-
-  [[ ! $prop =~ ^\. ]] && prop=".$prop"
-  jq -r "$prop" "$file"
+  jq -r '
+    [ .UserName | sub("@.+";"") ] + ( .TargetHierarchy | map(.DisplayName) )
+    | join(" : ")
+    ' "$configfile"
 
 }
 
 main() {
 
   # Show a short version of the context from the config file.
-
-  local configfile="${1:-$BTP_CLIENTCONFIG}"
-  local subdomain subaccount email
-
-  subdomain="$(getproperty "$configfile" SubDomain)"
-  subaccount="$(getproperty "$configfile" Subaccount)"
-  email="$(getproperty "$configfile" Authentication.Mail)"
-
-  if [[ $subaccount =~ ^$ ]]; then
-    subaccount="(no subaccount targeted)"
-  else
-    subaccount="${subaccount:0:8}"
-  fi
-
-  echo "${email%%@*} / ${subdomain%-ga} / $subaccount"
+  getcontext "${1:-$BTP_CLIENTCONFIG}"
 
 }
 
