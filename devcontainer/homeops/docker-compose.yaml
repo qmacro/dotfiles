@@ -1,0 +1,17 @@
+version: "3"
+services:
+  devcontainer:
+    container_name: devcontainer
+    image: devcontainer
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - /home/dj/.ssh:/home/user/.ssh
+      - /home/dj/.gnupg:/home/user/.gnupg
+      - /home/dj/.password-store:/home/user/.password-store
+      - /home/dj/work:/home/user/work
+    user: user
+    ports:
+      - "4004:4004"
+      - "8000:8000"

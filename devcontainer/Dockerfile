@@ -29,6 +29,7 @@ RUN apt-get update \
     file \
     fzf \
     gnupg \
+    highlight \
     iputils-ping \
     jq \
     libevent-dev \
@@ -46,6 +47,7 @@ RUN apt-get update \
     postgresql \
     shellcheck \
     sudo \
+    toot \
     uuid-runtime \
     vim-nox \
     w3m \
@@ -62,31 +64,15 @@ ARG TMUXVER=3.2a
 RUN curl -fsSL "https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz" | tar -xzf - \
   && cd "tmux-$TMUXVER" && ./configure && make && make install
 
+# Install nvim from release deb distribution
+ARG NVIMVER=0.8.0
+RUN cd /tmp/ \
+  && curl -sLO https://github.com/neovim/neovim/releases/download/v${NVIMVER}/nvim-linux64.deb \
+  && apt install ./nvim-linux64.deb
+
 # Install specific Node.js
 ARG NODEVER=lts
 RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - && apt-get install -y nodejs
-
-# Install global npm modules for Node.js
-RUN npm install -g \
-  @sap/cds-dk \
-  @sap/generator-fiori \
-  @sapui5/generator-sapui5-templates \
-  @ui5/cli \
-  bash-language-server \
-  docsify-cli \
-  eslint \
-  fx \
-  http-server \
-  httpie \
-  jwt-cli \
-  lodash \
-  lorem-ipsum \
-  markdownlint-cli \
-  prettier \
-  ramda \
-  url-decode-encode-cli \
-  yarn \
-  yo
 
 # Install bat - cat with wings
 ARG BATVER=0.18.3
@@ -97,7 +83,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.18.1
+ARG GHVER=2.20.0
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
@@ -145,9 +131,33 @@ RUN adduser \
   $USERNAME \
  && chown $USERNAME:$USERNAME /tmp/
 
+RUN mkdir /home/$USERNAME/.npm-global 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 ENV TERM xterm-256color
+
+# Install global npm modules for Node.js
+RUN npm config set prefix '/home/$USERNAME/.npm-global'
+RUN npm install -g \
+  @sap/cds-dk \
+  @sap/generator-fiori \
+  @sapui5/generator-sapui5-templates \
+  @ui5/cli \
+  bash-language-server \
+  docsify-cli \
+  eslint \
+  fx \
+  http-server \
+  httpie \
+  jwt-cli \
+  lodash \
+  lorem-ipsum \
+  markdownlint-cli \
+  prettier \
+  ramda \
+  url-decode-encode-cli \
+  yarn \
+  yo
 
 # Set up dotfiles
 RUN git clone https://github.com/qmacro/dotfiles.git && cd dotfiles/ && ./dotsetup
@@ -234,6 +244,9 @@ RUN curl \
       --file - \
       --directory /home/$USERNAME/bin/ \
       slides
+
+# Install Packer (for NeoVim) core 
+RUN git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 # Off we go - based on tmux, the terminal multiplexer
 CMD ["tmux", "-u", "new", "-s", "main"]
