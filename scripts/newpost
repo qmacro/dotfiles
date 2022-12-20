@@ -17,7 +17,7 @@ declare location="${0%/*}"
 # Experimental lib functions
 source "$location/lib/slugify"
 
-set -euo pipefail
+set -eo pipefail
 shopt -s extglob
 
 create_file() {
