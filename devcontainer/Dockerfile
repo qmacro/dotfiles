@@ -19,7 +19,7 @@ RUN apt-get update \
     bc \
     build-essential \
     ca-certificates \
-    cf7-cli \
+    cf8-cli \
     cron \
     curl \
     delta \
@@ -75,7 +75,7 @@ ARG NODEVER=lts
 RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - && apt-get install -y nodejs
 
 # Install bat - cat with wings
-ARG BATVER=0.18.3
+ARG BATVER=0.22.1
 RUN curl -fsSLO "https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-musl_${BATVER}_amd64.deb" && dpkg -i "./bat-musl_${BATVER}_amd64.deb"
 
 # Install glow - terminal based Markdown rendering
@@ -83,7 +83,7 @@ ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.20.0
+ARG GHVER=2.21.2
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install yq - YAML query tool
@@ -129,15 +129,17 @@ RUN adduser \
   --home /home/$USERNAME \
   --gecos "Dev User" \
   $USERNAME \
- && chown $USERNAME:$USERNAME /tmp/
+  && chown $USERNAME:$USERNAME /tmp/
 
-RUN mkdir /home/$USERNAME/.npm-global 
+RUN mkdir /home/$USERNAME/.npm-global \
+  && chown $USERNAME:$USERNAME /home/$USERNAME/.npm-global
+
 USER $USERNAME
 WORKDIR /home/$USERNAME
 ENV TERM xterm-256color
 
 # Install global npm modules for Node.js
-RUN npm config set prefix '/home/$USERNAME/.npm-global'
+RUN npm config set prefix "/home/$USERNAME/.npm-global"
 RUN npm install -g \
   @sap/cds-dk \
   @sap/generator-fiori \
@@ -244,6 +246,19 @@ RUN curl \
       --file - \
       --directory /home/$USERNAME/bin/ \
       slides
+
+# Install ngrok
+ARG NGROKVER=3
+RUN curl \
+    --silent \
+    --location \
+    --url "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v${NGROKVER}-stable-linux-amd64.tgz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /home/$USERNAME/bin/ \
+      ngrok
 
 # Install Packer (for NeoVim) core 
 RUN git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim
