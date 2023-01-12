@@ -8,12 +8,24 @@ declare CLIENT_SECRET="${STRAVA_CLIENT_SECRET:?Client secret not set}"
 declare SCOPE=read_all,activity:read_all,activity:write
 declare -A QUERYPARAMS
 
+
+get_callback_url() {
+
+  local port=$1
+
+  urlencode "http://localhost:$port"
+
+}
+
 show_start_url() {
+
+  local callback_url
+  callback_url="$(get_callback_url "$PORT")"
 
   echo "\
 https://www.strava.com/oauth/authorize\
 ?client_id=$CLIENT_ID\
-&redirect_uri=http://localhost:${PORT}\
+&redirect_uri=$callback_url\
 &scope=$SCOPE\
 &response_type=code\
 &approval_prompt=force\
@@ -58,7 +70,9 @@ main() {
   # shellcheck disable=2034
   read -r method query version <<< "$output"
   parsequeryparams "${query#/?}"
-  exchange_token "${QUERYPARAMS[code]}" | jq .
+  exchange_token "${QUERYPARAMS[code]}" \
+    | jq . \
+    | tee tokendata.json
 
 }
 
