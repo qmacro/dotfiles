@@ -46,11 +46,18 @@ require('packer').startup(function(use)
   -- Syntax highlighting
   use 'vito-c/jq.vim'
 
+  -- Telescope
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.0',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
+
 end)
 
 vim.opt.signcolumn = 'yes'
 vim.opt.termguicolors = true
 pcall(vim.cmd, 'colorscheme onedark')
+pcall(vim.cmd, 'autocmd BufEnter bash* set ft=bash')
 
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
@@ -118,3 +125,10 @@ require('lspconfig').sumneko_lua.setup {
     },
   },
 }
+
+vim.g.mapleader = ' '
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
