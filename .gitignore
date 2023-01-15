@@ -3,6 +3,7 @@
 .*.un~
 *~
 *.lock
+*.log
 host.aliases
 config/g/
 config/htop/
