@@ -122,9 +122,7 @@ RUN rm -rf /tmp/*
 
 # Set up non-root user
 ARG USERNAME=user
-ARG UID=1031
 RUN adduser \
-  --uid $UID \
   --quiet \
   --disabled-password \
   --shell /bin/bash \
