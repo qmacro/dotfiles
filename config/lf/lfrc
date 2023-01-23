@@ -103,10 +103,12 @@ set hidden
 
 # Add some commands for JSON files
 cmd view-json-with-fx ${{ fx "$f" }}
+cmd view-json-with-jl ${{ jl "$f" }}
 cmd view-json-with-interactive-jq ${{ ijq $f }}
 cmd slurp-and-view-multiple-json-files-with-interactive-jq $IFS="$(printf '\n\t')"; cat $fx | ijq -s
 
 map Jf view-json-with-fx
+map Jl view-json-with-jl
 map Ji view-json-with-interactive-jq
 map Js slurp-and-view-multiple-json-files-with-interactive-jq
 #

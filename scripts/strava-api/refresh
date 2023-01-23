@@ -38,8 +38,8 @@ refreshtoken() {
   curl \
     --silent \
     --fail \
-    --data client_id="$STRAVA_CLIENTID" \
-    --data client_secret="$STRAVA_CLIENTSECRET" \
+    --data client_id="$STRAVA_CLIENT_ID" \
+    --data client_secret="$STRAVA_CLIENT_SECRET" \
     --data refresh_token="$(getvalue refresh_token)" \
     --data grant_type=refresh_token \
     --url "https://www.strava.com/api/v3/oauth/token"
@@ -65,7 +65,7 @@ main() {
 
 }
 
-: "${STRAVA_CLIENTID:?Env var STRAVA_CLIENTID not set.}"
-: "${STRAVA_CLIENTSECRET:?Env var STRAVA_CLIENTSECRET not set.}"
+: "${STRAVA_CLIENT_ID:?Env var STRAVA_CLIENT_ID not set.}"
+: "${STRAVA_CLIENT_SECRET:?Env var STRAVA_CLIENT_SECRET not set.}"
 
 main "$@"

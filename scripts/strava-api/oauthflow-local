@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+declare PORT="${PORT:-8000}"
+declare CLIENT_ID="${STRAVA_CLIENT_ID:?Client ID not set}"
+declare CLIENT_SECRET="${STRAVA_CLIENT_SECRET:?Client secret not set}"
+declare SCOPE=read_all,activity:read_all,activity:write
+declare -A QUERYPARAMS
+
+
+get_callback_url() {
+
+  local port=$1
+
+  urlencode "http://localhost:$port"
+
+}
+
+show_start_url() {
+
+  local callback_url
+  callback_url="$(get_callback_url "$PORT")"
+
+  echo "\
+https://www.strava.com/oauth/authorize\
+?client_id=$CLIENT_ID\
+&redirect_uri=$callback_url\
+&scope=$SCOPE\
+&response_type=code\
+&approval_prompt=force\
+"
+
+}
+
+capture_request() {
+
+  ncat -l "$PORT" < <(printf "HTTP/1.0 200 OK\r\n\r\nOK")
+
+}
+
+parsequeryparams() {
+
+  declare -a list
+  IFS='=&' list=($1) # need to investigate mapfile
+  for ((i = 0; i < ${#list[@]}; i += 2)); do
+    QUERYPARAMS[${list[$i]}]=${list[i + 1]}
+  done
+}
+
+exchange_token() {
+
+  local code=$1
+
+  curl "https://www.strava.com/api/v3/oauth/token" \
+    --verbose \
+    --fail \
+    --data grant_type=authorization_code \
+    --data client_id="$CLIENT_ID" \
+    --data client_secret="$CLIENT_SECRET" \
+    --data code="$code"
+
+}
+
+main() {
+
+  show_start_url
+  output="$(capture_request)"
+  echo "Received: $output"
+  # shellcheck disable=2034
+  read -r method query version <<< "$output"
+  parsequeryparams "${query#/?}"
+  exchange_token "${QUERYPARAMS[code]}" \
+    | jq . \
+    | tee tokendata.json
+
+}
+
+main "$@"
