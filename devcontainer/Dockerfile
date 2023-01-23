@@ -26,6 +26,7 @@ RUN apt-get update \
     dnsutils \
     docker-ce-cli \
     entr \
+    fd-find \
     file \
     fzf \
     gnupg \
@@ -45,6 +46,7 @@ RUN apt-get update \
     pandoc \
     pass \
     postgresql \
+    ripgrep \
     shellcheck \
     sudo \
     toot \
@@ -164,8 +166,11 @@ RUN npm install -g \
 # Set up dotfiles
 RUN git clone https://github.com/qmacro/dotfiles.git && cd dotfiles/ && ./dotsetup
 
+# Add extra bashrc.d file to append $HOME/.npm-global/bin to $PATH
+RUN echo 'export PATH=$PATH:$HOME/.npm-global/bin' > $HOME/dotfiles/bashrc.d/99-docker-npm-global-bin-path.sh
+
 # Install Vim plugins
-RUN vim +'PlugInstall --sync' +qa > /dev/null 2>&1
+RUN vim +'PackerInstall' +qa > /dev/null 2>&1
 
 # Set focus reminder
 RUN echo "What are you focusing on?" | tee "$HOME/.status" > "$HOME/.focus"
