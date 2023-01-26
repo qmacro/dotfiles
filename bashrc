@@ -16,3 +16,5 @@ for rcfile in "$DOTFILES"/bashrc.d/*.sh; do
   # shellcheck disable=SC1090
   source "$rcfile"
 done
+
+source /Users/i347491/.docker/init-bash.sh || true # Added by Docker Desktop

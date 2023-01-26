@@ -34,3 +34,4 @@ config/k9s/config.yml
 config/ookla/speedtest.json
 config/toot/
 config/ngrok/
+config/nvim/plugin/packer_compiled.lua
