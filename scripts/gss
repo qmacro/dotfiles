@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC2086,SC2012
+
+# gss - grab screenshot
+
+declare location="$HOME/work/shots"
+
+[[ $# -eq 0 ]] && ls -1T $location/screenshot* && exit 0
+[[ $1 =~ ^(-c|--clear)$ ]] && rm $location/screenshot* && exit 0
+mv "$(ls -1t $HOME/work/shots/screenshot* | tail -1)" "${1:?specify target name}"
