@@ -134,3 +134,7 @@ vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 vim.keymap.set('n', '<leader>pp', 'i👉 <esc>', {})
+
+-- Fix stupid smart quotes, grr
+vim.keymap.set('n', '<leader>fq', ':%s/“/"/g<cr>:%s/”/"/g<cr>:%s/’/\'/g<cr>', {})
+
