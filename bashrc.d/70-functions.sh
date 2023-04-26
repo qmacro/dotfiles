@@ -86,10 +86,3 @@ ssp() {
   done < <(grep '^http' /tmp/pending.dat)
 
 }
-
-jl() {
-
-  # JSON less
-  jq -C . < "$1" | less -R
-
-}
