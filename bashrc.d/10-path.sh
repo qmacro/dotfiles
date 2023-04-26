@@ -11,3 +11,6 @@ done <<< "$(find "$DOTFILES/scripts" -type d)"
 
 # Have my user-specific bin dir take priority
 export PATH="$HOME/bin:$PATH"
+
+# Add krew for kubectl
+export PATH="${KREW_ROOT:-$HOME/.config/krew}/bin:$PATH"
