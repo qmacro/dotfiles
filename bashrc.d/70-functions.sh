@@ -4,19 +4,6 @@ repo() {
   export REPO="$1"
 }
 
-j() {
-
-  # Start new journal entry
-  cd "$HOME/Projects/gh/github.com/qmacro/thinking-aloud" || exit
-  gh issue create --label entry --title "$(date '+%Y-%m-%d %H:%M:%S')"
-}
-
-choose_tmux_session() {
-
-  tmux ls | fzf --layout=reverse --border --info=inline --margin=8,20 --padding=1 | cut -d: -f 1
-
-}
-
 g() {
 
   # Change to a git repo
@@ -83,12 +70,6 @@ ss() {
 
 }
 
-f() {
-  # Invoke fff as f and cd on exit
-  fff "$@"
-  cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" || :
-}
-
 nd() {
   # Create new directory and cd into it
   mkdir "$1" && { cd $_ || :; }
@@ -106,9 +87,9 @@ ssp() {
 
 }
 
-js() {
+jl() {
 
-  # JSON scroll
+  # JSON less
   jq -C . < "$1" | less -R
 
 }
