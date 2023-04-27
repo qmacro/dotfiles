@@ -12,14 +12,18 @@ declare tempfile
 tempfile="$(mktemp)"
 
 # When ijq ends, the output of the expression is emitted to STDOUT,
-# and the expression itself is output to STDERR. If there's an error,
-# the error code is also output to STDERR.
+# and the expression itself is output to STDERR.
 
-# We only want to capture the jq expression if it didn't end in error,
-# so this will cause the script to end early if it does.
-set -o errexit 
-
-# Run ijq and capture STDERR
+# Run ijq and capture STDERR and the actual RC
+declare ijqrc
 ijq "$@" 2>"$tempfile"
+ijqrc="$?"
 
-tmux set-buffer "$(cat "$tempfile")"
+# Either things were OK, in which case set the TMUX paste buffer.
+# Otherwise, emit the error and also pass on the error RC.
+if [[ "$ijqrc" -eq 0 ]]; then
+  tmux set-buffer "$(cat "$tempfile")"
+else
+  cat "$tempfile"
+  exit "$ijqrc"
+fi
