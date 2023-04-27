@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Wrapper around ijq to capture the actual jq expression that was used, 
+# unless it ended in an error. The capture of the expression is into a 
+# TMUX paste buffer, so this will only be valid in a TMUX session.
+
+# Just exec ijq directly if we're not in a TMUX context
+[[ -z $TMUX ]] && exec ijq "$@"
+
+# This is a temporary file to capture the jq expression in
+declare tempfile
+tempfile="$(mktemp)"
+
+# When ijq ends, the output of the expression is emitted to STDOUT,
+# and the expression itself is output to STDERR. If there's an error,
+# the error code is also output to STDERR.
+
+# We only want to capture the jq expression if it didn't end in error,
+# so this will cause the script to end early if it does.
+set -o errexit 
+
+# Run ijq and capture STDERR
+ijq "$@" 2>"$tempfile"
+
+tmux set-buffer "$(cat "$tempfile")"
