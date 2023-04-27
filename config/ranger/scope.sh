@@ -1,1 +1,0 @@
-/Users/i347491/.dotfiles/ranger/scope.sh
