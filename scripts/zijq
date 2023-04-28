@@ -19,11 +19,11 @@ declare ijqrc
 ijq "$@" 2>"$tempfile"
 ijqrc="$?"
 
-# Either things were OK, in which case set the TMUX paste buffer.
-# Otherwise, emit the error and also pass on the error RC.
-if [[ "$ijqrc" -eq 0 ]]; then
-  tmux set-buffer "$(cat "$tempfile")"
-else
-  cat "$tempfile"
-  exit "$ijqrc"
-fi
+# Emit contents of temporary file to STDERR as ijq would
+cat "$tempfile" >&2
+
+# If things were OK, set the TMUX paste buffer.
+[[ "$ijqrc" -eq 0 ]] && tmux set-buffer "$(cat "$tempfile")"
+
+# Exit with whatever RC ijq ended with
+exit "$ijqrc"
