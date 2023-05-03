@@ -52,6 +52,10 @@ require('packer').startup(function(use)
     requires = { {'nvim-lua/plenary.nvim'} }
   }
 
+  -- Goyo and Limelight
+  use 'junegunn/goyo.vim'
+  use 'junegunn/limelight.vim'
+
 end)
 
 vim.opt.signcolumn = 'yes'
@@ -115,16 +119,16 @@ end
 setup_diags()
 
 -- From https://neovim.discourse.group/t/how-to-suppress-warning-undefined-global-vim/1882/3
-require('lspconfig').sumneko_lua.setup {
-  settings = {
-    Lua = {
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
-      },
-    },
-  },
-}
+-- require('lspconfig').sumneko_lua.setup {
+--   settings = {
+--     Lua = {
+--       diagnostics = {
+--         -- Get the language server to recognize the `vim` global
+--         globals = {'vim'},
+--       },
+--     },
+--   },
+-- }
 
 vim.g.mapleader = ' '
 local builtin = require('telescope.builtin')
@@ -134,3 +138,7 @@ vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 vim.keymap.set('n', '<leader>pp', 'i👉 <esc>', {})
+
+-- Fix stupid smart quotes, grr
+vim.keymap.set('n', '<leader>fq', ':%s/“/"/g<cr>:%s/”/"/g<cr>:%s/’/\'/g<cr>', {})
+

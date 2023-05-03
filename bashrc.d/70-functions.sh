@@ -4,19 +4,6 @@ repo() {
   export REPO="$1"
 }
 
-j() {
-
-  # Start new journal entry
-  cd "$HOME/Projects/gh/github.com/qmacro/thinking-aloud" || exit
-  gh issue create --label entry --title "$(date '+%Y-%m-%d %H:%M:%S')"
-}
-
-choose_tmux_session() {
-
-  tmux ls | fzf --layout=reverse --border --info=inline --margin=8,20 --padding=1 | cut -d: -f 1
-
-}
-
 g() {
 
   # Change to a git repo
@@ -78,15 +65,9 @@ ss() {
 
   # Gets most recent screenshot file & moves it to specified location
   local shot dest=$1
-  shot="$(find "$HOME/Desktop/" -name "screenshot*at*png" | sort | tail -1)"
+  shot="$(find "$HOME/work/shots/" -name "screenshot*at*png" | sort | tail -1)"
   mv "$shot" "${dest}.png"
 
-}
-
-f() {
-  # Invoke fff as f and cd on exit
-  fff "$@"
-  cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" || :
 }
 
 nd() {
@@ -103,12 +84,5 @@ ssp() {
   while read -r url; do
     chrome-cli open "$url"
   done < <(grep '^http' /tmp/pending.dat)
-
-}
-
-js() {
-
-  # JSON scroll
-  jq -C . < "$1" | less -R
 
 }
