@@ -36,3 +36,4 @@ config/toot/
 config/ngrok/
 config/nvim/plugin/packer_compiled.lua
 config/pulse/
+config/krew/
