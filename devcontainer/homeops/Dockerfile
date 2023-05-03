@@ -42,7 +42,7 @@ RUN apt-get update \
 WORKDIR /tmp/
 ARG DEST=/usr/local/bin
 
-ARG ARCH=amd64
+ARG ARCH=arm64
 
 # Install tmux - terminal multiplexer
 ARG TMUXVER=3.2a
@@ -77,7 +77,7 @@ RUN npm install -g \
   yo
 
 # Install gh - CLI for GitHub
-ARG GHVER=2.19.0
+ARG GHVER=2.28.0
 RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_${ARCH}.deb" && dpkg -i "./gh_${GHVER}_linux_${ARCH}.deb"
 
 # Install yq - YAML query tool
@@ -103,6 +103,24 @@ RUN curl -fsSL "https://github.com/hadolint/hadolint/releases/download/v${HADOLI
 # Install glow - terminal based Markdown rendering
 ARG GLOWVER=1.4.1
 RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_${ARCH}.deb" && dpkg -i "./glow_${GLOWVER}_linux_${ARCH}.deb"
+
+# Install exercism
+ARG EXERCISMVER=3.1.0
+RUN curl -fsSL "https://github.com/exercism/cli/releases/download/v${EXERCISMVER}/exercism-${EXERCISMVER}-linux-armv6.tar.gz" | tar -C "$DEST" -xzf - exercism
+
+# Install bats
+ARG BATSVER=1.8.2
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/bats-core/bats-core/archive/refs/tags/v$BATSVER.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory /tmp/ \
+  && cd "/tmp/bats-core-$BATSVER" \
+  && ./install.sh "$(dirname "$DEST")" 
 
 # Clean up temp dir
 RUN rm -rf /tmp/*
