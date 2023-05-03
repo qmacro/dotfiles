@@ -9,8 +9,10 @@ services:
     volumes:
       - /home/dj/.ssh:/home/user/.ssh
       - /home/dj/.gnupg:/home/user/.gnupg
+      - /home/dj/.config:/home/user/.config
       - /home/dj/.password-store:/home/user/.password-store
       - /home/dj/work:/home/user/work
+      - /home/dj/media:/home/user/media
     user: user
     ports:
       - "4004:4004"
