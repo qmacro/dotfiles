@@ -86,3 +86,9 @@ ssp() {
   done < <(grep '^http' /tmp/pending.dat)
 
 }
+
+addpath() {
+
+  export PATH="$PATH:$PWD"
+
+}
