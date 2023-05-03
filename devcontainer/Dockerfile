@@ -38,6 +38,7 @@ RUN apt-get update \
     lsb-release \
     lynx \
     man \
+    miller \
     ncat \
     ncurses-dev \
     neofetch \
