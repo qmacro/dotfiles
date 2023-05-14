@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+log() {
+
+  [[ -z "${DEBUG+x}" ]] || echo "$*"
+
+}
+
+replaceWithEditedVersions() {
+
+  # Replaces photos with their edited versions. For example:
+  # photo001.jpg and photo001-edited.jpg ->
+  # photo001.jpg will be overwritten (replaced) by photo001-edited.jpg via 'mv'
+
+  while read -r file;
+  do
+    log "Replacing $file with edited version"
+    mv "$file" "${file/-edited/}";
+  done < <(find . -name '*-edited.*')
+
+}
+
+fixDatestamps() {
+
+  log "Fixing date / time stamps"
+  exiftool \
+    -dateFormat "%s" \
+    -tagsFromFile %d%f.%e.json \
+    '-DateTimeOriginal<PhotoTakenTimeTimestamp' \
+    '-FileModifyDate<PhotoTakenTimeTimestamp' \
+    -overwrite_original \
+    -ext mp4 \
+    -ext jpg \
+    -ext jpeg \
+    -ext png \
+    -recurse \
+    .
+
+}
+
+showAlbumTitle() {
+
+  jq -r '"Album title: \(.title)"' metadata.json
+
+}
+
+main() {
+
+  replaceWithEditedVersions
+  fixDatestamps
+  showAlbumTitle
+
+}
+
+main "$@"
+
