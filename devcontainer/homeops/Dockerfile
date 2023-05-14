@@ -13,6 +13,7 @@ RUN apt-get update \
     curl \
     delta \
     entr \
+    exiftool \
     file \
     fzf \
     gnupg \
