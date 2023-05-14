@@ -26,6 +26,7 @@ RUN apt-get update \
     dnsutils \
     docker-ce-cli \
     entr \
+    exiftool \
     fd-find \
     file \
     fzf \
