@@ -38,3 +38,5 @@ alias dpa='docker ps -a --format "table {{.Names}}\t{{.State}}\t{{.RunningFor}}\
 alias dcl='docker context list'
 alias vi=nvim
 alias vim=nvim
+
+alias gapi='gh api --paginate --cache 1h'
