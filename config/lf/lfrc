@@ -133,3 +133,5 @@ map i $~/.config/lf/previewer $f | less -R
 
 cmd rename %[ -e $1 ] && printf "file exists" || mv $f $1
 map r push :rename<space>
+
+set ratios 1:3
