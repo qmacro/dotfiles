@@ -13,10 +13,11 @@
 
 set -o errexit
 
-declare PLATFORM
+declare PLATFORM ARCH
 PLATFORM="$(uname -s)"
+ARCH="$(dpkg --print-architecture)"
 
-declare -r ARCH="${PLATFORM,,}-amd64"
+declare -r PLATFORM_ARCH="${PLATFORM,,}-${ARCH}"
 declare -r TARGETDIR="$HOME/bin"
 declare -r LICENCE="tools.hana.ondemand.com/developer-license-3_1.txt"
 
@@ -47,7 +48,7 @@ retrieve() {
 
   local desired=$1
   local tempdir=$2
-  local filename="btp-cli-$ARCH-$desired.tar.gz"
+  local filename="btp-cli-$PLATFORM_ARCH-$desired.tar.gz"
 
   cd "$tempdir" \
     && curl \
@@ -62,7 +63,7 @@ retrieve() {
       --extract \
       --gunzip \
       --strip-components 1 \
-      "$ARCH/btp"
+      "$PLATFORM_ARCH/btp"
 
 }
 
