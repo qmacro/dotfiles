@@ -1,144 +1,73 @@
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.softtabstop = 2
-vim.opt.expandtab = true
-vim.opt.wrap = true
+require('qmacro')
 
-require('packer').startup(function(use)
-  -- Packer manages itself
-  use 'wbthomason/packer.nvim'
-
-  -- Colour scheme
-  use 'joshdick/onedark.vim'
-
-  -- LSP
-  use {
-    'VonHeikemen/lsp-zero.nvim',
-    requires = {
-      -- LSP Support
-      {'neovim/nvim-lspconfig'},
-      {'williamboman/mason.nvim'},
-      {'williamboman/mason-lspconfig.nvim'},
-
-      -- Autocompletion
-      {'hrsh7th/nvim-cmp'},
-      {'hrsh7th/cmp-buffer'},
-      {'hrsh7th/cmp-path'},
-      {'saadparwaiz1/cmp_luasnip'},
-      {'hrsh7th/cmp-nvim-lsp'},
-      {'hrsh7th/cmp-nvim-lua'},
-
-      -- Snippets
-      {'L3MON4D3/LuaSnip'},
-      {'rafamadriz/friendly-snippets'},
-    }
-  }
-
-  -- Treesitter
-  use 'nvim-treesitter/nvim-treesitter'
-
-  -- Nice status line
-  use 'nvim-lualine/lualine.nvim'
-
-  -- JSON Schema store Support
-  use 'b0o/schemastore.nvim'
-
-  -- Syntax highlighting
-  use 'vito-c/jq.vim'
-
-  -- Telescope
-  use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.0',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-
-  -- Goyo and Limelight
-  use 'junegunn/goyo.vim'
-  use 'junegunn/limelight.vim'
-
-end)
-
-vim.opt.signcolumn = 'yes'
-vim.opt.termguicolors = true
-pcall(vim.cmd, 'colorscheme onedark')
-pcall(vim.cmd, 'autocmd BufEnter bash* set ft=bash')
-
-local lsp = require('lsp-zero')
-lsp.preset('recommended')
-lsp.setup()
-
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "lua" },
-  highlight = {
-    enable = true
-  },
-}
-
-require('lualine').setup {
-  options = {
-    icons_enabled = false,
-    theme = 'auto',
-  }
-}
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-require('lspconfig').jsonls.setup {
-  capabilities = capabilities,
-  settings = {
-    json = {
-      schemas = vim.list_extend(
-        {
-          {
-            description = 'BTP Service Metadata',
-            fileMatch = { '*usecase.json' },
-            name = 'Use Case',
-            url = 'https://raw.githubusercontent.com/SAP-samples/btp-setup-automator/main/libs/btpsa-usecase.json',
-          },
-        },
-        require('schemastore').json.schemas()
-      ),
-      validate = { enable = true },
-    }
-  }
-}
-
--- From https://github.com/samhh/dotfiles/blob/99e67298fbcb61d7398ad1850f3c2df31d90bd0d/home/.config/nvim/plugin/lsp.lua#L120-L130
-local function setup_diags()
-  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics,
-    {
-      virtual_text = true,
-      signs = true,
-      update_in_insert = false,
-      underline = true,
-    }
-  )
+-- Bootstrap lazy.nvim (i.e. install if not present) then set it up
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim.git',
+        '--branch=stable', -- latest stable release
+        lazypath,
+    })
 end
+vim.opt.rtp:prepend(lazypath)
 
-setup_diags()
+require('lazy').setup({
 
--- From https://neovim.discourse.group/t/how-to-suppress-warning-undefined-global-vim/1882/3
--- require('lspconfig').sumneko_lua.setup {
---   settings = {
---     Lua = {
---       diagnostics = {
---         -- Get the language server to recognize the `vim` global
---         globals = {'vim'},
---       },
---     },
---   },
--- }
+    -- Colour scheme
+    { 'folke/tokyonight.nvim' },
 
-vim.g.mapleader = ' '
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+    -- Treesitter
+    { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
+    { 'nvim-treesitter/playground' },
 
-vim.keymap.set('n', '<leader>pp', 'i👉 <esc>', {})
+    -- Source code control utils
+    { 'mbbill/undotree' },
+    { 'tpope/vim-fugitive' },
 
--- Fix stupid smart quotes, grr
-vim.keymap.set('n', '<leader>fq', ':%s/“/"/g<cr>:%s/”/"/g<cr>:%s/’/\'/g<cr>', {})
+    -- Package manager for LSP servers, linters, formatters etc
+    { 'williamboman/mason.nvim' },
+    { 'williamboman/mason-lspconfig.nvim' },
+
+    -- LSP support
+    { 'VonHeikemen/lsp-zero.nvim', branch = 'v3.x', lazy = true, config = false },
+    { 'neovim/nvim-lspconfig', dependencies = { 'hrsh7th/cmp-nvim-lsp' } },
+
+    -- Autocompletion
+    { 'hrsh7th/nvim-cmp', dependencies = { 'L3MON4D3/LuaSnip' } },
+
+    -- Fuzzy finder
+    { 'nvim-telescope/telescope.nvim', tag = '0.1.4', dependencies = { 'nvim-lua/plenary.nvim' } },
+
+    -- Quick file switcher
+    { 'theprimeagen/harpoon' },
+
+})
+
+
+local cmp = require('cmp')
+local cmp_select = { behavior = cmp.SelectBehavior.Select }
+
+cmp.setup({
+    mapping = cmp.mapping.preset.insert({
+
+        -- Move between suggested items
+        ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+        ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+
+        -- Enter key to confirm completion
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+
+        -- Ctrl+Space to trigger completion menu
+        ['<C-Space>'] = cmp.mapping.complete(),
+
+        -- Scroll up and down in the completion documentation
+        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-d>'] = cmp.mapping.scroll_docs(4)
+
+    })
+})
+
 
