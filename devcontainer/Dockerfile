@@ -1,123 +1,157 @@
-FROM debian:11 as base
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Add Docker as source for apt
-RUN apt-get update && apt-get install -y curl gpg lsb-release \
-  && apt-get clean && rm -rf /var/lib/apt/lists/* \
-  && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
-  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# Add Cloud Foundry (CLI) as source for apt
-RUN curl -fsSL "https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key" | apt-key add - \
-  && echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-
-RUN apt-get update \
- && apt-get install -y \
-    apt-transport-https \
-    asciinema \
-    bash-completion \
-    bc \
-    build-essential \
-    ca-certificates \
-    cf8-cli \
-    cron \
-    curl \
-    delta \
-    dnsutils \
-    docker-ce-cli \
-    entr \
-    exiftool \
-    fd-find \
-    file \
-    fzf \
-    gnupg \
-    highlight \
-    iputils-ping \
-    jq \
-    libevent-dev \
-    libgraph-easy-perl \
-    lsb-release \
-    lynx \
-    man \
-    miller \
-    ncat \
-    ncurses-dev \
-    neofetch \
-    newsboat \
-    openssh-server \
-    pandoc \
-    pass \
-    postgresql \
-    ripgrep \
-    shellcheck \
-    sudo \
-    toot \
-    uuid-runtime \
-    vim-nox \
-    w3m \
-    wamerican-small \
-    wget \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+FROM --platform=linux/amd64 debian:12
 
 WORKDIR /tmp/
 ARG DEST=/usr/local/bin
 
-# Install tmux - terminal multiplexer
-ARG TMUXVER=3.2a
-RUN curl -fsSL "https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz" | tar -xzf - \
+RUN apt-get update \
+  && apt-get install -y \
+     apt-transport-https \
+     asciinema \
+     bash-completion \
+     bc \
+     build-essential \
+     ca-certificates \
+     cron \
+     curl \
+     delta \
+     dnsutils \
+     entr \
+     exiftool \
+     fd-find \
+     file \
+     fzf \
+     gnupg \
+     golang \
+     highlight \
+     iputils-ping \
+     jq \
+     libevent-dev \
+     libgraph-easy-perl \
+     lsb-release \
+     man \
+     miller \
+     ncat \
+     ncurses-dev \
+     nodejs \
+     npm \
+     neofetch \
+     openssh-server \
+     pandoc \
+     pass \
+     postgresql \
+     ripgrep \
+     shellcheck \
+     sudo \
+     toot \
+     uuid-runtime \
+     w3m \
+     wamerican-small \
+     wget \
+     yq \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Cloud Foundry CLI binary (package approach uses deprecated apt-key)
+RUN curl \
+    --location \
+    --url 'https://packages.cloudfoundry.org/stable?release=linux64-binary&version=v8&source=github' \
+    | tar xzf - -C $DEST cf cf8
+
+# tmux - terminal multiplexer
+ARG TMUXVER=3.3a
+RUN curl -fsSL "https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz" \
+  | tar -xzf - \
   && cd "tmux-$TMUXVER" && ./configure && make && make install
 
-# Install nvim from release deb distribution
-ARG NVIMVER=0.8.0
+# Latest stable neovim release
+ARG NVIMVER=0.9.4
 RUN cd /tmp/ \
-  && curl -sLO https://github.com/neovim/neovim/releases/download/v${NVIMVER}/nvim-linux64.deb \
-  && apt install ./nvim-linux64.deb
+  && curl -sL https://github.com/neovim/neovim/releases/download/v${NVIMVER}/nvim-linux64.tar.gz \
+  | tar xzf - -C /usr --strip-components 1
 
-# Install specific Node.js
-ARG NODEVER=lts
-RUN curl -fsSL "https://deb.nodesource.com/setup_$NODEVER.x" | bash - && apt-get install -y nodejs
+# bat - cat with wings
+ARG BATVER=0.24.0
+RUN curl -fsSLO "https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-musl_${BATVER}_amd64.deb" \
+  && dpkg -i "./bat-musl_${BATVER}_amd64.deb"
 
-# Install bat - cat with wings
-ARG BATVER=0.22.1
-RUN curl -fsSLO "https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-musl_${BATVER}_amd64.deb" && dpkg -i "./bat-musl_${BATVER}_amd64.deb"
+# glow - terminal based Markdown rendering
+ARG GLOWVER=1.5.1
+RUN curl -sLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_amd64.deb" \
+  && dpkg -i "./glow_${GLOWVER}_amd64.deb"
 
-# Install glow - terminal based Markdown rendering
-ARG GLOWVER=1.4.1
-RUN curl -fsSLO "https://github.com/charmbracelet/glow/releases/download/v${GLOWVER}/glow_${GLOWVER}_linux_amd64.deb" && dpkg -i "./glow_${GLOWVER}_linux_amd64.deb"
-
-# Install gh - CLI for GitHub
-ARG GHVER=2.30.0
-RUN curl -fsSLO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
-
-# Install yq - YAML query tool
-ARG YQVER=4.16.1
-RUN curl -fsSL "https://github.com/mikefarah/yq/releases/download/v${YQVER}/yq_linux_amd64" -o "$DEST/yq" && chmod +x "$DEST/yq"
+# gh - CLI for GitHub
+ARG GHVER=2.37.0
+RUN curl -LO "https://github.com/cli/cli/releases/download/v${GHVER}/gh_${GHVER}_linux_amd64.deb" \
+  && dpkg -i "./gh_${GHVER}_linux_amd64.deb"
 
 # Install lf - a terminal file manager
-ARG LFVER=26
-RUN curl -fsSL "https://github.com/gokcehan/lf/releases/download/r${LFVER}/lf-linux-amd64.tar.gz" | tar -C "$DEST" -xzf - lf
-
-# Install gitui - a git TUI
-ARG GITUIVER=0.19.0
-RUN curl -fsSL "https://github.com/extrawurst/gitui/releases/download/v${GITUIVER}/gitui-linux-musl.tar.gz" | tar -C "$DEST" -xzf -
+ARG LFVER=31
+RUN curl -sL "https://github.com/gokcehan/lf/releases/download/r${LFVER}/lf-linux-amd64.tar.gz" \
+  | tar -C "$DEST" -xzf - lf
 
 # Install shfmt - shell script formatter
-ARG SHFMTVER=3.4.1
-RUN curl -fsSL "https://github.com/mvdan/sh/releases/download/v${SHFMTVER}/shfmt_v${SHFMTVER}_linux_amd64" -o "$DEST/shfmt" && chmod +x "$DEST/shfmt"
+ARG SHFMTVER=3.7.0
+RUN curl -sL "https://github.com/mvdan/sh/releases/download/v${SHFMTVER}/shfmt_v${SHFMTVER}_linux_amd64" -o "$DEST/shfmt" && chmod +x "$DEST/shfmt"
 
 # Install kubectl - Kubernetes CLI
-RUN curl -fsSL "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" -o "$DEST/kubectl" && chmod +x "$DEST/kubectl"
-
-# Install Dockerfile linter hadolint
-ARG HADOLINTVER=2.8.0
-RUN curl -fsSL "https://github.com/hadolint/hadolint/releases/download/v${HADOLINTVER}/hadolint-Linux-x86_64" -o "$DEST/hadolint" && chmod +x "$DEST/hadolint"
-
-# Install Steampipe - SQL for APIs
-RUN /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/turbot/steampipe/main/install.sh)"
+RUN curl -sL "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" -o "$DEST/kubectl" && chmod +x "$DEST/kubectl"
 
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Install ijq
+ARG IJQVER=0.4.0
+RUN curl \
+    --silent \
+    --location \
+    --url "https://git.sr.ht/~gpanders/ijq/refs/download/v$IJQVER/ijq-$IJQVER-linux-amd64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory $DEST \
+      --strip-components 1 \
+      --wildcards \
+      ijq-$IJQVER/ijq
+
+# Install Exercism
+ARG EXERCISMVER=3.2.0
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/exercism/cli/releases/download/v$EXERCISMVER/exercism-$EXERCISMVER-linux-x86_64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory $DEST \
+      exercism
+
+# Install slides (presentations in terminal)
+ARG SLIDESVER=0.9.0
+RUN curl \
+    --silent \
+    --location \
+    --url "https://github.com/maaslalani/slides/releases/download/v$SLIDESVER/slides_${SLIDESVER}_linux_amd64.tar.gz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory $DEST \
+      slides
+
+# Install ngrok
+ARG NGROKVER=3
+RUN curl \
+    --silent \
+    --location \
+    --url "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v${NGROKVER}-stable-linux-amd64.tgz" \
+    | tar \
+      --extract \
+      --gunzip \
+      --file - \
+      --directory $DEST \
+      ngrok
 
 # Clean up temp dir
 RUN rm -rf /tmp/*
@@ -140,41 +174,6 @@ USER $USERNAME
 WORKDIR /home/$USERNAME
 ENV TERM xterm-256color
 
-# Install global npm modules for Node.js
-RUN npm config set prefix "/home/$USERNAME/.npm-global"
-RUN npm install -g \
-  @sap/cds-dk \
-  @sap/generator-fiori \
-  @sapui5/generator-sapui5-templates \
-  @ui5/cli \
-  bash-language-server \
-  docsify-cli \
-  eslint \
-  fx \
-  http-server \
-  httpie \
-  jwt-cli \
-  lodash \
-  lorem-ipsum \
-  markdownlint-cli \
-  prettier \
-  ramda \
-  url-decode-encode-cli \
-  yarn \
-  yo
-
-# Set up dotfiles
-RUN git clone https://github.com/qmacro/dotfiles.git && cd dotfiles/ && ./dotsetup
-
-# Add extra bashrc.d file to append $HOME/.npm-global/bin to $PATH
-RUN echo 'export PATH=$PATH:$HOME/.npm-global/bin' > $HOME/dotfiles/bashrc.d/99-docker-npm-global-bin-path.sh
-
-# Install Vim plugins
-RUN vim +'PackerInstall' +qa > /dev/null 2>&1
-
-# Set focus reminder
-RUN echo "What are you focusing on?" | tee "$HOME/.status" > "$HOME/.focus"
-
 # Install btp CLI
 RUN cd /tmp/ \
   && curl \
@@ -184,89 +183,37 @@ RUN cd /tmp/ \
   && chmod +x getbtpcli \
   && echo -ne '\n' | ./getbtpcli
 
-# Install ijq
-ARG IJQVER=0.4.0
-RUN curl \
-    --silent \
-    --location \
-    --url "https://git.sr.ht/~gpanders/ijq/refs/download/v$IJQVER/ijq-$IJQVER-linux-amd64.tar.gz" \
-    | tar \
-      --extract \
-      --gunzip \
-      --file - \
-      --directory /home/$USERNAME/bin/ \
-      --strip-components 1 \
-      --wildcards \
-      ijq-$IJQVER/ijq
+# Install global npm modules for Node.js
+#RUN npm config set prefix "/home/$USERNAME/.npm-global"
+#RUN npm install -g \
+#  @sap/cds-dk \
+#  @sap/generator-fiori \
+#  @sapui5/generator-sapui5-templates \
+#  @ui5/cli \
+#  bash-language-server \
+#  docsify-cli \
+#  eslint \
+#  fx \
+#  http-server \
+#  httpie \
+#  jwt-cli \
+#  lodash \
+#  lorem-ipsum \
+#  markdownlint-cli \
+#  prettier \
+#  ramda \
+#  url-decode-encode-cli \
+#  yarn \
+#  yo
 
-# Install Service Manager CLI tool
-ARG SMCTLVER=1.11.12
-RUN curl \
-    --silent \
-    --location \
-    --url "https://github.com/Peripli/service-manager-cli/releases/download/v$SMCTLVER/smctl-v$SMCTLVER-linux-amd64.tar.gz" \
-    | tar \
-      --extract \
-      --gunzip \
-      --file - \
-      --directory /home/$USERNAME/bin/ \
-      smctl
+# Set up dotfiles
+RUN git clone https://github.com/qmacro/dotfiles.git && cd dotfiles/ && ./dotsetup
 
-# Install Exercism
-ARG EXERCISMVER=3.0.13
-RUN curl \
-    --silent \
-    --location \
-    --url "https://github.com/exercism/cli/releases/download/v$EXERCISMVER/exercism-$EXERCISMVER-linux-x86_64.tar.gz" \
-    | tar \
-      --extract \
-      --gunzip \
-      --file - \
-      --directory /home/$USERNAME/bin/ \
-      exercism
+# Add extra bashrc.d file to append $HOME/.npm-global/bin to $PATH
+RUN echo 'export PATH=$PATH:$HOME/.npm-global/bin' > $HOME/dotfiles/bashrc.d/99-docker-npm-global-bin-path.sh
 
-# Install bats
-ARG BATSVER=1.7.0
-RUN curl \
-    --silent \
-    --location \
-    --url "https://github.com/bats-core/bats-core/archive/refs/tags/v$BATSVER.tar.gz" \
-    | tar \
-      --extract \
-      --gunzip \
-      --file - \
-      --directory /tmp/ \
-  && cd "/tmp/bats-core-$BATSVER" \
-  && ./install.sh "$HOME"
-
-# Install slides (presentations in terminal)
-ARG SLIDESVER=0.7.3
-RUN curl \
-    --silent \
-    --location \
-    --url "https://github.com/maaslalani/slides/releases/download/v$SLIDESVER/slides_${SLIDESVER}_linux_amd64.tar.gz" \
-    | tar \
-      --extract \
-      --gunzip \
-      --file - \
-      --directory /home/$USERNAME/bin/ \
-      slides
-
-# Install ngrok
-ARG NGROKVER=3
-RUN curl \
-    --silent \
-    --location \
-    --url "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v${NGROKVER}-stable-linux-amd64.tgz" \
-    | tar \
-      --extract \
-      --gunzip \
-      --file - \
-      --directory /home/$USERNAME/bin/ \
-      ngrok
-
-# Install Packer (for NeoVim) core
-RUN git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim
+# Set focus reminder
+RUN echo "What are you focusing on?" | tee "$HOME/.status" > "$HOME/.focus"
 
 # Off we go - based on tmux, the terminal multiplexer
 CMD ["tmux", "-u", "new", "-s", "main"]
