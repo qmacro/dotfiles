@@ -8,11 +8,11 @@ cmp.setup({
         ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
         ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
 
-        -- Enter key to confirm completion
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        -- Ctrl-y to confirm completion
+        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
 
-        -- Tab to trigger completion menu
-        ['<Tab>'] = cmp.mapping.complete(),
+        -- Ctrl-Tab to trigger completion menu
+        ['<C-Tab>'] = cmp.mapping.complete(),
 
         -- Scroll up and down in the completion documentation
         ['<C-u>'] = cmp.mapping.scroll_docs(-4),
