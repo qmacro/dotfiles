@@ -48,6 +48,7 @@ require('lazy').setup({
             'hrsh7th/cmp-nvim-lsp'
         }
     },
+    { 'nvimtools/none-ls.nvim' },
 
     -- Autocompletion
     { 'hrsh7th/nvim-cmp',
@@ -82,5 +83,8 @@ require('lazy').setup({
         'folke/which-key.nvim',
         opts = {}
     },
+
+    -- Experimental
+    { 'rafcamlet/nvim-luapad' },
 
 })
