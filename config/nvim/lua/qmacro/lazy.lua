@@ -14,8 +14,9 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
 
-    -- Colour scheme
-    { 'folke/tokyonight.nvim' },
+    -- Look and feel
+    { 'Mofiqul/dracula.nvim' },
+    { 'nvim-lualine/lualine.nvim' },
 
     -- Treesitter
     {
@@ -25,39 +26,29 @@ require('lazy').setup({
         },
         build = ':TSUpdate'
     },
-    { 'nvim-treesitter/playground' },
-
-    -- Source code control utils
-    { 'mbbill/undotree' },
-    { 'tpope/vim-fugitive' },
-    { 'lewis6991/gitsigns.nvim' },
 
     -- Package manager for LSP servers, linters, formatters etc
     { 'williamboman/mason.nvim' },
     { 'williamboman/mason-lspconfig.nvim' },
 
-    -- LSP support
+    -- LSP support and other linters and formatters
     {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v3.x',
         lazy = true,
         config = false
     },
-    { 'neovim/nvim-lspconfig',
+    {
+        'neovim/nvim-lspconfig',
         dependencies = {
             'hrsh7th/cmp-nvim-lsp'
         }
     },
-    { 'nvimtools/none-ls.nvim' },
-
-    -- Autocompletion
-    { 'hrsh7th/nvim-cmp',
-        dependencies = {
-            'L3MON4D3/LuaSnip'
-        }
+    {
+        'mfussenegger/nvim-lint'
     },
 
-    -- Fuzzy finder
+    -- Finding & navigating
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.4',
@@ -65,26 +56,32 @@ require('lazy').setup({
             'nvim-lua/plenary.nvim'
         }
     },
-
-    -- Quick file switcher
-    { 'theprimeagen/harpoon' },
-
-    -- Nice status line
-    { 'nvim-lualine/lualine.nvim' },
-
-    -- Power comments
     {
-        'numToStr/Comment.nvim',
-        opts = {}
+        'ThePrimeagen/harpoon'
     },
 
-    -- Plugin to show pending keybinds
-    {
-        'folke/which-key.nvim',
-        opts = {}
-    },
+    -- Completion
+    { 'hrsh7th/cmp-buffer' },
+    { 'hrsh7th/cmp-path' },
+    { 'hrsh7th/cmp-cmdline' },
+    { 'hrsh7th/cmp-nvim-lua' },
+    { 'hrsh7th/nvim-cmp' },
 
-    -- Experimental
-    { 'rafcamlet/nvim-luapad' },
+    { 'hrsh7th/cmp-vsnip' },
+    { 'hrsh7th/vim-vsnip' },
+    { 'rafamadriz/friendly-snippets' },
+
+    { 'onsails/lspkind.nvim' },
+
+    -- Utils
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+        opts = {}
+    }
 
 })

@@ -1,30 +1,36 @@
 vim.defer_fn(function()
+
+    -- Install treesitter for CDS
+    local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+    parser_config.cds = {
+        install_info = {
+            -- local path or git repo
+            url = "https://github.com/cap-js-community/tree-sitter-cds.git",
+            -- url = "/path/to/tree-sitter-cds",
+            branch = "main",
+            files = { "src/parser.c", "src/scanner.c" }
+        },
+        filetype = "cds",
+        -- additional filetypes that use this parser
+        used_by = { "cdl", "hdbcds" }
+    }
+
     require 'nvim-treesitter.configs'.setup({
 
-        -- A list of parser names, or "all" (the five listed parsers should always be installed)
+        -- A list of parser names, or "all"
         ensure_installed = {
+            -- These should always be installed
             "c",
             "lua",
             "vim",
             "vimdoc",
             "query",
+
+            -- Others
+            "cds",
             "javascript",
-            "typescript",
-            "awk",
-            "bash",
-            "dockerfile",
-            "diff",
-            "gitcommit",
-            "gitignore",
-            "git_config",
-            "http",
-            "jq",
             "json",
-            "lua",
-            "markdown",
-            "tsv",
-            "csv",
-            "yaml"
+            "jq",
         },
 
         -- Install parsers synchronously (only applied to `ensure_installed`)
