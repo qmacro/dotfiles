@@ -17,3 +17,7 @@
 	defaultBranch = main
 [pull]
 	rebase = false
+[safe]
+	directory = /home/user/work/gh/github.com/qmacro/exploring-neovim
+	directory = /home/user/work
+	directory = /home/user/work/gh/github.com/qmacro/aoc
