@@ -7,5 +7,5 @@ dotfiles="$HOME/dotfiles"
 # Files
 for i in inputrc gitconfig bashrc config/tmux/tmux.conf; do
   [[ $i =~ \/ ]] && mkdir -p "$HOME/.$(dirname $i)"
-  ln -s -f "$dotfiles/$i" "$HOME/.$i"
+  ln -s -f "$dotfiles/$i" "$HOME/.${i%/}"
 done
