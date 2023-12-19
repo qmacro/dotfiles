@@ -5,6 +5,6 @@
 dotfiles="$HOME/dotfiles"
 
 # Files
-for i in inputrc gitconfig bashrc config; do
+for i in inputrc gitconfig bashrc; do
   ln -s -f "$dotfiles/$i" "$HOME/.$i"
 done
