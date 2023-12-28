@@ -23,3 +23,6 @@ end
 if lspconfig.sapcds_lsp.setup then
     lspconfig.sapcds_lsp.setup({})
 end
+
+-- Get a border round the LSP popup windows
+require('lspconfig.ui.windows').default_options.border = 'single'
