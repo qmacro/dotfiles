@@ -9,7 +9,7 @@ config/g/
 config/htop/
 id_rsa*
 known_hosts
-config/nvim/lua/packer_compiled.lua
+config/nvim/queries/cds/
 
 # Config files that contain sensitive info or are installed
 # there and don't need to be stored
