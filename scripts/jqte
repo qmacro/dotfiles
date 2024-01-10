@@ -44,16 +44,19 @@ setup() {
   # |                     |                      |
   # +---------------------+----------------------+
 
+  # This assumes, btw, that you have pane numbering starting at 1
+  # with set -w -g pane-base-index 1
+
   # The 'output' and 'original JSON data' panes (1 and 2) are
   # read-only, and the 'filter' pane (3) is a vim session to edit the
-  # jq filter. Whenever that filter is saved (to a temporary scratch
-  # file) the output is re-rendered accordingly.
+  # jq filter. Whenever that filter is modified the output is
+  # re-rendered accordingly.
 
   tmux new-window \; \
     split-window -h \; \
     send-keys "vim $jsonfile" C-m \; \
     select-pane -t 2 \; \
-    split-window -v -p 25 \; \
+    split-window -v -p 35 \; \
     send-keys "vim -c 'set filetype=jq' -c 'autocmd TextChanged,InsertLeave <buffer> silent write' $filterfile" C-m \; \
     select-pane -t 1 \; \
     send-keys "ls $jsonfile $filterfile | entr -c $self --process $filterfile $jsonfile" C-m \; \
