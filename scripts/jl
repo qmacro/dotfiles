@@ -2,4 +2,4 @@
 
 # JSON less
 # This is a script so that I can use it in lf
-jq -C . < "$1" | less -R
+jq -C . < "${1:-/dev/stdin}" | less -R
