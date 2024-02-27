@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export EDITOR=nvim
 export WORK="$HOME/work"
 
