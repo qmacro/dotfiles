@@ -2,4 +2,5 @@
 
 set -eo pipefail
 
-curl --silent "$*" | jq -C .
+# shellcheck disable=SC2048,2086
+curl --silent $* | jq -C .
