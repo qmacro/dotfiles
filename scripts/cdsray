@@ -6,11 +6,11 @@ declare scriptname="${0##*/}"
 declare old="./.${scriptname}.old"
 declare new="./.${scriptname}.new"
 
-touch "$old"
-
 cds compile --to yaml "$modelfile" > "$new"
 
 bat -p -l yaml "$new"
-echo
-diff --color "$old" "$new"
+if [[ -f "$old" ]]; then
+    echo
+    diff --color "$old" "$new"
+fi
 cp "$new" "$old"
