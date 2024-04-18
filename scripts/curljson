@@ -2,5 +2,11 @@
 
 set -eo pipefail
 
+declare myname="${0##*/}"
+declare jqinvocation="'.'"
+
+# Tell jq to always colourise JSON output if requested
+[[ $myname == "curljc" ]] && jqinvocation="-C ${jqinvocation}"
+
 # shellcheck disable=SC2048,2086
-curl --silent $* | jq -C .
+curl --silent $* | eval "jq $jqinvocation"
