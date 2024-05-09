@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# CAP Test Project
+#
+set -eo pipefail
+
+die() {
+    echo "$*"
+    exit 1
+}
+
+serverimpl() {
+    cat <<EOSERVER
+const fs = require('node:fs/promises')
+require('@sap/cds').on('listening', async () => {
+    await fs.writeFile('listening', '')
+})
+EOSERVER
+}
+
+serviceimpl() {
+    local name=$1
+    cat <<EOSERVICE
+const cds = require('@sap/cds')
+const log = cds.log('$name')
+module.exports = cds.service.impl(function() {
+
+})
+EOSERVICE
+}
+
+editaction() {
+    echo 'vim -p db/data-model.cds srv/cat-service.*'
+}
+
+listenaction() {
+    echo "ls listening | entr -p -c bash -c 'curl -s localhost:4004/odata/v4/catalog/Books | jq .'"
+}
+
+newwindow() {
+
+    local name=$1
+
+    touch listening
+
+    tmux \
+        new-window \; \
+        rename-window "$name" \; \
+        split-window -h \; \
+        send-keys "$(editaction)" C-m \; \
+        select-pane -t 1 \; \
+        split-window -v \; \
+        send-keys "cds watch" C-m \; \
+        select-pane -t 1 \; \
+        send-keys "$(listenaction)" C-m \; \
+        select-pane -t 3
+
+}
+
+main() {
+
+    local name="${1:?Specify project name}"
+    test ! -d "$name" || die "Dir '$name' already exists"
+    cds init --add tiny-sample "$name"
+    cd "$name" || die "Cannot enter '$name'"
+    rm -rf README.md app/ .vscode/
+    serviceimpl "$name" > srv/cat-service.js
+    serverimpl > server.js
+    newwindow "$name"
+
+}
+
+main "$@"
