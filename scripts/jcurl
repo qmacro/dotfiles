@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-curl -H "Content-Type: application/json" "$@"
