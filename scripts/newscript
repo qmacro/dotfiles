@@ -11,13 +11,13 @@ set -eo pipefail
 
 somefunction() {
 
-  :
+    :
 
 }
 
 main() {
 
-  somefunction
+    somefunction
 
 }
 
