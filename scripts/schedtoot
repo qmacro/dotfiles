@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Schedules a toot
+#
+# Takes two parameters:
+# - when e.g. "09:45 tomorrow", "+15 mins", "14:30 Thursday next week"
+# - toot e.g. "A toot with #Hashtag, emoji 👍 & URL https://qmacro.org"
+#
+# Requires two env vars to be set:
+# - TZ (defaults to "Europe/London")
+# - MASTODON_TOKEN an access token with write:status scope
+
+set -eo pipefail
+
+declare TOKEN="${MASTODON_TOKEN:?Must specify}"
+declare TZ="${TZ:-Europe/London}"
+declare STATUSAPIURL='https://hachyderm.io/api/v1/statuses'
+
+utc_date_in_iso8601() {
+
+    local when="$1"
+    date -u +'%Y-%m-%dT%H:%M:%SZ' --date='TZ="'"$TZ"'" '"$when"
+
+}
+
+main() {
+
+    local when="$1"
+    local toot="$2"
+    local scheduled_at
+
+    scheduled_at="$(utc_date_in_iso8601 "$when")"
+
+    curl \
+        --fail \
+        --silent \
+        --include \
+        --header "Authorization: Bearer $TOKEN" \
+        --form scheduled_at="$scheduled_at" \
+        --form status="$toot" \
+        --url "$STATUSAPIURL"
+
+}
+
+main "$@"
