@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 
-# Schedules a toot
-#
-# Takes two parameters:
-# - when e.g. "09:45 tomorrow", "+15 mins", "14:30 Thursday next week"
-# - toot e.g. "A toot with #Hashtag, emoji 👍 & URL https://qmacro.org"
-#
-# Requires two env vars to be set:
-# - TZ (defaults to "Europe/London")
-# - MASTODON_TOKEN an access token with write:status scope
+# Schedules a toot - see usage() for detail
 
 set -eo pipefail
 
@@ -23,13 +15,41 @@ utc_date_in_iso8601() {
 
 }
 
+usage() {
+
+    cat <<EOF
+schedtoot: Schedule a toot in advance
+
+Usage: schedtoot <when> <toot>
+- when e.g. "09:45 tomorrow", "+15 mins", "14:30 Thursday next week"
+- toot e.g. "A toot with #Hashtag, emoji 👍  & URL https://qmacro.org"
+
+Requires two env vars to be set:
+- TZ (defaults to "Europe/London")
+- MASTODON_TOKEN (an access token with write:status scope)
+
+Set env var TEST to run in test mode, i.e. to check what the scheduled time would be.
+EOF
+
+}
+
 main() {
 
     local when="$1"
     local toot="$2"
     local scheduled_at
 
+    if [[ -z $TEST && $# -ne 2 ]]; then
+        usage
+        exit 1
+    fi
+
     scheduled_at="$(utc_date_in_iso8601 "$when")"
+
+    if [[ -n $TEST ]]; then
+        echo "TEST mode: scheduled time would be $scheduled_at (UTC)"
+        exit
+    fi
 
     curl \
         --fail \
