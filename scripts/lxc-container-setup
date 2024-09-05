@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# This is to set up what I need in a new LXC container on Crostini.
+
+# Step 1
+# In termina, create the container and jump into it like this:
+# lxc launch images:debian/12 mycontainer && lxc exec mycontainer bash
+
+# Step 2
+# Generate a Tailscale auth key at 
+# https://login.tailscale.com/admin/settings/keys
+# It should look something like 'tskey-auth-...'
+
+# Step 3
+# In the new container, install curl and invoke this script, supplying 
+# the Tailscale auth key as shown
+# apt-get install -y curl && curl -s https://raw.githubusercontent.com/qmacro/dotfiles/main/scripts/lxc-container-setup | bash -s -- <tailscale-auth-key>
+
+set -o errexit
+
+declare TS_AUTH_KEY="${1:?Supply Tailscale auth key}"
+
+install_tailscale() {
+
+  # Install Tailscale & add the node to the tailnet
+  # -----------------------------------------------
+  
+  # See https://tailscale.com/kb/1031/install-linux
+  
+  curl -fsSL https://tailscale.com/install.sh | sh
+  tailscale up --auth-key "$TS_AUTH_KEY"
+
+}
+
+add_apt_cache_config() {
+
+  # Add apt configuration to use existing apt cache on 'cacher'
+  #------------------------------------------------------------
+  
+  echo 'Acquire::http::Proxy "http://cacher:3142";' > /etc/apt/apt.conf.d/00cacher
+
+}
+
+install_docker_engine() {
+
+  # Install Docker engine
+  # ---------------------
+  
+  # Using procedure as defined at https://docs.docker.com/engine/install/debian/
+  # This should use the 'cacher' apt cache for packages for Debian packages.
+  
+  # And via a small workaround modification we can achieve cacheing for Docker
+  # packages at download.docker.com. This modification is to change the URL which
+  # is echo'd to /etc/apt/sources.list.d/docker.list from an HTTPS to an HTTP one,
+  # because of the issues that SSL/TLS remotes bring into the context of
+  # cacheing proxies in the middle of the connection. For background, see
+  # http://cacher:3142/acng-doc/html/howtos.html#ssluse and for the modification
+  # (workaround) see the "Getting https://download.docker.com to cache" section
+  # at https://hub.docker.com/r/modem7/apt-cacher-ng 
+  
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+  
+  # Add the repository to Apt sources
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  
+  # Make the workaround modification of HTTPS to HTTP
+  sed -i 's|https://download.docker.com|http://download.docker.com|' /etc/apt/sources.list.d/docker.list
+  
+  sudo apt-get update
+  
+  sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+}
+
+add_docker_cache_config() {
+
+  # Add Docker daemon configuration for the pull-thru caching registry on 'cacher'
+  # ------------------------------------------------------------------------------
+  
+  cat <<EOF > /etc/docker/daemon.json
+{
+  "insecure-registries": ["http://cacher:5000"],
+  "registry-mirrors": ["http://cacher:5000"],
+  "debug": true
+}
+EOF
+  
+  # Reload / restart Docker daemon
+  /etc/init.d/docker reload
+  /etc/init.d/docker restart
+  
+}
+
+main() {
+
+  install_tailscale
+  add_apt_cache_config
+  install_docker_engine
+  add_docker_cache_config
+
+}
+
+main
