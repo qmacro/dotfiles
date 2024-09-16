@@ -1,5 +1,5 @@
 {
-  "name": "Nano Starter Project",
+  "name": "nano-starter-project",
   "version": "0.0.1",
   "description": "A minimal CAP starter project with a single services.cds file",
   "dependencies": {
