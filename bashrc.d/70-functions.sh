@@ -12,9 +12,6 @@ g() {
   local target
   local repo
 
-  # Look for a repo name in case a short form is given
-  repo=$(grep -E "^$1\s" "$HOME/.config/g/config.txt" | cut -f 2)
-
   # Fall back to what was originally given if a short form can't be resolved
   repo=${repo:-$1}
 
@@ -58,7 +55,7 @@ search() {
 }
 
 focus() {
-  echo "$*" | tee "$HOME/.focus" > "$HOME/.status"
+  echo "$*" > "$HOME/.focus-status"
 }
 
 ss() {

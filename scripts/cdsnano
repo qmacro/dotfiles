@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Creates a nano-sized starter CAP project
+
+set -eo pipefail
+declare projname="${1:?Specify project (dir) name}"
+mkdir -p "$projname"
+cp -a ${0}-template/* "$projname/"

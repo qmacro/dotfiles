@@ -14,32 +14,92 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
 
-    -- Colour scheme
-    { 'folke/tokyonight.nvim' },
+    -- Look and feel
+    { 'Mofiqul/dracula.nvim' },
+    { 'nvim-lualine/lualine.nvim' },
 
     -- Treesitter
-    { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
-    { 'nvim-treesitter/playground' },
-
-    -- Source code control utils
-    { 'mbbill/undotree' },
-    { 'tpope/vim-fugitive' },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects'
+        },
+        build = ':TSUpdate'
+    },
 
     -- Package manager for LSP servers, linters, formatters etc
     { 'williamboman/mason.nvim' },
     { 'williamboman/mason-lspconfig.nvim' },
 
-    -- LSP support
-    { 'VonHeikemen/lsp-zero.nvim', branch = 'v3.x', lazy = true, config = false },
-    { 'neovim/nvim-lspconfig', dependencies = { 'hrsh7th/cmp-nvim-lsp' } },
+    -- LSP support and other linters and formatters
+    {
+        'VonHeikemen/lsp-zero.nvim',
+        branch = 'v3.x',
+        lazy = true,
+        config = false
+    },
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            'hrsh7th/cmp-nvim-lsp'
+        }
+    },
+    {
+        'mfussenegger/nvim-lint'
+    },
 
-    -- Autocompletion
-    { 'hrsh7th/nvim-cmp', dependencies = { 'L3MON4D3/LuaSnip' } },
+    -- Finding & navigating
+    {
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.4',
+        dependencies = {
+            'nvim-lua/plenary.nvim'
+        }
+    },
+    {
+        'ThePrimeagen/harpoon'
+    },
 
-    -- Fuzzy finder
-    { 'nvim-telescope/telescope.nvim', tag = '0.1.4', dependencies = { 'nvim-lua/plenary.nvim' } },
+    {
+        "christoomey/vim-tmux-navigator",
+        cmd = {
+            "TmuxNavigateLeft",
+            "TmuxNavigateDown",
+            "TmuxNavigateUp",
+            "TmuxNavigateRight",
+            "TmuxNavigatePrevious",
+        },
+        keys = {
+            { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
+            { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
+            { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
+            { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+            { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+        },
+    },
 
-    -- Quick file switcher
-    { 'theprimeagen/harpoon' },
+    -- Completion
+    { 'hrsh7th/cmp-buffer' },
+    { 'hrsh7th/cmp-path' },
+    { 'hrsh7th/cmp-cmdline' },
+    { 'hrsh7th/cmp-nvim-lua' },
+    { 'hrsh7th/nvim-cmp' },
+
+    { 'hrsh7th/cmp-vsnip' },
+    { 'hrsh7th/vim-vsnip' },
+    { 'rafamadriz/friendly-snippets' },
+
+    { 'onsails/lspkind.nvim' },
+
+    -- Utils
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+        opts = {}
+    }
 
 })

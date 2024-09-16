@@ -5,6 +5,7 @@
 dotfiles="$HOME/dotfiles"
 
 # Files
-for i in inputrc vimrc tmux.conf gitconfig bashrc config; do
-  ln -s -f "$dotfiles/$i" "$HOME/.$i"
+for i in inputrc gitconfig bashrc config/tmux/tmux.conf config/nvim/; do
+  [[ $i =~ \/ ]] && mkdir -p "$HOME/.$(dirname $i)"
+  ln -s -f "$dotfiles/$i" "$HOME/.${i%/}"
 done

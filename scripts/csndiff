@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+declare myname="${0##*/}"
+declare cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/$myname"
+declare oldfile="$cachedir/old.json"
+declare tmpfile
+tmpfile="$(mktemp)"
+
+setupcachedir() {
+    if [[ ! -d "$cachedir" ]]; then
+        mkdir -p "$cachedir"
+    fi
+}
+
+checkoldfile() {
+    if [[ ! -f "$oldfile" ]]; then
+        echo '{}' > "$oldfile"
+    fi
+}
+
+performdiff() {
+    tee "$tmpfile" | jd -color "$oldfile" || true
+}
+
+replaceoldfile() {
+    mv "$tmpfile" "$oldfile"
+}
+
+
+main() {
+    setupcachedir
+    checkoldfile
+    performdiff
+    replaceoldfile
+}
+
+main "$@"

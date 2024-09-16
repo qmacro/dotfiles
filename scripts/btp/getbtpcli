@@ -13,20 +13,21 @@
 
 set -o errexit
 
-declare PLATFORM ARCH
+declare PLATFORM
 PLATFORM="$(uname -s)"
-ARCH="$(dpkg --print-architecture)"
 
-declare -r PLATFORM_ARCH="${PLATFORM,,}-${ARCH}"
+declare -r licence_major=3
+declare -r licence_minor=2
+declare -r ARCH="${PLATFORM,,}-amd64"
 declare -r TARGETDIR="$HOME/bin"
-declare -r LICENCE="tools.hana.ondemand.com/developer-license-3_1.txt"
+declare -r LICENCE="tools.hana.ondemand.com/developer-license-${licence_major}_${licence_minor}.txt"
 
 confirm_licence_acceptance() {
 
   # Ensure licence acceptance
 
   local proceed
-  echo "Proceed (with Enter) only if you accept the SAP Developer Licence 3.1"
+  echo "Proceed (with Enter) only if you accept the SAP Developer Licence ${licence_major}.${licence_minor}"
   echo -n "(see https://$LICENCE) ..."
   # shellcheck disable=2034
   read -r proceed
@@ -48,7 +49,7 @@ retrieve() {
 
   local desired=$1
   local tempdir=$2
-  local filename="btp-cli-$PLATFORM_ARCH-$desired.tar.gz"
+  local filename="btp-cli-$ARCH-$desired.tar.gz"
 
   cd "$tempdir" \
     && curl \
@@ -56,14 +57,14 @@ retrieve() {
       --silent \
       --location \
       --output "$filename" \
-      --header "Cookie: eula_3_1_agreed=$LICENCE; path=/;" \
+      --header "Cookie: eula_${licence_major}_${licence_minor}_agreed=$LICENCE; path=/;" \
       "https://tools.hana.ondemand.com/additional/$filename" \
     && tar \
       --file "$filename" \
       --extract \
       --gunzip \
       --strip-components 1 \
-      "$PLATFORM_ARCH/btp"
+      "$ARCH/btp"
 
 }
 
@@ -77,18 +78,48 @@ get_version() {
 
 }
 
+showhelp() {
+
+  cat << EOF
+Usage:
+getbtpcli [options] [version]
+
+Options:
+--help (-h)   This help information
+--test (-t)   Test mode, just return latest version number available
+--accept (-a) Accept license agreement
+EOF
+
+}
+
 main() {
 
   # Move to a temporary directory; extract and check version, and
   # (unless --test mode) install, setting up symlink.
 
-  local desired tempdir ver testmode=false
+  local accept desired tempdir ver testmode=false
 
-  # Determine if we're in test mode
-  [[ $1 =~ ^(-t|--test)$ ]] && {
-    testmode=true
-    shift
-  }
+  while [[ $1 =~ - ]]; do
+
+    # Determine if we're in test mode
+    [[ $1 =~ ^(-t|--test)$ ]] && {
+      testmode=true
+      shift
+    }
+
+    # License acceptance may be indicated
+    [[ $1 =~ ^(-a|--accept)$ ]] && {
+      accept=true
+      shift
+    }
+
+    # Help mode
+    [[ $1 =~ ^(-h|--help)$ ]] && {
+      showhelp
+      exit
+    }
+
+  done
 
   desired="${1:-latest}"
 
@@ -97,7 +128,7 @@ main() {
   # - make sure the user confirms acceptance of the licence
   if [[ $testmode = false ]]; then
     [[ ! -d "$TARGETDIR" ]] && mkdir "$TARGETDIR"
-    confirm_licence_acceptance
+    [[ -z "$accept" ]] && confirm_licence_acceptance
   fi
 
   # Set up temporary directory and move into it

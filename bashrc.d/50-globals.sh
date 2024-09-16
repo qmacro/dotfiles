@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export EDITOR=nvim
 export WORK="$HOME/work"
 
@@ -28,3 +30,8 @@ export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export DOCKER_BUILDKIT=1
 
 export CF_HOME="$HOME/.config/cf"
+
+# This is so I can use $HOSTHOME when invoking Docker from within
+# a container, but want to specify a bind-mount (which of course
+# must refer to the host OS filesystem).
+export HOSTHOME="/Users/I347491"
