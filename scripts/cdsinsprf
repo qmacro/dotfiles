@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+declare PACKAGEFILE="package.json"
+
+die() {
+    >&2 echo "$*" 
+    exit 1
+}
+
+gen_env_value() {
+
+    local env_val
+    env_val="$(cds env --json "$1")"
+    [[ $env_val == "undefined" ]] && die "No value for $1"
+    jq --arg path "$1" \
+    '. as $v | {} | setpath($path|split(".");$v)' \
+    <<< "$env_val"
+
+}
+
+show_usage() {
+
+    cat <<EOF
+Inserts a [profile] into a cds node in package.json. 
+Backs up original package.json to package.json-backup.
+Specify the profile without the square brackets.
+Usage: cdsinsprf <cds-config-path> profile
+Example: cdsinsprf cds.requires.db development
+If no profile is specified, the value of the cds node specified is emitted.
+If the cds node doesn't exist, the script will abend.
+EOF
+
+    if [[ $1 == "extended" ]]; then
+        cat <<EOFEXTENDED
+This example will turn:
+
+{
+  "cds": {
+    "requires": {
+      "db": {
+        "impl": "@cap-js/sqlite",
+        "credentials": {
+          "url": ":memory:"
+        },
+        "kind": "sqlite"
+      }
+    }
+  }
+}
+
+into
+
+{
+  "cds": {
+    "requires": {
+      "db": {
+        "[development]": {
+          "impl": "@cap-js/sqlite",
+          "credentials": {
+            "url": ":memory:"
+          },
+          "kind": "sqlite"
+        }
+      }
+    }
+  }
+}
+EOFEXTENDED
+    fi
+
+}
+
+get_current_val() {
+
+    jq --arg path "$1" 'getpath($path|split("."))' "$PACKAGEFILE"
+
+}
+
+do_checks() {
+
+    [[ -f "$PACKAGEFILE" ]] || die "No $PACKAGEFILE found"
+    if [[ $# -ne 1 && $# -ne 2 ]]; then
+        show_usage ""
+        exit 1
+    fi
+    if [[ $# -eq 2 && "$(get_current_val "$@")" == "null" ]]; then
+        die "Cannot insert profile for non-existent node ($1)"
+    fi
+    
+
+}
+
+insert_profile() {
+
+    jq \
+        --arg path "$1" \
+        --arg profile "$2" \
+        'getpath($path|split(".")) |= {"[\($profile)]": .}'
+
+}
+
+main() {
+
+    local env_val
+    do_checks "$@"
+
+    if [[ $# -eq 1 ]]; then
+        get_current_val "$@"
+    else
+        mv "$PACKAGEFILE" "$PACKAGEFILE-backup"
+        insert_profile "$@" > "$PACKAGEFILE" < "$PACKAGEFILE-backup"
+    fi
+
+}
+
+main "$@"
