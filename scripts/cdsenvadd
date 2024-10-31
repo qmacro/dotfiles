@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+declare packagefile="package.json"
+
+die() {
+    >&2 echo "$*" 
+    exit 1
+}
+
+gen_env_value() {
+
+    local env_val
+    env_val="$(cds env --json "$1")"
+    [[ $env_val == "undefined" ]] && die "No value for $1"
+    jq --arg path "$1" \
+    '. as $v | {} | setpath($path|split(".");$v)' \
+    <<< "$env_val"
+
+}
+
+show_usage() {
+
+    cat <<EOF
+Merges effective config into package.json.
+Backs up original package.json to package.json-backup.
+Usage: cdsenvadd <cds-env-path>
+Example: cdsenvadd cds.requires.db
+EOF
+
+}
+
+do_checks() {
+
+    if [[ $# -ne 1 ]]; then
+        show_usage
+        exit 1
+    fi
+    [[ -f "$packagefile" ]] || die "No $packagefile found"
+
+}
+
+
+main() {
+
+    local env_val
+    do_checks "$@"
+    # Discrete assignment to allow for fail
+    env_val="$(gen_env_value "$1")"
+    mv "$packagefile" "$packagefile-backup"
+    cat "$packagefile-backup" <(echo "$env_val") \
+        | jq -s add \
+        > "$packagefile"
+
+}
+
+main "$@"
