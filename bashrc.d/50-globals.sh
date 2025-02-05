@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export EDITOR=nvim
-export WORK="$HOME/work"
+export WORK="/work"
 
 export HOSTALIASES="$HOME/.config/host.aliases"
 export BLOG_REPO_LOCATION="$HOME/Projects"
@@ -35,3 +35,6 @@ export CF_HOME="$HOME/.config/cf"
 # a container, but want to specify a bind-mount (which of course
 # must refer to the host OS filesystem).
 export HOSTHOME="/Users/I347491"
+
+
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
