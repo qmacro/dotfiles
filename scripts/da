@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# da - docker attach
+# List containers and attach to selected one
+
+set -o errexit
+
+declare container
+declare format='{{.Names | printf "%-30s" }} {{ .Image | printf "%-35s" }} {{.Status}}'
+
+container="$(docker ps --format "$format" | fzf --height=~20 --accept-nth=1)"
+docker attach "$container"

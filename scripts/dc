@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# dc - docker context
+# List contexts and change to selected one
+
+set -o errexit
+
+declare context
+declare format='{{.Name | printf "%-20s" }} {{ .Description | printf "%-35s" }}'
+
+context="$(docker context ls --format "$format" | fzf --height=~20 --accept-nth=1)"
+docker context use "$context"

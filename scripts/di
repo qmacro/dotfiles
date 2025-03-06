@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# di - docker images
+# List images including architecture.
+
+set -o errexit
+
+declare here="${0%/*}"
+declare images=$(docker image ls -q)
+
+declare imageid="$(
+docker image inspect $images \
+| jq -r -f "$here/imagedetail.jq" \
+| column -t \
+| fzf --accept-nth 1
+)"
+
+# [[ -n $imageid ]] && docker image history "$imageid"
