@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Sets up home dir with /work based config,
+# replacing the initial setup that was put
+# in place for the image build.
+
+set -eo pipefail
+
+declare DOTFILES=/work/gh/github.com/qmacro/dotfiles
+
+main() {
+
+    if [[ -d "$DOTFILES" ]] && [[ "$(file --brief "$HOME/.local")" =~ directory ]]
+    then
+        echo "Replacing local clone of dotfiles with link to /work based one"
+        rm -r -f "$HOME/dotfiles"
+        ln -s -f "$DOTFILES" "$HOME/dotfiles"
+	ln -s -f "$HOME/.config/npm/config" "$HOME/.npmrc"
+    fi
+
+}
+
+main "$@"
