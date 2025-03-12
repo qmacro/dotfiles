@@ -38,3 +38,6 @@ export HOSTHOME="/Users/I347491"
 
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
+# See https://github.com/joshmedeski/sesh/discussions/233
+export LC_CTYPE=C.utf-8
