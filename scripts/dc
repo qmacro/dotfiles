@@ -3,10 +3,28 @@
 # dc - docker context
 # List contexts and change to selected one
 
-set -o errexit
+declare contextsFormat='{{.Name | printf "%-20s" }} {{ .Description | printf "%-35s" }}'
 
-declare context
-declare format='{{.Name | printf "%-20s" }} {{ .Description | printf "%-35s" }}'
+getCurrentContext() { docker context show; }
+listContexts() { docker context ls --format "$contextsFormat"; }
+showSelection() { fzf --height=~20 --accept-nth 1; }
+#makeLastEntry() { local context=$1; ex -s -c "/^$context/m$" -c '1,$p' -c 'q!' -; }
+useContext() { docker context use ${1:-$(</dev/stdin)}; }
 
-context="$(docker context ls --format "$format" | fzf --height=~20 --accept-nth=1)"
-docker context use "$context"
+main() {
+
+  local context
+
+  context="$(
+  listContexts \
+  | showSelection
+  )"
+  docker context use "$context"
+
+
+}
+
+if [[ $0 =~ dc$ ]]; then
+  set -o errexit
+  main "$@"
+fi

@@ -38,3 +38,4 @@ config/ngrok/
 config/nvim/plugin/packer_compiled.lua
 config/pulse/
 config/krew/
+config/tmux/plugins

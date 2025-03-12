@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
-# Don't Panic - dp
-# Display text "in large, friendly letters"
+# dp - docker processes (containers)
+# List contexts and their running processes.
 
-clear
-figlet -w "$(tput cols)" "$@" | lolcat
+set -o errexit
+
+declare contextFormat='{{.Name | printf "%-20s" }} {{ .Description | printf "%-35s" }}'
+declare containerFormat='{{.Names | printf "%-30s" }} {{.Status}}'
+
+docker context ls --format "$contextFormat" \
+| fzf \
+  --delimiter='\s+' \
+  --preview="DOCKER_CONTEXT={1} docker ps --format \$containerFormat'"
