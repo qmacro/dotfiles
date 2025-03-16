@@ -19,6 +19,7 @@ return {
       local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<space>fh", builtin.help_tags)
       vim.keymap.set("n", "<space>fd", builtin.find_files)
+      vim.keymap.set("n", "<space>fp", function() builtin.find_files { cwd = "/work/projects", follow = true } end)
       vim.keymap.set("n", "<space>en", function() builtin.find_files { cwd = vim.fn.stdpath("config") } end)
 
       vim.keymap.set("n", "<space>ec",
