@@ -3,7 +3,7 @@ require("config.lazy")
 vim.opt.list = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 
 vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
