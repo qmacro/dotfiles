@@ -15,6 +15,7 @@ return {
       },
     },
     config = function()
+      require("lspconfig").ts_ls.setup {}
       require("lspconfig").lua_ls.setup {}
       require("lspconfig").marksman.setup {}
       vim.api.nvim_create_autocmd('LspAttach', {
