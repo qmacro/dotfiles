@@ -11,6 +11,7 @@ return {
     end,
     keys = {
       { "<Leader>rr",  "<Cmd>ReplOpen<cr>",                   mode = "n", desc = "Start default REPL" },
+      { "<Leader>rc",  "<Cmd>ReplClear<cr>",                  mode = "n", desc = "Clear REPL" },
       { "<Leader>cds", "<Cmd>ReplOpen cds\\ repl<CR>ctrl-wH", mode = "n", desc = "Start cds REPL" },
       { "<Leader>cc",  "<Cmd>ReplNewCell<CR>",                mode = "n", desc = "Create New Cell" },
       { "<Leader>cr",  "<Plug>(ReplSendCell)",                mode = "n", desc = "Send Repl Cell" },
