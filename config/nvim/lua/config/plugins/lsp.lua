@@ -33,6 +33,7 @@ return {
           end
         end,
       })
+      require("lspconfig").yamlls.setup {}
     end,
   }
 }
