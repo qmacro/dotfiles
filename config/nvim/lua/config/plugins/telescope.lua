@@ -18,7 +18,9 @@ return {
       }
       local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<space>fh", builtin.help_tags)
-      vim.keymap.set("n", "<space>fd", builtin.find_files)
+      -- Use ripgrep with options to show hidden files but ignore those in .git/
+      vim.keymap.set("n", "<space>fd",
+        function() builtin.find_files { find_command = { 'rg', '--files', '--glob', '!.git/', '--hidden' } } end)
       vim.keymap.set("n", "<space>fp", function() builtin.find_files { cwd = "/work/projects", follow = true } end)
       vim.keymap.set("n", "<space>en",
         function() builtin.find_files { cwd = vim.fn.stdpath("config") } end)
