@@ -7,10 +7,9 @@ return {
     },
     config = function()
       require("telescope").setup {
-        pickers = {
-          find_files = {
-            theme = "dropdown"
-          }
+        defaults = {
+          layout_strategy = 'horizontal',
+          layout_config = { preview_width = 0.6 }
         },
         extensions = {
           fzf = {}
