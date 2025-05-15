@@ -16,6 +16,7 @@ return {
         }
       }
       local builtin = require("telescope.builtin")
+      vim.keymap.set("n", "<space>fo", builtin.oldfiles)
       vim.keymap.set("n", "<space>fh", builtin.help_tags)
       -- Use ripgrep with options to show hidden files but ignore those in .git/
       vim.keymap.set("n", "<space>fd",
