@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://dlvhdr.github.io/gh-dash/configuration/gh-dash/schema.json
 prSections:
 - title: My Pull Requests
   filters: is:open author:@me
@@ -9,6 +10,10 @@ prSections:
   filters: is:open involves:@me -author:@me
   type: null
 issuesSections:
+- title: Blog posts
+  filters: is:open author:@me repo:qmacro-org/db NOT in:title "Hands-on SAP dev with qmacro"
+- title: Blog post comments
+  filters: is:open repo:qmacro/qmacro.github.io
 - title: My Issues
   filters: is:open author:@me
 - title: Assigned
@@ -24,7 +29,7 @@ defaults:
     width: 50
   prsLimit: 20
   issuesLimit: 20
-  view: prs
+  view: issues
   layout:
     prs:
       updatedAt:
