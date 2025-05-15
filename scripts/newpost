@@ -6,12 +6,12 @@
 # Sets me up for writing a new blog post
 
 # Has a new special mode for execution from `savepost`; supply
-# a tag in this form: sapcommunity-<sapcommunity-post-url> and 
+# a tag in this form: sapcommunity-<sapcommunity-post-url> and
 # the tag 'sapcommunity' will be added, plus an 'Originally posted
 # on SAP Community' link will be added at the bottom of the body,
 # with a link to the URL provided.
 
-declare bloghome="$HOME/work/gh/github.com/qmacro/qmacro.github.io"
+declare bloghome="$WORK/gh/github.com/qmacro/qmacro.github.io"
 declare location="${0%/*}"
 
 # Experimental lib functions
@@ -47,9 +47,9 @@ EO_TEMPLATE
   if [[ "${#tags[@]}" -gt 0 ]]; then
     echo "tags:" >> "$filename"
     for tag in "${tags[@]}"; do
-      if [[ $tag =~ ^sapcommunity- ]]; then 
+      if [[ $tag =~ ^sapcommunity- ]]; then
         originalurl="${tag#sapcommunity-}"
-        tag=sapcommunity 
+        tag=sapcommunity
       fi
       echo "  - $tag" >> "$filename"
     done
@@ -89,7 +89,7 @@ get_tags_and_date() {
 
   # Look through the tags, capturing a postdate if there is one,
   # and consolidating the tags into an array.
-  for i in "$@"; do 
+  for i in "$@"; do
     if [[ $i =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
       postdate=$i
     else
@@ -121,7 +121,7 @@ main() {
     create_file "$filename" "$title" "$postdate" "${tags[@]}"
   fi
 
-  # if 
+  # if
 
   $EDITOR "$filename"
 
