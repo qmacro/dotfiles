@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# vc - (n)vim configs
+
+set -eo pipefail
+
+declare CONFIGS=nvim-configs
+
+listConfigs() {
+
+  find "$HOME/.config/$CONFIGS" \
+    -mindepth 1 \
+    -maxdepth 1 \
+    -printf "%f\n"
+
+}
+
+main() {
+
+  local conf="${1:-$(listConfigs | fzf)}"
+  NVIM_APPNAME="$CONFIGS/$conf" nvim "$@"
+
+}
+
+main "$@"

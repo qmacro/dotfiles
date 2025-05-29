@@ -1,10 +1,11 @@
 #!/bin/sh
 
+echo "$1 -> $(basename "$1")" >> /tmp/previewer.log
 case "$(basename "$1")" in
     Dockerfile) highlight -O ansi --syntax Dockerfile "$1";;
     *.jpeg|*.jpg|*.png) exiftool "$1";;
     *.csv|*.jq) bat --style=plain --color=always "$1";;
-    *.md) glow -s dark "$1";;
+    *.md) echo "GLOW" >> /tmp/previewer.log; glow "$1";;
     *.json) jq -C . "$1";;
     *) bat --style plain --color always "$1" || highlight -O ansi "$1";;
 esac
