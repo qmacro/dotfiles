@@ -22,11 +22,6 @@ __showlocation() {
   fi
 }
 
-__is_theia() {
-  env | grep THEIA > /dev/null
-  return $?
-}
-
 __prompt_command() {
   local EXIT="$?"
   local promptcolour reset=$'\[\e[0m\]'
