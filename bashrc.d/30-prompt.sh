@@ -33,9 +33,12 @@ __prompt_command() {
   local locationcolour=$'\[\e[0;34m\]'
   local symbols="; "
 
+  local nvimconfigcolour=$'\[\e[0;32m\]'
+  local nvimconfig="${NVIM_APPNAME##*/}"
+
   # Location is shown in the Tmux status bar. But if Tmux
   # isn't running, show it in a prompt line.
-  PS1="${locationcolour}# $(__showlocation "$USER")$(__git_ps1)\\n${reset}"
+  PS1="${locationcolour}# $(__showlocation "$USER")$(__git_ps1) ${nvimconfigcolour}${nvimconfig}\\n${reset}"
 
   # Make prompt red if last command failed
   [[ $EXIT == 0 ]] && promptcolour=$'\[\e[0;32m\]' || promptcolour=$'\[\e[0;31m\]'
