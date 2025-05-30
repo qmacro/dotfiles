@@ -103,7 +103,7 @@ nvc() {
     -mindepth 1 \
     -maxdepth 1 \
     -printf "%f\n" \
-    | fzf
+    | fzf --height=~10
   )"
 
   export NVIM_APPNAME="$configdir/${config:-nvim}"
