@@ -39,4 +39,7 @@ config/nvim/plugin/packer_compiled.lua
 config/pulse/
 config/krew/
 config/tmux/plugins
-config/nvim-configs
+config/nvim-configs/lazy
+config/nvim-configs/chad
+
+bashrc.d/54-globals-nvim.sh

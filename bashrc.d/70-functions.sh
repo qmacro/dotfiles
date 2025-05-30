@@ -89,3 +89,27 @@ addpath() {
   export PATH="$PATH:$PWD"
 
 }
+
+
+
+# nvc - (n)vim configs
+nvc() {
+
+  local configdir=nvim-configs
+
+  local config
+  config="$(
+    find "$HOME/.config/$configdir" \
+    -mindepth 1 \
+    -maxdepth 1 \
+    -printf "%f\n" \
+    | fzf
+  )"
+
+  export NVIM_APPNAME="$configdir/${config:-nvim}"
+  sed -i -E 's#(NVIM_APPNAME)=.*$#\1='"$NVIM_APPNAME"'#' $HOME/dotfiles/bashrc.d/54-globals-nvim.sh
+
+
+  nvim "$@"
+
+}
