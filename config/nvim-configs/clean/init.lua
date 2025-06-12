@@ -27,7 +27,10 @@ vim.lsp.set_log_level("WARN")
 -- DIAGNOSTICS
 
 -- How diagnostics are displayed
-vim.diagnostic.config({ virtual_lines = { current_line = true } })
+vim.diagnostic.config({
+  virtual_lines = { current_line = true },
+  severity_sort = true
+})
 
 -- GENERAL OPTIONS
 
