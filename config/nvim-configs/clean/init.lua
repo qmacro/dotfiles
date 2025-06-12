@@ -1,3 +1,5 @@
+-- PLUGIN MANAGER
+
 require("config.lazy")
 
 -- LANGUAGE SERVER PROTOCOL
