@@ -8,7 +8,6 @@ return {
       require('mini.completion').setup()
       require('mini.snippets').setup()
       require('mini.icons').setup()
-      MiniIcons.tweak_lsp_kind()
       vim.cmd [[ colorscheme minischeme ]]
     end
   }

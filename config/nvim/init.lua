@@ -7,8 +7,6 @@ vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 vim.opt.splitright = true
 
--- vim.cmd [[ colorscheme minischeme ]]
-
 vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 
 -- Highlight when yanking text (see :help vim.highlight.on_yank())
