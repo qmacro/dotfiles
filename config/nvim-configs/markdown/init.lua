@@ -6,5 +6,6 @@ vim.opt.shiftwidth = 2
 vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 vim.opt.splitright = true
+vim.opt.winborder = "single"
 
 vim.cmd [[ colorscheme minischeme ]]
