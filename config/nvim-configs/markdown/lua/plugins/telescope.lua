@@ -20,7 +20,7 @@ return {
       vim.keymap.set("n", "<space>fh", builtin.help_tags)
       -- Use ripgrep with options to show hidden files but ignore those in .git/
       vim.keymap.set("n", "<space>fd",
-        function() builtin.find_files { find_command = { 'rg', '--files', '--glob', '!.git/', '--hidden' } } end)
+        function() builtin.find_files { find_command = { 'rg', '--files', '--glob', '!.git/', '--hidden', '--sort=path' } } end)
       vim.keymap.set("n", "<space>fp", function() builtin.find_files { cwd = "/work/projects", follow = true } end)
       vim.keymap.set("n", "<space>en",
         function() builtin.find_files { cwd = vim.fn.stdpath("config") } end)
