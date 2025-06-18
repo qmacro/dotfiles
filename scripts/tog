@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+declare suffix="__toggled__"
+
+main() {
+
+    local file=$1
+    if [[ -f "$file" ]] then
+      mv "$file" "$file$suffix"
+    elif [[ -f "$file$suffix" ]] then
+      mv "$file$suffix" "$file"
+    else
+      false # indicate there was nothing to toggle with rc!=0
+    fi
+
+}
+
+main "$@"
