@@ -1,5 +1,5 @@
 return {
   cmd = { 'typescript-language-server', '--stdio' },
   root_markers = { 'package.json', '.git' },
-  filetypes = { 'javascript' }
+  filetypes = { 'typescript', 'javascript' }
 }
