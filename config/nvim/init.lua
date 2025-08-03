@@ -58,7 +58,6 @@ vim.diagnostic.config({
 -- GENERAL OPTIONS
 
 vim.opt.list = true
-vim.opt.paste = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.expandtab = true
