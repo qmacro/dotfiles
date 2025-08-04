@@ -55,6 +55,10 @@ vim.diagnostic.config({
   severity_sort = true
 })
 
+require('qmacro.diagnostic').exclude({
+  { code = 80001, source = 'typescript' }
+})
+
 -- GENERAL OPTIONS
 
 vim.opt.list = true
