@@ -24,17 +24,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 
--- LSP config
-vim.lsp.config("lua", {
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { "vim" }
-      }
-    }
-  }
-})
-
 -- Control LSP support by filetype
 vim.lsp.enable({
   'javascript',
