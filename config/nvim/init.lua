@@ -21,6 +21,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end,
       })
     end
+    if client:supports_method('textDocument/definition') then
+      vim.keymap.set('n', 'grd', vim.lsp.buf.definition)
+    end
   end
 })
 
