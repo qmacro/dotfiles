@@ -73,5 +73,3 @@ vim.filetype.add({
     ['rules.vr'] = 'text',
   }
 })
-
-vim.cmd "colorscheme retrobox"
