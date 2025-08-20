@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A minimal CAP starter project with a single services.cds file",
   "dependencies": {
-    "@sap/cds": "^8",
+    "@sap/cds": "^9",
     "express": "^4"
   },
   "devDependencies": {
