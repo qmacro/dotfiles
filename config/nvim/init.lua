@@ -43,7 +43,7 @@ vim.lsp.set_log_level("WARN")
 
 -- How diagnostics are displayed
 vim.diagnostic.config({
-  virtual_lines = { current_line = true },
+  virtual_text = { current_line = true },
   severity_sort = true
 })
 
@@ -67,7 +67,10 @@ vim.opt.completeopt:append("fuzzy,noinsert")
 -- FILETYPES
 
 vim.filetype.add({
-  extension = { cds = 'cds' },
+  extension = {
+    ['cds'] = 'cds',
+    ['njk'] = 'xml'
+  },
   filename = {
     ['.markdownlintrc'] = 'json',
     ['rules.vr'] = 'text',
