@@ -34,6 +34,7 @@ vim.lsp.enable({
   'markdown',
   'dockerfile',
   'lua',
+  'bash',
 })
 
 -- LSP logging
@@ -48,7 +49,7 @@ vim.diagnostic.config({
 })
 
 require('qmacro.diagnostic').exclude({
-  { code = 80001, source = 'typescript' }
+  { code = 80001, source = 'typescript' },
 })
 
 -- GENERAL OPTIONS
@@ -63,6 +64,7 @@ vim.opt.cursorline = true
 vim.opt.splitright = true
 vim.opt.winborder = "rounded"
 vim.opt.completeopt:append("fuzzy,noinsert")
+vim.opt.exrc = true
 
 -- FILETYPES
 
