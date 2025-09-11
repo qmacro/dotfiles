@@ -38,7 +38,6 @@ create_file() {
 
   cat << EO_TEMPLATE > "$filename"
 ---
-layout: post
 title: $title
 date: $postdate
 EO_TEMPLATE
@@ -54,6 +53,9 @@ EO_TEMPLATE
       echo "  - $tag" >> "$filename"
     done
   fi
+
+  # Add an empty description property
+  echo "description: TODO" >> "$filename"
 
   # Add end-of-frontmatter
   echo "---" >> "$filename"
