@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+declare -a shfmtargs
+for i in "$@"; do
+  if [[ $i == --filename=* ]] || [[ $i == "-" ]]; then
+    shfmtargs=("${shfmtargs[@]}" "$i")
+  fi
+done
+shfmt "${shfmtargs[@]}"
