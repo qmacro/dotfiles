@@ -44,3 +44,4 @@ alias gapi='gh api --paginate --cache 1h'
 alias bat=batcat
 alias gg='nvim +Neogit'
 alias blog='cd $WORK/gh/github.com/qmacro/qmacro.github.io'
+alias ts=tmux-sessionizer
