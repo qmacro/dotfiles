@@ -56,8 +56,8 @@ deleterun() {
   run=$1
   id="$(cut -f 3 <<< "$run")"
   gh --hostname "$hostname" api -X DELETE "/repos/$repo/actions/runs/$id" \
-  && result="OK!" \
-  || result="BAD"
+    && result="OK!" \
+    || result="BAD"
   printf "%s\t%s\n" "$result" "$run"
 
 }
@@ -67,7 +67,7 @@ deleteruns() {
   local id
   while read -r run; do
     deleterun "$run"
-    sleep 0.25
+    sleep 0.50
   done
 
 }
