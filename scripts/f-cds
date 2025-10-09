@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+main() {
+
+  local file
+  file="$(mktemp).cds"
+  cat > "$file"
+  format-cds "$file" > /dev/null
+  cat "$file"
+
+}
+
+main "$@"

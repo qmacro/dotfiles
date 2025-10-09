@@ -74,7 +74,7 @@ generate_filename() {
   # of the post title.
   local postdate=$1
   local title=$2
-  echo "$bloghome/src/posts/$postdate-$(slugify "$title").md"
+  echo "$bloghome/content/blog/$postdate-$(slugify "$title").md"
 
 }
 

@@ -9,8 +9,11 @@ return {
     config = function()
       require("telescope").setup {
         defaults = {
-          layout_strategy = 'horizontal',
-          layout_config = { preview_width = 0.4 }
+          file_ignore_patterns = {
+            'node_modules'
+          },
+          layout_strategy = 'vertical',
+          -- layout_config = { preview_width = 0.6 }
         },
         extensions = {
           fzf = {}

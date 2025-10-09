@@ -28,3 +28,6 @@ local cdsdkpath = vim.fs.dirname(vim.fn.exepath('cds'))
 -- Add them if they exist
 addpath(projpath)
 addpath(cdsdkpath)
+
+vim.opt.number = false
+vim.opt.relativenumber = false
