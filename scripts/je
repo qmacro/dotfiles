@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# je - JSON edit (via YAML)
+
+set -eo pipefail
+
+main() {
+
+  local jsonfile=$1
+  local yamlfile
+  yamlfile="$(mktemp).yaml"
+  yq --yaml-output . "$jsonfile" > "$yamlfile"
+  $EDITOR "$yamlfile"
+  cp "$jsonfile" "/tmp/${jsonfile}.bck" # temp backup
+  yq . "$yamlfile" > "$jsonfile"
+  $EDITOR "$jsonfile"
+
+}
+
+main "$@"
