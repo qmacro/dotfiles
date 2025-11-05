@@ -6,7 +6,9 @@
 # retrieve the workflow runs for that repo and present them in a
 # list. Selected runs will be deleted. Uses the GitHub API.
 
-# Requires gh (GitHub CLI) and jq (JSON processor)
+# Requires gh (GitHub CLI)
+# fzf (general-purpose command-line fuzzy finder)
+# and jq (JSON processor)
 
 set -o errexit
 set -o pipefail
