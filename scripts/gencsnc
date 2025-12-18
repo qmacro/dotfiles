@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+declare model="${1:-srv/}"
+declare myname="$(basename "$0")"
+
+filter() {
+  local match="c$"
+  if [[ $myname =~ $match ]]; then
+    bat --language yaml --plain
+  else
+    cat
+  fi
+}
+
+cds compile --to yaml "$model" \
+  | prettier --parser yaml --print-width 60 \
+  | filter
