@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Creates a pico-sized starter CAP project
+# based on a simple NPM module install approach
+
+set -eo pipefail
+declare projname="${1:?Specify project (dir) name}"
+mkdir -p "$projname"
+cd "$projname"
+npm init -y
+npm add @sap/cds express
+npm add --save-dev @cap-js/sqlite
+cat > services.cds << EOMODEL
+context schema {
+  entity E {
+    key ID : Integer;
+        e  : String;
+  }
+}
+
+service S {
+  entity E as projection on schema.E;
+}
+EOMODEL
