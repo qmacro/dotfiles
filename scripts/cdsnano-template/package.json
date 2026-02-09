@@ -1,15 +1,15 @@
 {
   "name": "nano-starter-project",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A minimal CAP starter project with a single services.cds file",
   "dependencies": {
-    "@sap/cds": "^9",
-    "express": "^4"
+    "@sap/cds": "^9"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2"
   },
   "scripts": {
     "start": "cds-serve"
-  }
+  },
+  "private": true
 }
