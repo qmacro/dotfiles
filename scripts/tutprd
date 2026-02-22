@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+declare org=/work/gh/github.com/SAP-tutorials
+declare dev=developer-advocates-Contribution
+declare prd=developer-advocates
+
+main() {
+
+  local nr="${1:?Specify tutorial number}"
+  cp -a $org/$dev/tutorials/odata-dd-$nr-* "$org/$prd/tutorials/"
+  cd "$org/$prd/"
+  git pull
+  git add tutorials
+  git status
+  git commit -m "$(cat "$org/$dev/.git/COMMIT_EDITMSG")"
+  git push
+
+}
+
+main "$@"
