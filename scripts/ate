@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+# tmux-based awk explorer
+
+# Uses tmux, awk, vim and entr.
+# Similar to jqte.
+
+declare -r self=$0
+
+setup() {
+
+  local datafile filterfile nonums
+
+  datafile=$1
+  filterfile="$(mktemp)"
+
+  # Start with basic empty filter
+  echo '{ print }' > "$filterfile"
+
+  # No numbers at all via nvim options
+  nonums="-c 'set nonumber' -c 'set norelativenumber'"
+
+  # Create a new tmux window to explore the data like this:
+
+  # +---------------------+----------------------+
+  # | output              | original data        |
+  # |                     |                      |
+  # |                     |                      |
+  # |                     |                      |
+  # |          1          |                      |
+  # |                     |                      |
+  # |                     |          2           |
+  # |                     |                      |
+  # +                     +----------------------|
+  # |                     | filter               |
+  # |                     |          3           |
+  # |                     |                      |
+  # +---------------------+----------------------+
+
+  # This assumes, btw, that you have pane numbering starting at 1
+  # with set -w -g pane-base-index 1
+
+  # The 'output' and 'original data' panes (1 and 2) are
+  # read-only, and the 'filter' pane (3) is a vim session to edit the
+  # awk filter. Whenever that filter is modified the output is
+  # re-rendered accordingly.
+
+  tmux new-window \; \
+    split-window -h \; \
+    select-pane -t 2 \; \
+    send-keys "vim -c 'set nowrap' $nonums $datafile" C-m \; \
+    select-pane -t 2 \; \
+    split-window -v -p 35 \; \
+    send-keys "vim -c 'set filetype=awk' $nonums -c 'autocmd TextChanged,InsertLeave <buffer> silent write' $filterfile" C-m \; \
+    select-pane -t 1 \; \
+    send-keys "ls $datafile $filterfile | entr -c $self --process $filterfile $datafile" C-m \; \
+    select-pane -t 3
+
+}
+
+process() {
+
+  local datafile filterfile
+
+  filterfile=$1
+  datafile=$2
+
+  awk -f "$filterfile" "$datafile"
+
+}
+
+main() {
+
+  local process filterfile datafile
+
+  if [[ $1 =~ ^--?p(rocess)?$ ]]; then
+    process=true
+    shift
+    filterfile=$1
+    shift
+  fi
+
+  datafile=$1
+
+  if [[ -n $process ]]; then
+    process "$filterfile" "$datafile"
+  else
+    setup "$datafile"
+  fi
+
+}
+
+main "$@"
