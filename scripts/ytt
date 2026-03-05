@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# ytt - YouTube Time
+# Input:  mm:ss timestamp
+# Output: a Markdown link with the timestamp
+#         as the text and a YT URL
+#         e.g. https://www.youtube.com/watch?v=VID&t=NNNs
+#
+# Determines VID from .ytt
+
+set -eo pipefail
+
+calcsecs() {
+
+  local mm ss
+  mm="${1%%:*}"
+  ss="${1##*:}"
+  echo $(((mm * 60) + ss))
+
+}
+
+assertvalid() {
+  if [[ ! $1 =~ ^[0-9]{2}:[0-9]{2}$ ]]; then
+    echo "Invalid mm:ss timestamp ($1)"
+    exit 1
+  fi
+}
+
+main() {
+
+  local timestamp secs vid
+  timestamp="$(cat -)"
+  assertvalid "$timestamp"
+  read -r vid < "$HOME/.ytt"
+  secs="$(calcsecs "$timestamp")"
+  echo "[$timestamp](https://www.youtube.com/watch?v=${vid}&t=${secs}s)"
+
+}
+
+main "$@"
