@@ -15,7 +15,7 @@ calcsecs() {
   local mm ss
   mm="${1%%:*}"
   ss="${1##*:}"
-  echo $(((mm * 60) + ss))
+  echo $(((10#$mm * 60) + 10#$ss))
 
 }
 
@@ -29,7 +29,7 @@ assertvalid() {
 main() {
 
   local timestamp secs vid
-  timestamp="$(cat -)"
+  timestamp="$(xargs)"
   assertvalid "$timestamp"
   read -r vid < "$HOME/.ytt"
   secs="$(calcsecs "$timestamp")"
