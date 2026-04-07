@@ -1,0 +1,28 @@
+#!/usr/bin/awk -f
+
+# See https://qmacro.org/blog/posts/2026/03/03/genres-cuids-and-a-bit-of-awk/
+# - Reads in a CSV file of genres
+# - Emits a version with "clean(er)" IDs
+# - Creates a directory tree (in /tmp/genres/) representing the hierarchy
+
+function getparent(sid) {
+  if (! parent[sid]) return ""
+  return getparent(parent[sid]) "/" name[parent[sid]]
+}
+
+BEGIN {
+  OFS = FS = ",";
+  DIR = "genres";
+  system("rm -rf /tmp/" DIR);
+}
+
+NR == 1
+
+NR > 1 {
+  sid = NR - 1
+  id[$1] = sid
+  name[sid] = $3
+  parent[sid] = id[$2]
+  print sid, parent[sid], $3
+  system("mkdir -p '/tmp/" DIR getparent(sid) "/" $3 "'")
+}
