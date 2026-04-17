@@ -3,7 +3,7 @@
 case "$(basename "$1")" in
 Dockerfile | *.dockerfile) highlight -O ansi --syntax Dockerfile "$1" ;;
 *.jpeg | *.jpg | *.png) exiftool "$1" ;;
-*.csv | *.jq) bat --style=plain --color=always "$1" ;;
+*.csv | *.jq) batcat --style=plain --color=always "$1" ;;
 *.json) jq -C . "$1" ;;
 *) batcat --style plain --color always "$1" ;;
 esac
