@@ -21,6 +21,7 @@ jqscript() {
 
   cat << EOF
       def symbol:
+        sub(""; "")? // "NULL" |
         sub("skipped"; "SKIP") |
         sub("success"; "GOOD") |
         sub("failure"; "FAIL");
