@@ -21,9 +21,10 @@ jqscript() {
 
   cat << EOF
       def symbol:
-        sub("skipped"; "SKIP") |
-        sub("success"; "GOOD") |
-        sub("failure"; "FAIL");
+        sub("cancelled"; "CANC") |
+        sub("skipped";   "SKIP") |
+        sub("success";   "GOOD") |
+        sub("failure";   "FAIL");
 
       def tz:
         gsub("[TZ]"; " ");
