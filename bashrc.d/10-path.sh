@@ -13,4 +13,4 @@ export PATH="$HOME/.npm-packages/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # Add games dir for lolcat (!)
-export PATH="$PATH:/usr/bin/games"
+export PATH="$PATH:/usr/games"
