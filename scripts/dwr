@@ -19,7 +19,7 @@ declare repo hostname
 
 jqscript() {
 
-  cat << EOF
+  /bin/cat << EOF
       def symbol:
         sub("cancelled"; "CANC") |
         sub("skipped";   "SKIP") |
