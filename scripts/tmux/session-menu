@@ -7,14 +7,13 @@ current="$(tmux display-message -p '#S')"
 
 # Based on a list of the current session names, emit the display-menu lines one
 # for each session except the current one; print a similar line for the current
-# session at the end, with the lowest ID (1). Then sort them by the ID, and
-# show the menu, using -C to pre-select the current session (remembering it's
-# 0-indexed).
+# session at the end, with the lowest ID (0). Then sort them by the ID, and
+# show the menu, using -C to pre-select the current session.
 tmux list-sessions -F '#S' \
   | awk \
     -v current="$current" '
-    $1 != current { print $1, NR+1, "\"switch-client -t " $1 "\""}
-    END { print current, 1, "\"switch-client -t " current "\"" }
+    $1 != current { print $1, NR, "\"switch-client -t " $1 "\""}
+    END { print current, 0, "\"switch-client -t " current "\"" }
     ' \
   | sort -k 2 \
   | xargs tmux display-menu -C 0 -T "Switch-session"
