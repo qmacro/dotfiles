@@ -1,14 +1,6 @@
 # All aliases in here
-alias vi=vim
-alias kitty=/Applications/kitty.app/Contents/MacOS/kitty
-alias twt='[ "$TMUX" ] && tmux display-message -p "#W"'
-alias tm='tmux attach-session -t $(basename "$PWD") || tmux new-session -s $(basename "$PWD")'
-alias python=/usr/local/bin/python3
-alias cgr='cg && r'
-alias vig='vim -c "Goyo"'
 alias wfb='workflowbrowser'
 alias wfe='workflowbrowser | xargs showgithubcontent | vim --not-a-term -' # workflow edit
-alias branch='git checkout -b'
 alias pr='git push --set-upstream origin $(git branch --show-current) && gh pr create --body'
 
 # See https://superuser.com/questions/763071/show-whitespace-characters-in-printout
@@ -24,25 +16,26 @@ alias ic='gh issue comment'
 alias ls='ls -p -a --color=auto'
 
 # Single char aliases
-alias s='cd $HOME/work/scratch'
+alias s='cd /work/scratch'
 alias k=kubectl
-alias r=ranger
 alias t=tmux
 alias i='gh issue list'
-alias v=vim
 alias d='cd $DOTFILES'
 alias r=reset
 
 alias st='git status'
 alias dpa='docker ps -a --format "table {{.Names}}\t{{.State}}\t{{.RunningFor}}\t{{.Networks}}\t{{.Mounts}}"'
-alias dcl='docker context list'
+
+# (n)vi(m)
+alias v=nvim
 alias vi=nvim
 alias vim=nvim
 
 alias gapi='gh api --paginate --cache 1h'
 
 alias bat=batcat
-alias gg='nvim +Neogit'
 alias blog='cd $WORK/gh/github.com/qmacro/qmacro.github.io'
 
-alias tree='tree -I node_modules'
+# GitHub Enterprise gh
+# See https://github.com/dlvhdr/gh-dash/issues/285#issuecomment-1785135817
+alias ghe='GH_HOST=github.tools.sap gh'
