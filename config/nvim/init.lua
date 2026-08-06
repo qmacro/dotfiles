@@ -17,7 +17,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
         buffer = args.buf,
         callback = function()
-          vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
+          -- vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
         end,
       })
     end
@@ -78,3 +78,10 @@ vim.filetype.add({
     ['rules.vr'] = 'text',
   }
 })
+
+vim.cmd('colorscheme retrobox')
+vim.keymap.set('n', '<leader>y', 'V:!ytt<cr>A')
+vim.keymap.set('n', '<leader>p', 'I👉 <esc>')
+vim.keymap.set('n', '<leader>fp', 'gwap')
+vim.keymap.set('n', '<leader>js', 'I```javascript<cr>```<esc>O')
+vim.keymap.set('n', '<leader>fi', 'a(see [Further info](#further-info)) ')

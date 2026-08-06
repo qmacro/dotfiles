@@ -6,13 +6,16 @@
 
 # If not running interactively, don't do anything
 case $- in
-  *i*) ;;
-  *) return ;;
+*i*) ;;
+*) return ;;
 esac
 
 export DOTFILES="$HOME/dotfiles"
 
 for rcfile in "$DOTFILES"/bashrc.d/*.sh; do
-  # shellcheck disable=SC1090
-  source "$rcfile"
+	# shellcheck disable=SC1090
+	source "$rcfile"
 done
+
+# opencode
+export PATH=/home/dj/.opencode/bin:$PATH

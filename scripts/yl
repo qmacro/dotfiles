@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# YAML less
+bat \
+  --plain \
+  --language yaml \
+  --color always \
+  < "${1:-/dev/stdin}" \
+  | less -R

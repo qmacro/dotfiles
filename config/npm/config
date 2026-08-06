@@ -1,7 +1,4 @@
 loglevel=error
-@capire:registry=https://npm.pkg.github.com
-@qmacro:registry=https://npm.pkg.github.com
 prefix=/home/dj/.npm-packages
-#ignore-scripts=true
-#min-release-age=7
 fund=false
+@capire:registry=https://npm.pkg.github.com/

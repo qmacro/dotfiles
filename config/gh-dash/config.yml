@@ -1,84 +1,97 @@
-# yaml-language-server: $schema=https://dlvhdr.github.io/gh-dash/configuration/gh-dash/schema.json
 prSections:
-- title: My Pull Requests
-  filters: is:open author:@me
-  type: null
-- title: Needs My Review
-  filters: is:open review-requested:@me
-  type: null
-- title: Involved
-  filters: is:open involves:@me -author:@me
-  type: null
+    - title: My Pull Requests
+      filters: is:open author:@me
+    - title: Needs My Review
+      filters: is:open review-requested:@me
+    - title: Involved
+      filters: is:open involves:@me -author:@me
 issuesSections:
-- title: Blog posts
-  filters: is:open author:@me repo:qmacro-org/db NOT in:title "Hands-on SAP dev with qmacro"
-- title: Blog post comments
-  filters: is:open repo:qmacro/qmacro.github.io
-- title: My Issues
-  filters: is:open author:@me
-- title: Assigned
-  filters: is:open assignee:@me
-- title: Involved
-  filters: is:open involves:@me -author:@me
+    - title: My Issues
+      filters: is:open author:@me
+    - title: Assigned
+      filters: is:open assignee:@me
+    - title: Involved
+      filters: is:open involves:@me -author:@me
+notificationsSections:
+    - title: All
+      filters: ""
+    - title: Created
+      filters: reason:author
+    - title: Participating
+      filters: reason:participating
+    - title: Mentioned
+      filters: reason:mention
+    - title: Review Requested
+      filters: reason:review-requested
+    - title: Assigned
+      filters: reason:assign
+    - title: Subscribed
+      filters: reason:subscribed
+    - title: Team Mentioned
+      filters: reason:team-mention
 repo:
-  branchesRefetchIntervalSeconds: 30
-  prsRefetchIntervalSeconds: 60
+    branchesRefetchIntervalSeconds: 30
+    prsRefetchIntervalSeconds: 60
 defaults:
-  preview:
-    open: true
-    width: 50
-  prsLimit: 20
-  issuesLimit: 20
-  view: issues
-  layout:
-    prs:
-      updatedAt:
-        width: 5
-      createdAt:
-        width: 5
-      repo:
-        width: 20
-      author:
-        width: 15
-      authorIcon:
-        hidden: false
-      assignees:
-        width: 20
-        hidden: true
-      base:
-        width: 15
-        hidden: true
-      lines:
-        width: 15
-    issues:
-      updatedAt:
-        width: 5
-      createdAt:
-        width: 5
-      repo:
-        width: 15
-      creator:
-        width: 10
-      creatorIcon:
-        hidden: false
-      assignees:
-        width: 20
-        hidden: true
-  refetchIntervalMinutes: 30
-keybindings:
-  universal: []
-  issues: []
-  prs: []
-  branches: []
+    preview:
+        open: true
+        width: 0.45
+        height: 0.6
+        position: auto
+    prsLimit: 20
+    prApproveComment: LGTM
+    issuesLimit: 20
+    notificationsLimit: 20
+    view: prs
+    layout:
+        prs:
+            updatedAt:
+                width: 5
+            createdAt:
+                width: 5
+            repo:
+                width: 20
+            author:
+                width: 15
+            authorIcon:
+                hidden: false
+            labels:
+                width: 22
+                hidden: true
+            assignees:
+                width: 20
+                hidden: true
+            base:
+                width: 15
+                hidden: true
+            lines:
+                width: 15
+        issues:
+            updatedAt:
+                width: 5
+            createdAt:
+                width: 5
+            repo:
+                width: 15
+            creator:
+                width: 10
+            creatorIcon:
+                hidden: false
+            assignees:
+                width: 20
+                hidden: true
+    refetchIntervalMinutes: 30
+keybindings: {}
 repoPaths: {}
 theme:
-  ui:
-    sectionsShowCount: true
-    table:
-      showSeparator: true
-      compact: false
+    ui:
+        sectionsShowCount: true
+        table:
+            showSeparator: true
+            compact: false
 pager:
-  diff: ""
+    diff: ""
 confirmQuit: false
 showAuthorIcons: true
 smartFilteringAtLaunch: true
+includeReadNotifications: true
