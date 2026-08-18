@@ -10,10 +10,6 @@ current="$(tmux display-message -p '#S')"
 # session at the end, with the lowest ID (0). Then sort them by the ID, and
 # show the menu, using -C to pre-select the current session.
 tmux list-sessions -F '#S' \
-  | awk \
-    -v current="$current" '
-    $1 != current { print $1, NR, "\"switch-client -t " $1 "\""}
-    END { print current, 0, "\"switch-client -t " current "\"" }
-    ' \
+  | awk -v current="$current" -f "$(dirname "$0")/session-menu.awk" \
   | sort -k 2 \
   | xargs tmux display-menu -C 0 -T "Switch-session"
