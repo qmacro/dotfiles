@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "master",
     build = ":TSUpdate",
     config = function()
       -- local parser_configs = require 'nvim-treesitter.parsers'.get_parser_configs()
