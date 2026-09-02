@@ -14,6 +14,9 @@ return {
           },
           layout_strategy = 'vertical',
           -- layout_config = { preview_width = 0.6 }
+          preview = {
+            treesitter = false
+          },
         },
         extensions = {
           fzf = {}

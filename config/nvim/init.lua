@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 -- Control LSP support by filetype
 vim.lsp.enable({
-  'javascript',
+  'ts_ls',
   'cds',
   'markdown',
   'dockerfile',
@@ -79,9 +79,11 @@ vim.filetype.add({
   }
 })
 
-vim.cmd('colorscheme retrobox')
+vim.cmd('colorscheme minischeme')
 vim.keymap.set('n', '<leader>y', 'V:!ytt<cr>A')
-vim.keymap.set('n', '<leader>p', 'I👉 <esc>')
+vim.keymap.set('n', '<leader>p', 'I👉 <esc>gwap')
 vim.keymap.set('n', '<leader>fp', 'gwap')
 vim.keymap.set('n', '<leader>js', 'I```javascript<cr>```<esc>O')
 vim.keymap.set('n', '<leader>fi', 'a(see [Further info](#further-info)) ')
+vim.keymap.set('n', '<leader>h',  '30<c-e>')
+vim.keymap.set('n', '<leader>s',  ':%s/\\%xa0/ /g')
