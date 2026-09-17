@@ -27,6 +27,15 @@ require('nvim-treesitter').install {
   'markdown'
 }
 
+vim.lsp.enable({
+  'ts_ls',
+  'cds',
+  'markdown',
+  'dockerfile',
+  'lua',
+  'bash',
+})
+
 vim.opt.number = true
 vim.cmd('colorscheme minischeme')
 
