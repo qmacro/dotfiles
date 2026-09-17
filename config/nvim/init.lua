@@ -27,6 +27,7 @@ require('nvim-treesitter').install {
   'markdown'
 }
 
+vim.opt.number = true
 vim.cmd('colorscheme minischeme')
 
 vim.api.nvim_create_autocmd('FileType', {
