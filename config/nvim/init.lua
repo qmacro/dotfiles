@@ -28,7 +28,7 @@ require('nvim-treesitter').install {
 }
 
 vim.lsp.enable({
-  'ts_ls',
+  'javascript',
   'cds',
   'markdown',
   'dockerfile',
@@ -36,10 +36,63 @@ vim.lsp.enable({
   'bash',
 })
 
-vim.opt.number = true
-vim.cmd('colorscheme minischeme')
+vim.cmd('colorscheme dracula')
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'cds' },
   callback = function() vim.treesitter.start() end,
 })
+
+-- DIAGNOSTICS
+
+-- How diagnostics are displayed
+vim.diagnostic.config({
+  virtual_text = { current_line = true },
+  severity_sort = true
+})
+
+require('qmacro.diagnostic').exclude({
+  { code = 80001, source = 'typescript' },
+})
+
+vim.keymap.set('n', '<leader>y', 'V:!ytt<cr>A')
+vim.keymap.set('n', '<leader>p', 'I👉 <esc>gwap')
+vim.keymap.set('n', '<leader>fp', 'gwap')
+vim.keymap.set('n', '<leader>js', 'I```javascript<cr>```<esc>O')
+vim.keymap.set('n', '<leader>fi', 'a(see [Further info](#further-info)) ')
+vim.keymap.set('n', '<leader>h',  '30<c-e>')
+vim.keymap.set('n', '<leader>s',  ':%s/\\%xa0/ /g')
+
+vim.opt.list = true
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
+vim.opt.signcolumn = "yes:1"
+vim.opt.cursorline = true
+vim.opt.splitright = true
+vim.opt.winborder = "rounded"
+vim.opt.completeopt:append("fuzzy,noinsert")
+vim.opt.exrc = true
+
+vim.opt.wildignore = table.concat({
+  "blue.vim",
+  "darkblue.vim",
+  "delek.vim",
+  "elflord.vim",
+  "evening.vim",
+  "industry.vim",
+  "koehler.vim",
+  "lunaperche.vim",
+  "morning.vim",
+  "pablo.vim",
+  "quiet.vim",
+  "randomhue.vim",
+  "torte.vim",
+  "zellner.vim",
+  "minicyan.vim",
+  "minispring.vim",
+  "minisummer.vim",
+  "miniautumn.vim",
+  "miniwinter.vim",
+}, ",")

@@ -12,14 +12,15 @@ return {
             'node_modules'
           },
           layout_strategy = 'vertical',
-          -- layout_config = { preview_width = 0.6 }
-          -- preview = {
-          --   treesitter = false
-          -- },
         },
         extensions = {
           fzf = {}
-        }
+        },
+        pickers = {
+          colorscheme = {
+            enable_preview = true
+          }
+        },
       }
       local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<space>fo", builtin.oldfiles)
