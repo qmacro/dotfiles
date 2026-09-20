@@ -1,13 +1,15 @@
 require("config.lazy")
 
-vim.api.nvim_create_autocmd('User', { pattern = 'TSUpdate',
-callback = function()
-  require('nvim-treesitter.parsers').cds = {
-    install_info = {
-      url = 'https://github.com/SAP-archive/tree-sitter-cds',
-    },
-  }
-end})
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'TSUpdate',
+  callback = function()
+    require('nvim-treesitter.parsers').cds = {
+      install_info = {
+        url = 'https://github.com/SAP-archive/tree-sitter-cds',
+      },
+    }
+  end
+})
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
@@ -82,8 +84,8 @@ vim.keymap.set('n', '<leader>p', 'I👉 <esc>gwap')
 vim.keymap.set('n', '<leader>fp', 'gwap')
 vim.keymap.set('n', '<leader>js', 'I```javascript<cr>```<esc>O')
 vim.keymap.set('n', '<leader>fi', 'a(see [Further info](#further-info)) ')
-vim.keymap.set('n', '<leader>h',  '30<c-e>')
-vim.keymap.set('n', '<leader>s',  ':%s/\\%xa0/ /g')
+vim.keymap.set('n', '<leader>h', '30<c-e>')
+vim.keymap.set('n', '<leader>s', ':%s/\\%xa0/ /g')
 
 vim.opt.list = true
 vim.opt.number = true
