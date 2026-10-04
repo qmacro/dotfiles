@@ -19,3 +19,9 @@ done
 
 # opencode
 export PATH=/home/dj/.opencode/bin:$PATH
+
+
+# cds completion start
+# cds shell completion script (path resolved at install time)
+_p="/home/dj/.npm-packages/lib/node_modules/@sap/cds-dk/bin/completion/scripts/cds.sh" && [ -r "$_p" ] && . "$_p"
+# cds completion end
