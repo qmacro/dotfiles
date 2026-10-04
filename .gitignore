@@ -40,5 +40,6 @@ config/krew/
 config/tmux/plugins
 config/nvim-configs/lazy
 config/nvim-configs/chad
+config/opencode/opencode.json*
 
 bashrc.d/54-globals-nvim.sh
