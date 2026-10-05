@@ -1,3 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S awk -f
 
-sed -n '/^---$/, /^---$/{ /^---$/!p }' < "$1"
+# Extract frontmatter YAML from a (Markdown) file
+/^---$/ { if (n++) exit; next }
+n
