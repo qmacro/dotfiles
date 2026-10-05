@@ -17,7 +17,7 @@
 # Note: These hotkeys should be unique.
 
 #-- Basic Actions
-confirm = ['enter', '']
+confirm = ['l', '']
 quit = ['ctrl+c', ''] # a.k.a. "theprimeagen troller"
 cd_quit = ['Q', '']
 
@@ -90,7 +90,7 @@ cancel_typing = ['esc', '']
 # hotkeys.
 
 #-- Normal Mode Actions
-parent_directory = ['-', '']
+parent_directory = ['h', '']
 search_bar = ['/', '']
 
 #-- Selection Mode Actions
