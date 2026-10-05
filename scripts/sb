@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+fm() {
+
+  awk '/^---$/ { if (n++) exit; next } n'
+
+}
+
+pv() {
+
+  local skillfile=$1
+  local width=$2
+
+  fm < "$skillfile" \
+    | yq -r '"\(.name|ascii_upcase) (\(.metadata.version))\n\n\(.description)"' \
+    | fmt -s -w "$width"
+
+}
+
+export -f pv fm
+
+main() {
+
+  local loc="${1:-.}"
+  local descwidth=$((($(tput cols) / 2) - 5))
+  while read -r skill; do
+    echo "$skill" \
+      | awk -F/ '{print $4, $0}'
+  done <<< "$(find "$loc" -name "SKILL.md")" \
+    | fzf \
+      --with-nth=1 \
+      --preview "pv {2} $descwidth"
+
+}
+
+main "$@"
