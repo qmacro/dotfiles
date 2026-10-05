@@ -39,7 +39,11 @@ main() {
       | cut -d' ' -f 2
   )"
 
-  "$FILEBROWSER" "$(dirname "$selection")"
+  if test -z "$SB_DETAIL"; then
+    glow -p "$selection"
+  else
+    "$FILEBROWSER" "$(dirname "$selection")"
+  fi
 
 }
 
