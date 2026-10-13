@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+# devcontainer-to-compose conversion script.
+#
+# Reads .devcontainer/devcontainer.json and emits a Docker compose
+# configuration definition.
+#
+# Only container-relevant fields are translated (build, ports, user, etc.).
+# Non-container fields such as "customizations" are intentionally ignored.
+
+set -euo pipefail
+
+PROJECT_DIR="${1:?"Specify project dir that contains a .devcontainer/ dir"}"
+
+DEVCONTAINER_DIR="${PROJECT_DIR%/}/.devcontainer"
+JSON_FILE="${DEVCONTAINER_DIR}/devcontainer.json"
+
+# ── Prerequisites ──────────────────────────────────────────────────────────────
+if ! command -v jq &>/dev/null; then
+  echo "Error: jq is required but not found. Install it and try again." >&2
+  exit 1
+fi
+
+if [[ ! -f "$JSON_FILE" ]]; then
+  echo "Error: ${JSON_FILE} not found." >&2
+  exit 1
+fi
+
+# ── Helper: strip JSON comments (// …) before parsing ─────────────────────────
+strip_comments() {
+  # Remove single-line // comments that are not inside strings.
+  # This is a best-effort pass; jq itself does not support comments.
+  sed 's|//[^"]*$||' "$1"
+}
+
+JSON=$(strip_comments "$JSON_FILE")
+
+# ── Extract fields ─────────────────────────────────────────────────────────────
+
+# Service name: derive from "name" if present, otherwise "devcontainer"
+RAW_NAME=$(echo "$JSON" | jq -r '.name // "devcontainer"')
+SERVICE_NAME=$(echo "$RAW_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9_-]/-/g')
+
+# Build context / image --------------------------------------------------------
+DOCKERFILE=$(echo "$JSON" | jq -r '.build.dockerfile // empty')
+BUILD_CONTEXT=$(echo "$JSON" | jq -r '.build.context // empty')
+IMAGE=$(echo "$JSON" | jq -r '.image // empty')
+
+# Build args (key/value pairs under .build.args) --------------------------------
+BUILD_ARGS=$(echo "$JSON" | jq -r '
+  (.build.args // {}) | to_entries[] |
+  "      - " + .key + "=" + (.value | tostring)
+')
+
+# Forwarded ports  →  host:container ----------------------------------------
+PORTS=$(echo "$JSON" | jq -r '
+  (.forwardPorts // [])[] |
+  "      - \"" + (. | tostring) + ":" + (. | tostring) + "\""
+')
+
+# Remote user  →  user: <name> ------------------------------------------------
+REMOTE_USER=$(echo "$JSON" | jq -r '.remoteUser // empty')
+
+# Environment variables --------------------------------------------------------
+# devcontainer supports both object and array forms
+ENV_VARS=$(echo "$JSON" | jq -r '
+  if .containerEnv then
+    .containerEnv | to_entries[] |
+    "      - " + .key + "=" + (.value | tostring)
+  else empty end
+')
+
+# Volume mounts  →  volumes: section ------------------------------------------
+MOUNTS=$(echo "$JSON" | jq -r '
+  (.mounts // [])[] |
+  if .type == "bind" then
+    "      - type: bind\n        source: " + .source +
+    "\n        target: " + .target
+  elif .type == "volume" then
+    "      - type: volume\n        source: " + (.source // .name // "unnamed") +
+    "\n        target: " + .target
+  else
+    "      - " + .
+  end
+')
+
+# Network mode -----------------------------------------------------------------
+NETWORK_MODE=$(echo "$JSON" | jq -r '.hostRequirements.network // empty')
+
+# Privileged / cap_add ---------------------------------------------------------
+PRIVILEGED=$(echo "$JSON" | jq -r 'if .privileged == true then "true" else empty end')
+
+# ── Build the YAML ─────────────────────────────────────────────────────────────
+{
+  echo "# Generated from ${JSON_FILE} by devcompose"
+  echo "# Non-container sections (customizations, etc.) are omitted."
+  echo ""
+  echo "services:"
+  echo "  ${SERVICE_NAME}:"
+
+  # image or build block
+  if [[ -n "$DOCKERFILE" ]]; then
+    echo "    build:"
+    # Resolve context: explicit context wins, otherwise the Dockerfile's directory
+    if [[ -n "$BUILD_CONTEXT" ]]; then
+      echo "      context: ${BUILD_CONTEXT}"
+    else
+      echo "      context: ${DEVCONTAINER_DIR}"
+    fi
+    echo "      dockerfile: ${DOCKERFILE}"
+    if [[ -n "$BUILD_ARGS" ]]; then
+      echo "      args:"
+      echo "$BUILD_ARGS"
+    fi
+  elif [[ -n "$IMAGE" ]]; then
+    echo "    image: ${IMAGE}"
+  fi
+
+  # ports
+  if [[ -n "$PORTS" ]]; then
+    echo "    ports:"
+    echo "$PORTS"
+  fi
+
+  # user
+  if [[ -n "$REMOTE_USER" ]]; then
+    echo "    user: ${REMOTE_USER}"
+  fi
+
+  # environment
+  if [[ -n "$ENV_VARS" ]]; then
+    echo "    environment:"
+    echo "$ENV_VARS"
+  fi
+
+  # volumes / mounts
+  if [[ -n "$MOUNTS" ]]; then
+    echo "    volumes:"
+    echo -e "$MOUNTS"
+  fi
+
+  # network_mode
+  if [[ -n "$NETWORK_MODE" ]]; then
+    echo "    network_mode: ${NETWORK_MODE}"
+  fi
+
+  # privileged
+  if [[ -n "$PRIVILEGED" ]]; then
+    echo "    privileged: true"
+  fi
+
+  # Keep container alive (devcontainers typically run an idle loop)
+  echo "    stdin_open: true"
+  echo "    tty: true"
+
+}
