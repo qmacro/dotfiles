@@ -68,7 +68,7 @@ deleteruns() {
   local id
   while read -r run; do
     deleterun "$run"
-    sleep 0.50
+    sleep 1
   done
 
 }
