@@ -39,3 +39,5 @@ alias blog='cd $WORK/gh/github.com/qmacro/qmacro.github.io'
 # GitHub Enterprise gh
 # See https://github.com/dlvhdr/gh-dash/issues/285#issuecomment-1785135817
 alias ghe='GH_HOST=github.tools.sap gh'
+
+alias oc=opencode
