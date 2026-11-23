@@ -1,0 +1,116 @@
+base = "ocean"
+syntax = "base16-ocean.dark"
+
+# Dracula Theme for leaf
+# https://draculatheme.com/spec
+#
+# Install:
+#   cp dracula.toml ~/.config/leaf/themes/dracula.toml
+#
+# Then in ~/.config/leaf/config.toml:
+#   theme = "themes/dracula.toml"
+#
+# Palette:
+#   background   #282A36
+#   current_line #353747  (opaque fallback)
+#   selection    #44475A
+#   foreground   #F8F8F2
+#   comment      #6272A4
+#   red          #FF5555
+#   orange       #FFB86C
+#   yellow       #F1FA8C
+#   green        #50FA7B
+#   cyan         #8BE9FD
+#   purple       #BD93F9
+#   pink         #FF79C6
+
+[ui]
+content_bg            = "#282A36"
+toc_bg                = "#21222C"
+toc_border            = "#44475A"
+scrollbar_hover       = "#BD93F9"
+status_bg             = "#21222C"
+status_separator      = "#44475A"
+status_brand_fg       = "#282A36"
+status_brand_bg       = "#BD93F9"
+status_filename_fg    = "#F8F8F2"
+status_filename_bg    = "#44475A"
+status_watch_fg       = "#50FA7B"
+status_watch_bg       = "#21222C"
+status_reloaded_fg    = "#282A36"
+status_reloaded_bg    = "#50FA7B"
+status_search_fg      = "#F1FA8C"
+status_search_bg      = "#44475A"
+status_success_fg     = "#50FA7B"
+status_success_bg     = "#21222C"
+status_warning_fg     = "#FFB86C"
+status_error_fg       = "#FF5555"
+status_error_bg       = "#21222C"
+status_shortcut_fg    = "#6272A4"
+status_percent_fg     = "#BD93F9"
+status_dot_fg         = "#6272A4"
+toc_hover_fg          = "#F8F8F2"
+toc_header_fg         = "#6272A4"
+toc_active_bg         = "#44475A"
+toc_inactive_bg       = "#21222C"
+toc_accent            = "#FF79C6"
+toc_index_inactive    = "#44475A"
+toc_primary_active    = "#F8F8F2"
+toc_primary_inactive  = "#6272A4"
+toc_secondary_inactive         = "#44475A"
+toc_secondary_text_active      = "#F8F8F2"
+toc_secondary_text_inactive    = "#6272A4"
+
+[markdown]
+text                  = "#F8F8F2"
+strong_text           = "#F8F8F2"
+heading_1             = "#BD93F9"
+heading_2             = "#FF79C6"
+heading_3             = "#8BE9FD"
+heading_4             = "#50FA7B"
+heading_other         = "#FFB86C"
+heading_underline     = "#44475A"
+rule                  = "#44475A"
+blockquote_marker     = "#6272A4"
+blockquote_text       = "#6272A4"
+inline_code_fg        = "#DEDE7A"
+inline_code_bg        = "#44475A"
+code_frame            = "#44475A"
+code_label            = "#6272A4"
+code_gutter           = "#44475A"
+link_icon             = "#8BE9FD"
+link_text             = "#8BE9FD"
+link_hover            = "#F8F8F2"
+list_level_1          = "#50FA7B"
+list_level_2          = "#8BE9FD"
+list_level_3          = "#BD93F9"
+ordered_list          = "#FFB86C"
+table_border          = "#44475A"
+table_separator       = "#353747"
+table_header          = "#FF79C6"
+table_cell            = "#F8F8F2"
+search_highlight_bg   = "#44475A"
+search_match_bg       = "#F1FA8C"
+latex_inline_fg       = "#BD93F9"
+latex_inline_bg       = "#44475A"
+latex_block_fg        = "#BD93F9"
+mermaid_keyword       = "#FF79C6"
+mermaid_arrow         = "#8BE9FD"
+mermaid_label         = "#50FA7B"
+mermaid_block_fg      = "#F8F8F2"
+mark_fg               = "#282A36"
+mark_bg               = "#F1FA8C"
+task_checked          = "#50FA7B"
+task_unchecked        = "#6272A4"
+alert_note            = "#8BE9FD"
+alert_tip             = "#50FA7B"
+alert_important       = "#BD93F9"
+alert_warning         = "#FFB86C"
+alert_caution         = "#FF5555"
+footnote_ref          = "#8BE9FD"
+footnote_text         = "#6272A4"
+
+[diff]
+file_separator_fg     = "#F8F8F2"
+tree_tag_change       = "#FFB86C"
+tree_tag_renamed      = "#8BE9FD"
